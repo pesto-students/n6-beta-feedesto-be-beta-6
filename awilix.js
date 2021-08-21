@@ -1,6 +1,6 @@
 const awilix = require('awilix');
 
-const { AuthenticationService, OrganizationService } = require('./src/service');
+const { AuthenticationService, OrganizationService, DiscussionService } = require('./src/service');
 
 const { UserDbModel, DiscussionDbModel, CommentDbModel, OrganizationDbModel } = require('./src/dbModel');
 
@@ -17,6 +17,7 @@ function setup() {
 
     authenticationService: awilix.asClass(AuthenticationService).scoped(),
     organizationService: awilix.asClass(OrganizationService).scoped(),
+    discussionService: awilix.asClass(DiscussionService).scoped(),
 
     userDbModel: awilix.asClass(UserDbModel).scoped(),
     discussionDbModel: awilix.asClass(DiscussionDbModel).scoped(),

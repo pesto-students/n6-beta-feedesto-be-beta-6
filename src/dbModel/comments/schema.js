@@ -13,22 +13,38 @@ const CommentSchema = new Schema(
     },
     commentableType: {
       type: String,
+      enum: ['Discussion', 'Comment'],
+      index: true,
       required: true
     },
-    commentableId: {
+    discussionId: {
       type: Schema.Types.ObjectId,
-      refPath: 'commentableType',
+      ref: 'Discussion',
+      index: true,
       required: true
     },
-    numberOfUpVotes: {
-      type: Number,
-      default: 0,
-      min: 0
+    organizationId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Organization',
+      index: true,
+      required: true
     },
-    numberOfDownVotes: {
-      type: Number,
-      default: 0,
-      min: 0
+    upVoteIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'User',
+      index: true,
+      default: []
+    },
+    childrenIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Comment',
+      index: true
+    },
+    downVoteIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'User',
+      index: true,
+      default: []
     }
   },
   {

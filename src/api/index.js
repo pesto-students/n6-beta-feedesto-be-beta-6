@@ -4,6 +4,7 @@ const authRouter = require('./auth/routes');
 const { container } = require('../../awilix');
 const { requireUserAuth } = require('./authentication');
 const organizationRoutes = require('./organization/routes');
+const discussionRoutes = require('./discussion/routes');
 
 const router = express.Router();
 router.use(
@@ -15,7 +16,15 @@ router.use(
   authRouter
 );
 //  router.use('/user',(req,res,next)=>{req.container=container; next()},requireUserAuth,()=>{re}, authRouter);
-// router.use('/discussion',(req,res,next)=>{req.container=container; next()}, authRouter);
+router.use(
+  '/discussion',
+  (req, res, next) => {
+    req.container = container;
+    next();
+  },
+  requireUserAuth,
+  discussionRoutes
+);
 
 router.use(
   '/organization',

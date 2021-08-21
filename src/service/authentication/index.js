@@ -19,6 +19,7 @@ module.exports = class AuthenticationService {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await this.userDbModel.findById(payload._id);
+
         if (user && user.key === payload.key) {
           return resolve({ success: true, user });
         }
@@ -31,112 +32,113 @@ module.exports = class AuthenticationService {
   }
 
   async authenticateUserByGoogleToken(body) {
-    try {
-      const { googleToken, name, role, organization, organizationId } = body;
-      let user = null;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { googleToken, name, role, organization, organizationId } = body;
+        let user = null;
 
-      if (!name) {
-        return resolve({
-          success: false,
-          done: {
-            message: 'Name is required',
-            status: 422
-          }
+        const ticket = await client.verifyIdToken({
+          idToken: googleToken,
+          audience: process.env.CLIENT_ID || CLIENT_ID
         });
-      }
+        const { email } = ticket.getPayload();
 
-      if (!role || !['admin', 'user'].includes(role)) {
-        return resolve({
-          success: false,
-          done: {
-            message: 'Role is required',
-            status: 422
-          }
-        });
-      }
+        const userByEmail = await this.userDbModel.findByEmail(email);
 
-      const ticket = await client.verifyIdToken({
-        idToken: googleToken,
-        audience: process.env.CLIENT_ID || CLIENT_ID
-      });
-      const { email } = ticket.getPayload();
-
-      const userByEmail = await this.userDbModel.findByEmail(email);
-
-      if (!userByEmail) {
-        const key = `${Date.now()}${randomstring.generate()}`;
-        const keyExpiry = moment()
-          .add(3, 'M')
-          .seconds(0)
-          .format();
-
-        if (role === 'admin') {
-          const organizationNew = await this.organizationDbModel.create({ name: organization });
-
-          user = await this.userDbModel.create({
-            name,
-            email,
-            uniqueId: randomstring.generate(),
-            organizationId: organizationNew._id,
-            role,
-            key,
-            keyExpiry
-          });
-        } else {
-          if (!organizationId) {
+        if (!userByEmail) {
+          if (!name) {
             return resolve({
               success: false,
               done: {
-                message: 'Organization is required',
+                message: 'Name is required',
                 status: 422
               }
             });
           }
 
-          const organizationById = await this.organizationDbModel.findById(organizationId);
-
-          if (!organizationById) {
+          if (!role || !['admin', 'user'].includes(role)) {
             return resolve({
               success: false,
               done: {
-                message: 'Organization not found',
-                status: 404
+                message: 'Role is required',
+                status: 422
               }
             });
           }
 
-          user = await this.userDbModel.create({
-            name,
-            email,
-            uniqueId: randomstring.generate(),
-            organizationId,
-            role,
-            key,
-            keyExpiry
-          });
-        }
-      } else {
-        if (!userByEmail.key || isKeyExpired(userByEmail.keyExpiry)) {
           const key = `${Date.now()}${randomstring.generate()}`;
           const keyExpiry = moment()
             .add(3, 'M')
             .seconds(0)
             .format();
 
-          user = await this.userDbModel.findByIdAndUpdate(userByEmail._id, {
-            key,
-            keyExpiry
-          });
+          if (role === 'admin') {
+            const organizationNew = await this.organizationDbModel.create({ name: organization });
+
+            user = await this.userDbModel.create({
+              name,
+              email,
+              uniqueId: randomstring.generate(),
+              organizationId: organizationNew._id,
+              role,
+              key,
+              keyExpiry
+            });
+          } else {
+            if (!organizationId) {
+              return resolve({
+                success: false,
+                done: {
+                  message: 'Organization is required',
+                  status: 422
+                }
+              });
+            }
+
+            const organizationById = await this.organizationDbModel.findById(organizationId);
+
+            if (!organizationById) {
+              return resolve({
+                success: false,
+                done: {
+                  message: 'Organization not found',
+                  status: 404
+                }
+              });
+            }
+
+            user = await this.userDbModel.create({
+              name,
+              email,
+              uniqueId: randomstring.generate(),
+              organizationId,
+              role,
+              key,
+              keyExpiry
+            });
+          }
+        } else {
+          if (!userByEmail.key || isKeyExpired(userByEmail.keyExpiry)) {
+            const key = `${Date.now()}${randomstring.generate()}`;
+            const keyExpiry = moment()
+              .add(3, 'M')
+              .seconds(0)
+              .format();
+
+            user = await this.userDbModel.findByIdAndUpdate(userByEmail._id, {
+              key,
+              keyExpiry
+            });
+          }
         }
+
+        const token = await signToken({ _id: user._id, key: user.key }, this.accessTokenValidity);
+
+        return resolve({ token: `JWT ${token}`, user, success: true });
+      } catch (error) {
+        reject(error);
       }
-
-      const token = await signToken({ _id: user._id, key: user.key }, this.accessTokenValidity);
-      console.log('token', token, user);
-
-      return { token: `JWT ${token}`, user, success: true };
-    } catch (error) {
-      throw error;
-    }
+    });
   }
 
   // async refreshAccessToken(user:any) {

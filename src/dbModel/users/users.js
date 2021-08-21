@@ -18,6 +18,22 @@ module.exports = class UserDbModel {
   }
 
   /**
+   * fetch active userIds
+   * @param {String} organizationId
+   * @return {[Object]}
+   */
+  findAllActiveIdsByOrganizationId(organizationId) {
+    try {
+      return this.mongooseModel
+        .find({ organizationId, isApproved: true })
+        .select('_id')
+        .lean();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
    * create user
    * @param {Object} user object
    * @return {Object}

@@ -9,6 +9,11 @@ const DiscussionSchema = new Schema(
     description: {
       type: String
     },
+    organizationId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Organization',
+      required: true
+    },
     startTime: {
       type: Date
     },
@@ -29,19 +34,19 @@ const DiscussionSchema = new Schema(
       ref: 'User',
       default: []
     },
-    numberOfUpVotes: {
-      type: Number,
-      default: 0,
-      min: 0
+    upvoteIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'User',
+      default: []
     },
     createdById: {
       type: Schema.Types.ObjectId,
       ref: 'User'
     },
-    numberOfDownVotes: {
-      type: Number,
-      default: 0,
-      min: 0
+    downVoteIds: {
+      type: [Schema.Types.ObjectId],
+      ref: 'User',
+      default: []
     }
   },
   {

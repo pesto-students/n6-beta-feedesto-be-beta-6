@@ -35,6 +35,7 @@ const localLogin = new LocalStrategy(localOptions, async (req, name, googleToken
   try {
     const authenticationService = req.container.resolve('authenticationService');
     const response = await authenticationService.authenticateUserByGoogleToken(req.body);
+
     if (response.success) return done(null, response);
     done(response.done, false, null);
   } catch (error) {
