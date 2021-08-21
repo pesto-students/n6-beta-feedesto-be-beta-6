@@ -1,10 +1,13 @@
 const express = require('express');
 
+const bugsnagClient = require('./config/bugsnag');
+const { requestHandler, errorHandler } = bugsnagClient.getPlugin('express');
+
 const { setup } = require('./awilix.js');
 const apiErrorHandler = require('./error/api-error-handler.js');
 
 setup();
- const router = require('./src/api');
+const router = require('./src/api');
 
 class Server {
   constructor() {
@@ -13,9 +16,11 @@ class Server {
   }
 
   setup() {
+    this.app.use(requestHandler);
     this.app.use(express.json());
     this.app.use('/', router);
     this.app.use(apiErrorHandler);
+    this.app.use(errorHandler);
   }
 
   run(port) {
