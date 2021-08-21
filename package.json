@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js",
     "prettier": "prettier 'src/**/*.js'"
   },
   "husky": {
@@ -26,7 +26,15 @@
     "awilix": "^5.0.0",
     "eslint-config-airbnb": "^18.2.1",
     "express": "^4.17.1",
-    "mongoose": "^5.13.7"
+    "google-auth-library": "^7.6.2",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "mongoose": "^5.13.7",
+    "nodemon": "^2.0.12",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "randomstring": "^1.2.1"
   },
   "devDependencies": {
     "eslint-config-prettier": "^8.3.0",

@@ -4,7 +4,7 @@ const { setup } = require('./awilix.js');
 const apiErrorHandler = require('./error/api-error-handler.js');
 
 setup();
-// const router = require('./routes');
+ const router = require('./src/api');
 
 class Server {
   constructor() {

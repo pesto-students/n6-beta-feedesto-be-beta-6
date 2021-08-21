@@ -46,6 +46,20 @@ module.exports = class UserDbModel {
   }
 
   /**
+   * find a specific user document by email
+   * @param {String} email
+   * @return {Object}
+   */
+  findByEmail(email) {
+    try {
+      return this.mongooseModel.findOne({ email }).lean();
+    } catch (error) {
+      error.meta = { ...error.meta, 'userDbModel.findByEmail': { email } };
+      throw error;
+    }
+  }
+
+  /**
    * find a specific user document and update it
    * @param {String} userId: userId used to find the document to update
    * @param {Object} updateData: update data that needs to be pushed to the db

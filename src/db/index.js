@@ -1,22 +1,20 @@
 // src/db/connect.ts
 
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
-import { DB_URL } from "../../config/env.json";
+const { DB_URL } = require('../../config/env.json');
 
-function connect() {
-  return mongoose
-    .connect(process.env.DB_URL || DB_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    .then(() => {
-      console.log("Database connected");
-    })
-    .catch((error) => {
-      console.error("db error", error);
-      process.exit(1);
-    });
-}
+mongoose
+  .connect(process.env.DB_URL || DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log('Database connected');
+  })
+  .catch(error => {
+    console.error('db error', error);
+    process.exit(1);
+  });
 
-export default connect;
+module.exports = mongoose;
