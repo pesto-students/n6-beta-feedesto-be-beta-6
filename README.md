@@ -8,7 +8,7 @@ Feedesto provides a Complete and Concrete solution to help executives in the dec
 
 # Installation
 
-Clone the project
+Clone the project and run following command
 
 ```
 npm install
@@ -28,7 +28,7 @@ Add the env.json in config which should have following keys
 }
 ```
 
-Run by npm
+Run the project by npm
 
 ```
 npm start
@@ -36,5 +36,4 @@ npm start
 
 # Author
 
-Harshpinder Singh
-Harshit Sangani
+Harshpinder Singh & Harshit Sangani
