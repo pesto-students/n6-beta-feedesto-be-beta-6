@@ -10,8 +10,9 @@ Bugsnag.start({
   plugins: [bugsnagExpress],
   apiKey: BUGSNAG_KEY_SERVER,
   appVersion,
+  enabledBreadcrumbTypes: ['error', 'log', 'request', 'user'],
   releaseStage: NODE_ENV,
-  notifyReleaseStages: ['production', 'staging']
+  enabledReleaseStages: ['production', 'staging']
 });
 
 let rejectionEmitter = unhandledRejection({ timeout: 20 });

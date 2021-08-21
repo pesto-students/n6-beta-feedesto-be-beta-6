@@ -34,12 +34,33 @@ module.exports = class AuthenticationService {
     try {
       const { googleToken, name, role, organization, organizationId } = body;
       let user = null;
+
+      if (!name) {
+        return resolve({
+          success: false,
+          done: {
+            message: 'Name is required',
+            status: 422
+          }
+        });
+      }
+
+      if (!role || !['admin', 'user'].includes(role)) {
+        return resolve({
+          success: false,
+          done: {
+            message: 'Role is required',
+            status: 422
+          }
+        });
+      }
+
       const ticket = await client.verifyIdToken({
         idToken: googleToken,
         audience: process.env.CLIENT_ID || CLIENT_ID
       });
       const { email } = ticket.getPayload();
-      console.log('email', email);
+
       const userByEmail = await this.userDbModel.findByEmail(email);
 
       if (!userByEmail) {
@@ -62,11 +83,32 @@ module.exports = class AuthenticationService {
             keyExpiry
           });
         } else {
+          if (!organizationId) {
+            return resolve({
+              success: false,
+              done: {
+                message: 'Organization is required',
+                status: 422
+              }
+            });
+          }
+
+          const organizationById = await this.organizationDbModel.findById(organizationId);
+
+          if (!organizationById) {
+            return resolve({
+              success: false,
+              done: {
+                message: 'Organization not found',
+                status: 404
+              }
+            });
+          }
+
           user = await this.userDbModel.create({
             name,
             email,
             uniqueId: randomstring.generate(),
-
             organizationId,
             role,
             key,

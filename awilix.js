@@ -1,6 +1,6 @@
 const awilix = require('awilix');
 
-const { AuthenticationService } = require('./src/service');
+const { AuthenticationService, OrganizationService } = require('./src/service');
 
 const { UserDbModel, DiscussionDbModel, CommentDbModel, OrganizationDbModel } = require('./src/dbModel');
 
@@ -12,10 +12,11 @@ const container = awilix.createContainer({
 
 function setup() {
   container.register({
+    // inject database
     db: awilix.asValue(db),
 
-    // // inject database connection pooling
     authenticationService: awilix.asClass(AuthenticationService).scoped(),
+    organizationService: awilix.asClass(OrganizationService).scoped(),
 
     userDbModel: awilix.asClass(UserDbModel).scoped(),
     discussionDbModel: awilix.asClass(DiscussionDbModel).scoped(),

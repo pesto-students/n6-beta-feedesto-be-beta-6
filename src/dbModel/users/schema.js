@@ -14,7 +14,12 @@ const UserSchema = new Schema(
       type: String,
       required: true
     },
-
+    key: {
+      type: String
+    },
+    keyExpiry: {
+      type: String
+    },
     organizationId: {
       type: Schema.Types.ObjectId,
       ref: 'Organization',
