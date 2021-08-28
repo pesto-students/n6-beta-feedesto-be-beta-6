@@ -1,9 +1,5 @@
 import { AuthRole } from "../controller/auth"
 
-export type MobileNumber = { countryCode: string; mobileNo: string }
-
-export type Audits = { createdAt: string; modifiedAt: string }
-
 export type RequestLocals = {
 	session: {
 		role: AuthRole
@@ -11,5 +7,3 @@ export type RequestLocals = {
 		userId: string
 	}
 }
-
-export type RequestPagination = { limit?: number; offset?: number }
