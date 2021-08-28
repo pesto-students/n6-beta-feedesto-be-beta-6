@@ -1,6 +1,6 @@
-import configs from '../../../core/configs'
-import { parseIsoDate } from '../../../utils/utils'
-import { mongoClient, MongoCollections } from '../mongo.client'
+import configs from "../../../core/configs"
+import { parseIsoDate } from "../../../utils/utils"
+import { mongoClient, MongoCollections } from "../mongo.client"
 
 export type User = {
 	id: string
@@ -8,6 +8,7 @@ export type User = {
 	email: string
 	organizationId: string
 	isAdmin: boolean
+	isVerified: boolean
 	createdAt: string
 	modifiedAt: string
 }
@@ -29,6 +30,7 @@ export async function mongoUserList({
 			email: 1,
 			organizationId: 1,
 			isAdmin: 1,
+			isVerified: 1,
 			createdAt: 1,
 			modifiedAt: 1,
 		},
@@ -42,6 +44,7 @@ export async function mongoUserList({
 			organizationId: el.organizationId,
 			email: el.email,
 			isAdmin: el.isAdmin,
+			isVerified: el.isVerified,
 			createdAt: parseIsoDate(el.createdAt),
 			modifiedAt: parseIsoDate(el.modifiedAt),
 		}

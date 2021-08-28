@@ -1,8 +1,8 @@
-import { InternalServerError, InvalidArgumentError } from '@hkbyte/webapi'
-import _ from 'lodash'
-import { ObjectID } from 'mongodb'
-import configs from '../../../core/configs'
-import { mongoClient, MongoCollections } from '../mongo.client'
+import { InternalServerError, InvalidArgumentError } from "@hkbyte/webapi"
+import _ from "lodash"
+import { ObjectID } from "mongodb"
+import configs from "../../../core/configs"
+import { mongoClient, MongoCollections } from "../mongo.client"
 
 export async function mongoOrganizationUpdate({
 	id,
@@ -15,13 +15,13 @@ export async function mongoOrganizationUpdate({
 	}
 }) {
 	if (!id) {
-		throw new InvalidArgumentError('Filter missing for updating android builds')
+		throw new InvalidArgumentError("Filter missing for updating organization")
 	}
 
 	const tokenFilter: any = {}
 	if (id) {
 		if (!ObjectID.isValid(id)) {
-			throw new InternalServerError('Id is invalid')
+			throw new InternalServerError("Id is invalid")
 		}
 		tokenFilter._id = new ObjectID(id)
 	}

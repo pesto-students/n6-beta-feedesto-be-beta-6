@@ -1,7 +1,7 @@
-import { AlreadyExistError, InternalServerError } from '@hkbyte/webapi'
-import configs from '../../../core/configs'
-import { mongoClient, MongoCollections } from '../mongo.client'
-import { mongoUserList } from './mongoUserList'
+import { AlreadyExistError, InternalServerError } from "@hkbyte/webapi"
+import configs from "../../../core/configs"
+import { mongoClient, MongoCollections } from "../mongo.client"
+import { mongoUserList } from "./mongoUserList"
 
 export async function mongoUserAdd({
 	name,
@@ -29,11 +29,12 @@ export async function mongoUserAdd({
 		email,
 		organizationId,
 		isAdmin,
+		isVerified: false,
 		createdAt: new Date(),
 		modifiedAt: new Date(),
 	})
 	if (!insertUser?.insertedId) {
-		throw new InternalServerError('Something went wrong: unable to add user')
+		throw new InternalServerError("Something went wrong: unable to add user")
 	}
 	return insertUser.insertedId.toString()
 }
