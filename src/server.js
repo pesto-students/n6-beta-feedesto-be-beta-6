@@ -7,12 +7,12 @@ const { requestHandler, errorHandler } = bugsnagClient.getPlugin('express');
 const { setup } = require('./awilix.js');
 const apiErrorHandler = require('./error/api-error-handler.js');
 
-const eventEmitter = require('./src/helpers/emitEvent');
+const eventEmitter = require('./helpers/emitEvent');
 
-const frontEndWebsocket = require('./src/socket');
+const frontEndWebsocket = require('./socket');
 
 setup();
-const router = require('./src/api');
+const router = require('./api');
 
 class Server {
   constructor() {

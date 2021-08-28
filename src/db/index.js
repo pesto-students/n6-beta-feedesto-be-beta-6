@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-const { DB_URL } = require('../../config/env.json');
+const { DB_URL } = require('../config/env.json');
 
 mongoose
   .connect(process.env.DB_URL || DB_URL, {

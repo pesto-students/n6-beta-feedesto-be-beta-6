@@ -2,7 +2,7 @@ const moment = require('moment');
 const randomstring = require('randomstring');
 const { OAuth2Client } = require('google-auth-library');
 
-const { CLIENT_ID } = require('../../../config/env.json');
+const { CLIENT_ID } = require('../../config/env.json');
 
 const client = new OAuth2Client(process.env.CLIENT_ID || CLIENT_ID);
 

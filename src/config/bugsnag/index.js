@@ -4,7 +4,7 @@ const unhandledRejection = require('unhandled-rejection');
 
 const { BUGSNAG_KEY_SERVER, NODE_ENV } = require('../env.json');
 
-const appVersion = require('../../package.json').version;
+const appVersion = require('../../../package.json').version;
 
 Bugsnag.start({
   plugins: [bugsnagExpress],

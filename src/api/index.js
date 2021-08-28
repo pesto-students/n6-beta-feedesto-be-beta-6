@@ -2,7 +2,7 @@ const express = require('express');
 
 const authRouter = require('./auth/routes');
 
-const { container } = require('../../awilix');
+const { container } = require('../awilix');
 
 const { requireUserAuth } = require('./authentication');
 

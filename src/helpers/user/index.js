@@ -1,7 +1,7 @@
 const moment = require('moment');
 const jwt = require('jsonwebtoken');
 
-const { JWT_SECRET } = require('../../../config/env.json');
+const { JWT_SECRET } = require('../../config/env.json');
 
 const signToken = (data, expiry) => {
   return new Promise((resolve, reject) => {

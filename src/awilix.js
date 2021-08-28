@@ -6,13 +6,13 @@ const {
   DiscussionService,
   CommentService,
   UserService
-} = require('./src/service');
+} = require('./service');
 
-const { UserDbModel, DiscussionDbModel, CommentDbModel, OrganizationDbModel } = require('./src/dbModel');
+const { UserDbModel, DiscussionDbModel, CommentDbModel, OrganizationDbModel } = require('./dbModel');
 
-const db = require('./src/db');
+const db = require('./db');
 
-const eventEmitter = require('./src/helpers/emitEvent');
+const eventEmitter = require('./helpers/emitEvent');
 
 const container = awilix.createContainer({
   injectionMode: awilix.InjectionMode.PROXY
