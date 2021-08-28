@@ -3,9 +3,7 @@ import { mongoOrganizationAdd } from "../../../../services/mongo/organization/mo
 import { mongoOrganizationUpdate } from "../../../../services/mongo/organization/mongoOrganizationUpdate"
 import { mongoUserAdd } from "../../../../services/mongo/user/mongoUserAdd"
 import { validateEmail } from "../../../../utils/validators"
-import { AuthRole } from "../../../auth"
 import { generateOrganizationAuthToken } from "../../../auth/organization"
-import authMiddleware from "../../../middlewares/authMiddleware"
 
 type Context = {
 	body: {
@@ -22,7 +20,6 @@ export const apiAuthRegisterOrganization = new WebApi({
 		organizationName: T.string().trim().nonEmpty(),
 		email: validateEmail(),
 	}),
-	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
 	handler: async ({ body: { name, email, organizationName } }: Context) => {
 		const organizationId = await mongoOrganizationAdd({
 			name: organizationName,
