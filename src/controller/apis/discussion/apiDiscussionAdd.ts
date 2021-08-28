@@ -19,8 +19,8 @@ export const apiDiscussionAdd = new WebApi({
 	requestBodySchema: T.object({
 		title: T.string().nonEmpty(),
 		description: T.string().nonEmpty(),
-		startDate: T.string().nonEmpty(),
-		endDate: T.string().nonEmpty(),
+		startDate: T.string().date(true).nonEmpty(),
+		endDate: T.string().date(true).nonEmpty(),
 		participantIds: T.array(T.string().mongoObjectId()),
 		viewerIds: T.array(T.string().mongoObjectId()),
 	}),

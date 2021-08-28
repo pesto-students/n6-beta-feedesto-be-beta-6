@@ -1,30 +1,32 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoUserUpdate } from "../../../services/mongo/user/mongoUserUpdate"
+import { mongoOrganizationUpdate } from "../../../services/mongo/organization/mongoOrganizationUpdate"
+import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
 
 type Context = {
 	body: {
-		id: string
 		update: {
 			name?: string
-			isVerified?: boolean
 		}
 	}
+	locals: RequestLocals
 }
 
-export const apiUserUpdate = new WebApi({
-	endpoint: "/user",
+export const apiOrganizationUpdate = new WebApi({
+	endpoint: "/organization",
 	requestBodySchema: T.object({
 		id: T.string().mongoObjectId(),
 		update: T.object({
 			name: T.string().optional(),
-			isVerified: T.boolean().optional(),
 		}),
 	}),
 	method: RequestMethod.PUT,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
-	handler: async ({ body }: Context) => {
-		await mongoUserUpdate(body)
+	handler: async ({ body, locals }: Context) => {
+		await mongoOrganizationUpdate({
+			id: locals.session.organizationId,
+			update: body.update,
+		})
 	},
 })
