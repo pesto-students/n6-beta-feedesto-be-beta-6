@@ -11,7 +11,6 @@ import { apiDiscussionAdd } from "./discussion/apiDiscussionAdd"
 import { apiDiscussionDelete } from "./discussion/apiDiscussionDelete"
 import { apiDiscussionList } from "./discussion/apiDiscussionList"
 import { apiDiscussionUpdate } from "./discussion/apiDiscussionUpdate"
-import { apiOrganizationAdd } from "./organization/apiOrganizationAdd"
 import { apiOrganizationList } from "./organization/apiOrganizationList"
 import { apiOrganizationUpdate } from "./organization/apiOrganizationUpdate"
 import { apiUserDelete } from "./user/apiUserDelete"
@@ -19,7 +18,6 @@ import { apiUserUpdate } from "./user/apiUserUpdate"
 
 export default [
 	apiOrganizationList,
-	apiOrganizationAdd,
 	apiOrganizationUpdate,
 	apiAuthLogin,
 	apiAuthRegisterUser,

@@ -12,7 +12,7 @@ type Context = {
 export const apiAuthLogin = new WebApi({
 	endpoint: "/auth/login",
 	requestBodySchema: T.object({
-		idToken: T.string().trim().nonEmpty(),
+		googleUserId: T.string().trim().nonEmpty(),
 	}),
 	handler: async ({ body: { googleUserId } }: Context) => {
 		const [user] = await mongoUserList({ googleUserId })

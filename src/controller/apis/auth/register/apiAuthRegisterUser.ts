@@ -19,7 +19,7 @@ export const apiAuthRegisterUser = new WebApi({
 		name: T.string().trim().nonEmpty(),
 		email: validateEmail(),
 		googleUserId: T.string().trim().nonEmpty(),
-		organizationId: T.string().trim().nonEmpty(),
+		organizationId: T.string().trim().mongoObjectId(),
 	}),
 	handler: async ({ body }: Context) => {
 		const checkOrganizationExist = await mongoOrganizationList({
