@@ -23,9 +23,9 @@ jobs:
       - name: Install NPM packages
         run: npm install
         shell: bash
-        working-directory: n6-beta-feedesto-be-beta-6
+        working-directory: /home/runner/work/n6-beta-feedesto-be-beta-6
 
       - name: Build project
         run: npm run build
         shell: bash
-        working-directory: n6-beta-feedesto-be-beta-6
+        working-directory: /home/runner/work/n6-beta-feedesto-be-beta-6
