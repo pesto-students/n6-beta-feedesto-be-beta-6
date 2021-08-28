@@ -3,16 +3,16 @@ import {
 	InvalidArgumentError,
 	RequestHandler,
 	sendResponseError,
-} from '@hkbyte/webapi'
-import _ from 'lodash'
-import { AuthRole } from '../auth'
-import { validateOrganizationAuthToken } from '../auth/organization'
-import { validateUserAuthToken } from '../auth/user'
+} from "@hkbyte/webapi"
+import _ from "lodash"
+import { AuthRole } from "../auth"
+import { validateOrganizationAuthToken } from "../auth/organization"
+import { validateUserAuthToken } from "../auth/user"
 
 function extractAuthTokenData(value: string) {
-	const arrayOfValues = value.split(' ')
+	const arrayOfValues = value.split(" ")
 	if (arrayOfValues.length !== 2) {
-		throw new InvalidArgumentError('Invalid Auth Token')
+		throw new InvalidArgumentError("Invalid Auth Token")
 	}
 
 	return {
@@ -30,20 +30,21 @@ export default function (...roles: AuthRole[]): RequestHandler {
 				)
 
 				if (!roles.includes(authRole)) {
-					throw new ForbiddenError('User does not have permission')
+					throw new ForbiddenError("User does not have permission")
 				}
 
 				res.locals.session = { role: authRole }
 
 				if (authRole === AuthRole.USER) {
-					res.locals.session.user = await validateUserAuthToken(token)
+					res.locals.session.userId = await validateUserAuthToken(token)
 				} else if (authRole === AuthRole.ORGANIZATION) {
-					res.locals.session.organization = validateOrganizationAuthToken(token)
+					res.locals.session.organizationId =
+						validateOrganizationAuthToken(token)
 				} else {
-					throw new ForbiddenError('Invalid Authentication role')
+					throw new ForbiddenError("Invalid Authentication role")
 				}
 			} else {
-				if (!_.isEmpty(roles)) throw new ForbiddenError('Authentication missing')
+				if (!_.isEmpty(roles)) throw new ForbiddenError("Authentication missing")
 			}
 
 			next()

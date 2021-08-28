@@ -1,5 +1,6 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
 import { mongoUserDelete } from "../../../services/mongo/user/mongoUserDelete"
+import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
 
 type Context = {
@@ -14,7 +15,7 @@ export const apiUserDelete = new WebApi({
 		id: T.string().trim().mongoObjectId(),
 	}),
 	method: RequestMethod.DELETE,
-	middlewares: [authMiddleware()],
+	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
 	handler: async ({ body }: Context) => {
 		const created = await mongoUserDelete(body)
 		return { created }

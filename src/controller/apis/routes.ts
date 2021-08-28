@@ -1,8 +1,11 @@
 import { apiAuthLogin } from "./auth/login/apiAuthLogin"
 import { apiAuthRegisterOrganization } from "./auth/register/apiAuthRegisterOrganization"
 import { apiAuthRegisterUser } from "./auth/register/apiAuthRegisterUser"
+import { apiDiscussionList } from "./discussion/apiDiscussionList"
 import { apiOrganizationAdd } from "./organization/apiOrganizationAdd"
 import { apiOrganizationList } from "./organization/apiOrganizationList"
+import { apiUserDelete } from "./user/apiUserDelete"
+import { apiUserUpdate } from "./user/apiUserUpdate"
 
 export default [
 	apiOrganizationList,
@@ -10,4 +13,7 @@ export default [
 	apiAuthLogin,
 	apiAuthRegisterUser,
 	apiAuthRegisterOrganization,
+	apiUserUpdate,
+	apiUserDelete,
+	apiDiscussionList,
 ]
