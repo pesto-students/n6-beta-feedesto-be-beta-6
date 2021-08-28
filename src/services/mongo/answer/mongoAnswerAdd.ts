@@ -16,13 +16,11 @@ export async function mongoAnswerAdd({
 		id: discussionId,
 		participantId: userId,
 	})
-
 	if (!discussion) {
 		throw new ForbiddenError("User is not allowed to answer to this Discussion")
 	}
 
 	const db = await mongoRunner()
-
 	const insertAnswer = await db.collection(collection.discussions).insertOne({
 		content,
 		discussionId,
