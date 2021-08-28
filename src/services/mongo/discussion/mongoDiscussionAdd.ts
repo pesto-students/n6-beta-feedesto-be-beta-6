@@ -22,8 +22,8 @@ export async function mongoDiscussionAdd({
 	const insertDiscussion = await db.collection(collection.discussions).insertOne({
 		title,
 		description,
-		startDate,
-		endDate,
+		startDate: new Date(startDate),
+		endDate: new Date(endDate),
 		participantIds,
 		viewerIds,
 		createdAt: new Date(),

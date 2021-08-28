@@ -15,19 +15,15 @@ export const apiAuthLogin = new WebApi({
 		idToken: T.string().trim().nonEmpty(),
 	}),
 	handler: async ({ body: { googleUserId } }: Context) => {
-		const checkUserExist = await mongoUserList({ googleUserId })
-		if (_.isEmpty(checkUserExist)) {
+		const [user] = await mongoUserList({ googleUserId })
+		if (!user) {
 			throw new ForbiddenError("User does not exist")
 		}
 
-		if (checkUserExist[0].isAdmin) {
-			return generateOrganizationAuthToken({
-				organizationId: checkUserExist[0].organizationId,
-			})
+		if (user.isAdmin) {
+			return generateOrganizationAuthToken({ organizationId: user.organizationId })
 		}
 
-		return generateUserAuthToken({
-			userId: "user.id",
-		})
+		return generateUserAuthToken({ userId: user.id })
 	},
 })

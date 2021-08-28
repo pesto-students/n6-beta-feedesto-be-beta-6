@@ -1,6 +1,7 @@
 import { parseIsoDate } from "../../../utils/utils"
 import { collection } from "../collections"
 import { mongoRunner } from "../mongoRunner"
+import { checkAndGetObjectId } from "../utils"
 
 export type Discussion = {
 	id: string
@@ -27,7 +28,7 @@ export async function mongoDiscussionList({
 	organizationId?: string
 } = {}): Promise<Discussion[]> {
 	const tokenFindFilter: any = {}
-	if (id) tokenFindFilter.id = id
+	if (id) tokenFindFilter._id = checkAndGetObjectId(id)
 	if (participantId) tokenFindFilter.participantId = participantId
 	if (viewerId) tokenFindFilter.viewerId = viewerId
 	if (organizationId) tokenFindFilter.organizationId = organizationId
@@ -41,7 +42,7 @@ export async function mongoDiscussionList({
 	const userList = await queryBuilder.toArray()
 	return userList.map((el) => {
 		return {
-			id: el.id,
+			id: el._id,
 			organizationId: el.organizationId,
 			title: el.title,
 			description: el.description,
