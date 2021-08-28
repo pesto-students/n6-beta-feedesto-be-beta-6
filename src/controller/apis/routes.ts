@@ -1,3 +1,5 @@
+import { apiAnswerAdd } from "./answer/apiAnswerAdd"
+import { apiAnswerList } from "./answer/apiAnswerList"
 import { apiAuthLogin } from "./auth/login/apiAuthLogin"
 import { apiAuthRegisterOrganization } from "./auth/register/apiAuthRegisterOrganization"
 import { apiAuthRegisterUser } from "./auth/register/apiAuthRegisterUser"
@@ -18,4 +20,6 @@ export default [
 	apiUserDelete,
 	apiDiscussionList,
 	apiDiscussionAdd,
+	apiAnswerAdd,
+	apiAnswerList,
 ]
