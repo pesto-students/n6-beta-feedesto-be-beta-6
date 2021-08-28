@@ -8,7 +8,7 @@ export async function mongoOrganizationUpdate({
 	id,
 	update,
 }: {
-	id?: string
+	id: string
 	update: {
 		userId?: string
 		name?: string
