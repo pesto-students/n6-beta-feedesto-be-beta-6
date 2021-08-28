@@ -1,8 +1,8 @@
-import { InternalServerError, InvalidArgumentError } from "@hkbyte/webapi"
+import { InvalidArgumentError } from "@hkbyte/webapi"
 import _ from "lodash"
-import { ObjectID } from "mongodb"
-import configs from "../../../core/configs"
-import { mongoClient, MongoCollections } from "../mongo.client"
+import { collection } from "../collections"
+import { mongoRunner } from "../mongoRunner"
+import { checkAndGetObjectId } from "../utils"
 
 export async function mongoOrganizationUpdate({
 	id,
@@ -19,22 +19,17 @@ export async function mongoOrganizationUpdate({
 	}
 
 	const tokenFilter: any = {}
-	if (id) {
-		if (!ObjectID.isValid(id)) {
-			throw new InternalServerError("Id is invalid")
-		}
-		tokenFilter._id = new ObjectID(id)
-	}
+
+	tokenFilter._id = checkAndGetObjectId(id)
 
 	const tokenUpdate: any = { modifiedAt: new Date() }
 	if (!_.isUndefined(update.name)) tokenUpdate.name = update.name
 	if (!_.isUndefined(update.userId)) tokenUpdate.userId = update.userId
 
-	const MongoClient = await mongoClient()
-	const db = MongoClient.db(configs.mongodb.name)
+	const db = await mongoRunner()
 
 	const updateOrganizations = await db
-		.collection(MongoCollections.ORGANIZATIONS)
+		.collection(collection.organizations)
 		.updateMany(tokenFilter, { $set: tokenUpdate })
 
 	return updateOrganizations.result.ok

@@ -1,6 +1,6 @@
-import configs from "../../../core/configs"
 import { parseIsoDate } from "../../../utils/utils"
-import { mongoClient, MongoCollections } from "../mongo.client"
+import { collection } from "../collections"
+import { mongoRunner } from "../mongoRunner"
 
 export type User = {
 	id: string
@@ -21,20 +21,9 @@ export async function mongoUserList({
 	const tokenFindFilter: any = {}
 	if (email) tokenFindFilter.email = email
 
-	const MongoClient = await mongoClient()
-	const db = MongoClient.db(configs.mongodb.name)
+	const db = await mongoRunner()
 
-	const queryBuilder = db.collection(MongoCollections.USERS).find(tokenFindFilter, {
-		projection: {
-			name: 1,
-			email: 1,
-			organizationId: 1,
-			isAdmin: 1,
-			isVerified: 1,
-			createdAt: 1,
-			modifiedAt: 1,
-		},
-	})
+	const queryBuilder = db.collection(collection.users).find(tokenFindFilter)
 
 	const userList = await queryBuilder.toArray()
 	return userList.map((el) => {

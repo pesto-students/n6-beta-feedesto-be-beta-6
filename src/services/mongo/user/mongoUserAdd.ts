@@ -1,6 +1,7 @@
 import { AlreadyExistError, InternalServerError } from "@hkbyte/webapi"
-import configs from "../../../core/configs"
-import { mongoClient, MongoCollections } from "../mongo.client"
+import { collection } from "../collections"
+
+import { mongoRunner } from "../mongoRunner"
 import { mongoUserList } from "./mongoUserList"
 
 export async function mongoUserAdd({
@@ -14,8 +15,7 @@ export async function mongoUserAdd({
 	organizationId: string
 	isAdmin?: boolean
 }): Promise<string> {
-	const MongoClient = await mongoClient()
-	const db = MongoClient.db(configs.mongodb.name)
+	const db = await mongoRunner()
 
 	// Check for Duplicates
 	const [[userWithEmail]] = await Promise.all([mongoUserList({ email })])
@@ -24,7 +24,7 @@ export async function mongoUserAdd({
 		throw new AlreadyExistError(`User email: ${email} already exist`)
 	}
 
-	const insertUser = await db.collection(MongoCollections.USERS).insertOne({
+	const insertUser = await db.collection(collection.users).insertOne({
 		name,
 		email,
 		organizationId,

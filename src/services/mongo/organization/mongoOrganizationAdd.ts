@@ -1,7 +1,7 @@
-import { AlreadyExistError, InternalServerError } from '@hkbyte/webapi'
-import configs from '../../../core/configs'
-import { mongoClient, MongoCollections } from '../mongo.client'
-import { mongoOrganizationList } from './mongoOrganizationList'
+import { AlreadyExistError, InternalServerError } from "@hkbyte/webapi"
+import { collection } from "../collections"
+import { mongoRunner } from "../mongoRunner"
+import { mongoOrganizationList } from "./mongoOrganizationList"
 
 export async function mongoOrganizationAdd({
 	name,
@@ -10,8 +10,7 @@ export async function mongoOrganizationAdd({
 	name: string
 	userId?: string
 }): Promise<string> {
-	const MongoClient = await mongoClient()
-	const db = MongoClient.db(configs.mongodb.name)
+	const db = await mongoRunner()
 
 	// Check for Duplicates
 	const [[organizationWithName]] = await Promise.all([mongoOrganizationList({ name })])
@@ -20,16 +19,14 @@ export async function mongoOrganizationAdd({
 		throw new AlreadyExistError(`Organization name: ${name} already exist`)
 	}
 
-	const insertOrganization = await db
-		.collection(MongoCollections.ORGANIZATIONS)
-		.insertOne({
-			name,
-			userId,
-			createdAt: new Date(),
-			modifiedAt: new Date(),
-		})
+	const insertOrganization = await db.collection(collection.organizations).insertOne({
+		name,
+		userId,
+		createdAt: new Date(),
+		modifiedAt: new Date(),
+	})
 	if (!insertOrganization?.insertedId) {
-		throw new InternalServerError('Something went wrong: unable to add organization')
+		throw new InternalServerError("Something went wrong: unable to add organization")
 	}
 	return insertOrganization.insertedId.toString()
 }

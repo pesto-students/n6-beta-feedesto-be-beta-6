@@ -1,7 +1,7 @@
-import { ObjectId } from "mongodb"
-import configs from "../../../core/configs"
 import { parseIsoDate } from "../../../utils/utils"
-import { mongoClient, MongoCollections } from "../mongo.client"
+import { collection } from "../collections"
+import { mongoRunner } from "../mongoRunner"
+import { checkAndGetObjectId } from "../utils"
 
 export type Organization = {
 	id: string
@@ -19,22 +19,12 @@ export async function mongoOrganizationList({
 	name?: string
 } = {}): Promise<Organization[]> {
 	const tokenFindFilter: any = {}
-	if (id) tokenFindFilter._id = new ObjectId(id)
+	if (id) tokenFindFilter._id = checkAndGetObjectId(id)
 	if (name) tokenFindFilter.name = name
 
-	const MongoClient = await mongoClient()
-	const db = MongoClient.db(configs.mongodb.name)
+	const db = await mongoRunner()
 
-	const queryBuilder = db
-		.collection(MongoCollections.ORGANIZATIONS)
-		.find(tokenFindFilter, {
-			projection: {
-				name: 1,
-				userId: 1,
-				createdAt: 1,
-				modifiedAt: 1,
-			},
-		})
+	const queryBuilder = db.collection(collection.organizations).find(tokenFindFilter)
 
 	const organizationList = await queryBuilder.toArray()
 	return organizationList.map((el) => {
