@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: 14.x
 
+      - name: check pwd
+        run: ls -la
+
       - name: Install NPM packages
         run: npm install
         shell: bash
