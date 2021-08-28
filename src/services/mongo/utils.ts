@@ -1,7 +1,7 @@
 import { InternalServerError } from "@hkbyte/webapi"
-import { ObjectID } from "mongodb"
+import { ObjectId } from "mongodb"
 
 export function checkAndGetObjectId(val: string) {
-	if (!ObjectID.isValid(val)) return new ObjectID(val)
+	if (ObjectId.isValid(val)) return new ObjectId(val)
 	throw new InternalServerError("Id is invalid")
 }
