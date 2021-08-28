@@ -6,6 +6,7 @@ export type User = {
 	id: string
 	name: string
 	email: string
+	googleUserId: string
 	organizationId: string
 	isAdmin: boolean
 	isVerified: boolean
@@ -14,12 +15,12 @@ export type User = {
 }
 
 export async function mongoUserList({
-	email,
+	googleUserId,
 }: {
-	email?: string
+	googleUserId?: string
 } = {}): Promise<User[]> {
 	const tokenFindFilter: any = {}
-	if (email) tokenFindFilter.email = email
+	if (googleUserId) tokenFindFilter.googleUserId = googleUserId
 
 	const db = await mongoRunner()
 
@@ -32,6 +33,7 @@ export async function mongoUserList({
 			name: el.name,
 			organizationId: el.organizationId,
 			email: el.email,
+			googleUserId: el.googleUserId,
 			isAdmin: el.isAdmin,
 			isVerified: el.isVerified,
 			createdAt: parseIsoDate(el.createdAt),

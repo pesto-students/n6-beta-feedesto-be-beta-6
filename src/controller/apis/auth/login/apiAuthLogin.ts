@@ -1,13 +1,11 @@
 import { ForbiddenError, T, WebApi, _ } from "@hkbyte/webapi"
 import { mongoUserList } from "../../../../services/mongo/user/mongoUserList"
-import { validateEmail } from "../../../../utils/validators"
 import { generateOrganizationAuthToken } from "../../../auth/organization"
 import { generateUserAuthToken } from "../../../auth/user"
 
 type Context = {
 	body: {
-		idToken: string
-		email: string
+		googleUserId: string
 	}
 }
 
@@ -15,17 +13,16 @@ export const apiAuthLogin = new WebApi({
 	endpoint: "/auth/login",
 	requestBodySchema: T.object({
 		idToken: T.string().trim().nonEmpty(),
-		email: validateEmail(),
 	}),
-	handler: async ({ body: { email } }: Context) => {
-		const checkEmailExist = await mongoUserList({ email })
-		if (_.isEmpty(checkEmailExist)) {
-			throw new ForbiddenError("Email does not exist")
+	handler: async ({ body: { googleUserId } }: Context) => {
+		const checkUserExist = await mongoUserList({ googleUserId })
+		if (_.isEmpty(checkUserExist)) {
+			throw new ForbiddenError("User does not exist")
 		}
 
-		if (checkEmailExist[0].isAdmin) {
+		if (checkUserExist[0].isAdmin) {
 			return generateOrganizationAuthToken({
-				organizationId: checkEmailExist[0].organizationId,
+				organizationId: checkUserExist[0].organizationId,
 			})
 		}
 

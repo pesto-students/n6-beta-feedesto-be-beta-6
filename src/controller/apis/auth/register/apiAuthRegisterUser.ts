@@ -8,6 +8,7 @@ type Context = {
 	body: {
 		name: string
 		email: string
+		googleUserId: string
 		organizationId: string
 	}
 }
@@ -17,19 +18,18 @@ export const apiAuthRegisterUser = new WebApi({
 	requestBodySchema: T.object({
 		name: T.string().trim().nonEmpty(),
 		email: validateEmail(),
+		googleUserId: T.string().trim().nonEmpty(),
 		organizationId: T.string().trim().nonEmpty(),
 	}),
-	handler: async ({ body: { email, name, organizationId } }: Context) => {
-		const checkOrganizationExist = await mongoOrganizationList({ id: organizationId })
+	handler: async ({ body }: Context) => {
+		const checkOrganizationExist = await mongoOrganizationList({
+			id: body.organizationId,
+		})
 		if (_.isEmpty(checkOrganizationExist)) {
 			throw new BadRequestError("Organization not found !")
 		}
 
-		const userId = await mongoUserAdd({
-			email,
-			name,
-			organizationId,
-		})
+		const userId = await mongoUserAdd(body)
 
 		return generateUserAuthToken({
 			userId,
