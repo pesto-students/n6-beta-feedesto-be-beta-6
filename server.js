@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const bugsnagClient = require('./config/bugsnag');
 const { requestHandler, errorHandler } = bugsnagClient.getPlugin('express');
@@ -16,6 +17,7 @@ class Server {
   }
 
   setup() {
+    this.app.use(cors());
     this.app.use(requestHandler);
     this.app.use(express.json());
     this.app.use('/', router);
