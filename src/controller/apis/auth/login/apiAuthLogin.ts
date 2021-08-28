@@ -1,8 +1,8 @@
-import { ForbiddenError, T, WebApi, _ } from '@hkbyte/webapi'
-import { mongoUserList } from '../../../../services/mongo/user/mongoUserList'
-import { validateEmail } from '../../../../utils/validators'
-import { generateOrganizationAuthToken } from '../../../auth/organization'
-import { generateUserAuthToken } from '../../../auth/user'
+import { ForbiddenError, T, WebApi, _ } from "@hkbyte/webapi"
+import { mongoUserList } from "../../../../services/mongo/user/mongoUserList"
+import { validateEmail } from "../../../../utils/validators"
+import { generateOrganizationAuthToken } from "../../../auth/organization"
+import { generateUserAuthToken } from "../../../auth/user"
 
 type Context = {
 	body: {
@@ -11,8 +11,8 @@ type Context = {
 	}
 }
 
-export const apiUserLogin = new WebApi({
-	endpoint: '/auth/login',
+export const apiAuthLogin = new WebApi({
+	endpoint: "/auth/login",
 	requestBodySchema: T.object({
 		idToken: T.string().trim().nonEmpty(),
 		email: validateEmail(),
@@ -20,7 +20,7 @@ export const apiUserLogin = new WebApi({
 	handler: async ({ body: { email } }: Context) => {
 		const checkEmailExist = await mongoUserList({ email })
 		if (_.isEmpty(checkEmailExist)) {
-			throw new ForbiddenError('Email does not exist')
+			throw new ForbiddenError("Email does not exist")
 		}
 
 		if (checkEmailExist[0].isAdmin) {
@@ -30,7 +30,7 @@ export const apiUserLogin = new WebApi({
 		}
 
 		return generateUserAuthToken({
-			userId: 'user.id',
+			userId: "user.id",
 		})
 	},
 })

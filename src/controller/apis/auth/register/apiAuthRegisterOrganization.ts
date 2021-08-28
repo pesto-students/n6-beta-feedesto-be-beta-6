@@ -1,11 +1,11 @@
-import { T, WebApi } from '@hkbyte/webapi'
-import { mongoOrganizationAdd } from '../../../../services/mongo/organization/mongoOrganizationAdd'
-import { mongoOrganizationUpdate } from '../../../../services/mongo/organization/mongoOrganizationUpdate'
-import { mongoUserAdd } from '../../../../services/mongo/user/mongoUserAdd'
-import { validateEmail } from '../../../../utils/validators'
-import { AuthRole } from '../../../auth'
-import { generateOrganizationAuthToken } from '../../../auth/organization'
-import authMiddleware from '../../../middlewares/authMiddleware'
+import { T, WebApi } from "@hkbyte/webapi"
+import { mongoOrganizationAdd } from "../../../../services/mongo/organization/mongoOrganizationAdd"
+import { mongoOrganizationUpdate } from "../../../../services/mongo/organization/mongoOrganizationUpdate"
+import { mongoUserAdd } from "../../../../services/mongo/user/mongoUserAdd"
+import { validateEmail } from "../../../../utils/validators"
+import { AuthRole } from "../../../auth"
+import { generateOrganizationAuthToken } from "../../../auth/organization"
+import authMiddleware from "../../../middlewares/authMiddleware"
 
 type Context = {
 	body: {
@@ -15,8 +15,8 @@ type Context = {
 	}
 }
 
-export const apiUserLogin = new WebApi({
-	endpoint: '/auth/register/organization',
+export const apiAuthRegisterOrganization = new WebApi({
+	endpoint: "/auth/register/organization",
 	requestBodySchema: T.object({
 		name: T.string().trim().nonEmpty(),
 		organizationName: T.string().trim().nonEmpty(),
