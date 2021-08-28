@@ -11,7 +11,7 @@ module.exports = class UserDbModel {
    */
   findAll() {
     try {
-      return this.mongooseModel.find({}).lean();
+      return this.mongooseModel.find({ $or: [{ isApproved: true }, { role: 'admin' }] }).lean();
     } catch (error) {
       console.log(error);
 

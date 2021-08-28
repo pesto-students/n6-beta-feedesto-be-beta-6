@@ -1,9 +1,10 @@
 const moment = require('moment');
 
 module.exports = class DiscussionService {
-  constructor({ discussionDbModel, commentDbModel }) {
+  constructor({ discussionDbModel, commentDbModel, eventEmitter }) {
     this.discussionDbModel = discussionDbModel;
     this.commentDbModel = commentDbModel;
+    this.eventEmitter = eventEmitter;
   }
 
   validateByUserUpdate = async ({ comment, user }, id) => {
@@ -160,6 +161,24 @@ module.exports = class DiscussionService {
         viewerIds,
         createdById: user._id
       });
+
+      (participantIds || []).forEach(user =>
+        this.eventEmitter.emit('emitToFrontEnd', {
+          topic: `${discussion.organizationId}-${user}`,
+          object: discussion,
+          model: 'discussion',
+          action: 'create'
+        })
+      );
+      (viewerIds || []).forEach(user =>
+        this.eventEmitter.emit('emitToFrontEnd', {
+          topic: `${discussion.organizationId}-${user}`,
+          object: discussion,
+          model: 'discussion',
+          action: 'create'
+        })
+      );
+
       return discussion;
     } catch (error) {
       console.log(error);
@@ -218,7 +237,7 @@ module.exports = class DiscussionService {
         });
       }
 
-      return this.fetchOne(id, user);
+      return this.fetchOne(id, user, true);
     } catch (error) {
       console.log(error);
 
@@ -242,7 +261,7 @@ module.exports = class DiscussionService {
     }
   };
 
-  fetchOne = async (id, user) => {
+  fetchOne = async (id, user, isUpdated) => {
     try {
       let discussion = null;
       let comments = null;
@@ -253,6 +272,26 @@ module.exports = class DiscussionService {
         discussion = await this.discussionDbModel.findByIdFormatted(id, user.organizationId, user._id);
         comments = await this.commentDbModel.findAllByDisscussionId(id, user._id);
       }
+
+      if (isUpdated) {
+        (discussion.participantIds || []).forEach(user =>
+          this.eventEmitter.emit('emitToFrontEnd', {
+            topic: `${discussion.organizationId}-${user}`,
+            object: { ...discussion, comments },
+            model: 'discussion',
+            action: 'update'
+          })
+        );
+        (discussion.viewerIds || []).forEach(user =>
+          this.eventEmitter.emit('emitToFrontEnd', {
+            topic: `${discussion.organizationId}-${user}`,
+            object: { ...discussion, comments },
+            model: 'discussion',
+            action: 'update'
+          })
+        );
+      }
+
       return { ...discussion, comments };
     } catch (error) {
       console.log(error);
@@ -270,8 +309,33 @@ module.exports = class DiscussionService {
         throw error;
       }
 
+      const oldDiscussion = await this.discussionDbModel.findById(id);
+
+      if (!oldDiscussion) {
+        error = new Error('Discussion is not found');
+        error.status = 404;
+        throw error;
+      }
+
       await this.discussionDbModel.deleteById(id);
       await this.commentDbModel.deleteByDiscussionId(id);
+
+      (oldDiscussion.participantIds || []).forEach(user =>
+        this.eventEmitter.emit('emitToFrontEnd', {
+          topic: `${oldDiscussion.organizationId}-${user}`,
+          object: oldDiscussion,
+          model: 'discussion',
+          action: 'create'
+        })
+      );
+      (oldDiscussion.viewerIds || []).forEach(user =>
+        this.eventEmitter.emit('emitToFrontEnd', {
+          topic: `${oldDiscussion.organizationId}-${user}`,
+          object: oldDiscussion,
+          model: 'discussion',
+          action: 'create'
+        })
+      );
 
       return { discussion: id };
     } catch (error) {

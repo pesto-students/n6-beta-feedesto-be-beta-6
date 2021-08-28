@@ -9,10 +9,11 @@ const client = new OAuth2Client(process.env.CLIENT_ID || CLIENT_ID);
 const { signToken, isKeyExpired } = require('../../helpers/user');
 
 module.exports = class AuthenticationService {
-  constructor({ userDbModel, organizationDbModel }) {
+  constructor({ userDbModel, organizationDbModel, eventEmitter }) {
     this.userDbModel = userDbModel;
     this.organizationDbModel = organizationDbModel;
     this.accessTokenValidity = 60 * 60; // 60mins
+    this.eventEmitter = eventEmitter;
   }
 
   authenticateUserByToken(payload) {

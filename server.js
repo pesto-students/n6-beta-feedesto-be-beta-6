@@ -7,6 +7,10 @@ const { requestHandler, errorHandler } = bugsnagClient.getPlugin('express');
 const { setup } = require('./awilix.js');
 const apiErrorHandler = require('./error/api-error-handler.js');
 
+const eventEmitter = require('./src/helpers/emitEvent');
+
+const frontEndWebsocket = require('./src/socket');
+
 setup();
 const router = require('./src/api');
 
@@ -28,6 +32,9 @@ class Server {
   run(port) {
     this.server = this.app.listen(port, () => {
       console.log(`server running on port ${port}`);
+    });
+    eventEmitter.on('emitToFrontEnd', ({ topic, model, object, action }) => {
+      frontEndWebsocket.emit(topic, { model, object, action });
     });
   }
 

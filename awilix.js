@@ -1,10 +1,18 @@
 const awilix = require('awilix');
 
-const { AuthenticationService, OrganizationService, DiscussionService, CommentService } = require('./src/service');
+const {
+  AuthenticationService,
+  OrganizationService,
+  DiscussionService,
+  CommentService,
+  UserService
+} = require('./src/service');
 
 const { UserDbModel, DiscussionDbModel, CommentDbModel, OrganizationDbModel } = require('./src/dbModel');
 
 const db = require('./src/db');
+
+const eventEmitter = require('./src/helpers/emitEvent');
 
 const container = awilix.createContainer({
   injectionMode: awilix.InjectionMode.PROXY
@@ -15,9 +23,12 @@ function setup() {
     // inject database
     db: awilix.asValue(db),
 
+    eventEmitter: awilix.asValue(eventEmitter),
+
     authenticationService: awilix.asClass(AuthenticationService).scoped(),
     organizationService: awilix.asClass(OrganizationService).scoped(),
     discussionService: awilix.asClass(DiscussionService).scoped(),
+    userService: awilix.asClass(UserService).scoped(),
     commentService: awilix.asClass(CommentService).scoped(),
 
     userDbModel: awilix.asClass(UserDbModel).scoped(),
