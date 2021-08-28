@@ -36,7 +36,7 @@ const create = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const discussionService = req.container.resolve('discussionService');
-    const discussion = await discussionService.update(req.body, req.user);
+    const discussion = await discussionService.update(req.params.id, req.body, req.user);
     res.status(201).json({
       success: true,
       discussion
@@ -70,7 +70,7 @@ const fetchOne = async (req, res, next) => {
 const deleteOne = async (req, res, next) => {
   try {
     const discussionService = req.container.resolve('discussionService');
-    const discussion = await discussionService.fetchAll(req.params.id, req.user);
+    const discussion = await discussionService.delete(req.params.id, req.user);
     res.status(201).json({
       success: true,
       discussion,

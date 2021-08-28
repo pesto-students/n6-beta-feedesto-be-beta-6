@@ -13,6 +13,8 @@ module.exports = class UserDbModel {
     try {
       return this.mongooseModel.find({}).lean();
     } catch (error) {
+      console.log(error);
+
       throw error;
     }
   }
@@ -29,6 +31,8 @@ module.exports = class UserDbModel {
         .select('_id')
         .lean();
     } catch (error) {
+      console.log(error);
+
       throw error;
     }
   }
@@ -43,6 +47,8 @@ module.exports = class UserDbModel {
       return this.mongooseModel.create(user);
     } catch (error) {
       error.meta = { ...error.meta, 'userDbModel.create': { user } };
+      console.log(error);
+
       throw error;
     }
   }
@@ -57,6 +63,8 @@ module.exports = class UserDbModel {
       return this.mongooseModel.findById(userId).lean();
     } catch (error) {
       error.meta = { ...error.meta, 'userDbModel.findById': { userId } };
+      console.log(error);
+
       throw error;
     }
   }
@@ -71,6 +79,8 @@ module.exports = class UserDbModel {
       return this.mongooseModel.findOne({ email }).lean();
     } catch (error) {
       error.meta = { ...error.meta, 'userDbModel.findByEmail': { email } };
+      console.log(error);
+
       throw error;
     }
   }
@@ -86,6 +96,8 @@ module.exports = class UserDbModel {
       return this.mongooseModel.findByIdAndUpdate(userId, updateData, { new: true }).lean();
     } catch (error) {
       error.meta = { ...error.meta, 'userDbModel.findByIdAndUpdate': { userId, updateData } };
+      console.log(error);
+
       throw error;
     }
   }
@@ -99,6 +111,8 @@ module.exports = class UserDbModel {
       return this.mongooseModel.deleteOne(userId).lean();
     } catch (error) {
       error.meta = { ...error.meta, 'userDbModel.findByIdAndUpdate': { userId, updateData } };
+      console.log(error);
+
       throw error;
     }
   }

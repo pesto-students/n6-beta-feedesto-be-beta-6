@@ -1,5 +1,3 @@
-const { ObjectId } = require('mongoose').Types;
-
 const DiscussionModel = require('./schema');
 
 module.exports = class DiscussionDbModel {
@@ -29,6 +27,7 @@ module.exports = class DiscussionDbModel {
 
       return this.mongooseModel.find({ organizationId }).lean();
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }
@@ -43,6 +42,8 @@ module.exports = class DiscussionDbModel {
       return this.mongooseModel.create(discussion);
     } catch (error) {
       error.meta = { ...error.meta, 'discussionDbModel.create': { discussion } };
+      console.log(error);
+
       throw error;
     }
   }
@@ -57,6 +58,8 @@ module.exports = class DiscussionDbModel {
       return this.mongooseModel.findById(discussionId).lean();
     } catch (error) {
       error.meta = { ...error.meta, 'discussionDbModel.findById': { discussionId } };
+      console.log(error);
+
       throw error;
     }
   }
@@ -71,93 +74,95 @@ module.exports = class DiscussionDbModel {
       let query;
 
       if (userId) {
-        query = [
-          { $match: { _id: ObjectId(id), organizationId: ObjectId(organizationId) } },
-          {
-            $lookup: {
-              from: 'users',
-              localField: 'createdById',
-              foreignField: '_id',
-              as: 'createdById'
-            }
-          },
-          { $unwind: '$createdById' },
-          {
-            $lookup: {
-              from: 'comments',
-              let: { discussionId: '$_id', commentableType: 'Discussion' },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        { $eq: ['$discussionId', '$$discussionId'] },
-                        { $eq: ['$commentableType', '$$commentableType'] }
-                      ]
-                    }
-                  }
-                },
-                {
-                  $lookup: {
-                    from: 'users',
-                    localField: 'commentedByUserId',
-                    foreignField: '_id',
-                    as: 'commentedByUserId'
-                  }
-                },
-                { $unwind: '$commentedByUserId' },
-                { $addFields: { commentedByUserId: { uniqueId: '$commentedByUserId.uniqueId' } } }
-              ],
-              as: 'comments'
-            }
-          }
-        ];
+        // query = [
+        //   { $match: { _id: ObjectId(id), organizationId: ObjectId(organizationId) } },
+        //   {
+        //     $lookup: {
+        //       from: 'users',
+        //       localField: 'createdById',
+        //       foreignField: '_id',
+        //       as: 'createdById'
+        //     }
+        //   },
+        //   { $unwind: '$createdById' },
+        //   {
+        //     $lookup: {
+        //       from: 'comments',
+        //       let: { discussionId: '$_id', commentableType: 'Discussion' },
+        //       pipeline: [
+        //         {
+        //           $match: {
+        //             $expr: {
+        //               $and: [
+        //                 { $eq: ['$discussionId', '$$discussionId'] },
+        //                 { $eq: ['$commentableType', '$$commentableType'] }
+        //               ]
+        //             }
+        //           }
+        //         },
+        //         {
+        //           $lookup: {
+        //             from: 'users',
+        //             localField: 'commentedByUserId',
+        //             foreignField: '_id',
+        //             as: 'commentedByUserId'
+        //           }
+        //         },
+        //         { $unwind: '$commentedByUserId' },
+        //         { $addFields: { commentedByUserId: { uniqueId: '$commentedByUserId.uniqueId' } } }
+        //       ],
+        //       as: 'comments'
+        //     }
+        //   }
+        // ];
       } else {
-        query = [
-          { $match: { _id: ObjectId(id), organizationId: ObjectId(organizationId) } },
-          {
-            $lookup: {
-              from: 'users',
-              localField: 'createdById',
-              foreignField: '_id',
-              as: 'createdById'
-            }
-          },
-          { $unwind: '$createdById' },
-          {
-            $lookup: {
-              from: 'comments',
-              let: { discussionId: '$_id', commentableType: 'Discussion' },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        { $eq: ['$discussionId', '$$discussionId'] },
-                        { $gte: ['$commentableType', '$$commentableType'] }
-                      ]
-                    }
-                  }
-                },
-                {
-                  $lookup: {
-                    from: 'users',
-                    localField: 'commentedByUserId',
-                    foreignField: '_id',
-                    as: 'commentedByUserId'
-                  }
-                },
-                { $unwind: '$commentedByUserId' }
-              ],
-              as: 'comments'
-            }
-          }
-        ];
+        // query = [
+        //   { $match: { _id: ObjectId(id), organizationId: ObjectId(organizationId) } },
+        //   {
+        //     $lookup: {
+        //       from: 'users',
+        //       localField: 'createdById',
+        //       foreignField: '_id',
+        //       as: 'createdById'
+        //     }
+        //   },
+        //   { $unwind: '$createdById' },
+        //   {
+        //     $lookup: {
+        //       from: 'comments',
+        //       let: { discussionId: '$_id', commentableType: 'Discussion' },
+        //       pipeline: [
+        //         {
+        //           $match: {
+        //             $expr: {
+        //               $and: [
+        //                 { $eq: ['$discussionId', '$$discussionId'] },
+        //                 { $gte: ['$commentableType', '$$commentableType'] }
+        //               ]
+        //             }
+        //           }
+        //         },
+        //         {
+        //           $lookup: {
+        //             from: 'users',
+        //             localField: 'commentedByUserId',
+        //             foreignField: '_id',
+        //             as: 'commentedByUserId'
+        //           }
+        //         },
+        //         { $unwind: '$commentedByUserId' }
+        //       ],
+        //       as: 'comments'
+        //     }
+        //   }
+        // ];
       }
 
-      return this.mongooseModel.aggregate(query).allowDiskUse(true);
+      return this.mongooseModel.findOne({ _id: id }).lean();
     } catch (error) {
       error.meta = { ...error.meta, 'discussionDbModel.findById': { id, organizationId, userId } };
+      console.log(error);
+
       throw error;
     }
   }
@@ -173,19 +178,24 @@ module.exports = class DiscussionDbModel {
       return this.mongooseModel.findByIdAndUpdate(discussionId, updateData, { new: true }).lean();
     } catch (error) {
       error.meta = { ...error.meta, 'discussionDbModel.findByIdAndUpdate': { discussionId, updateData } };
+      console.log(error);
+
       throw error;
     }
   }
+
   /**
    *
    * @param {String} discussionId
    * @returns {string}
    */
-  deleteById(discussionId) {
+  deleteByDisscussionId(discussionId) {
     try {
-      return this.mongooseModel.deleteOne(discussionId).lean();
+      return this.mongooseModel.deleteOne({ _id: discussionId }).lean();
     } catch (error) {
-      error.meta = { ...error.meta, 'discussionDbModel.findByIdAndUpdate': { discussionId, updateData } };
+      error.meta = { ...error.meta, 'discussionDbModel.findByIdAndUpdate': { discussionId } };
+      console.log(error);
+
       throw error;
     }
   }

@@ -17,9 +17,9 @@ const CommentSchema = new Schema(
       index: true,
       required: true
     },
-    discussionId: {
+    commentableId: {
       type: Schema.Types.ObjectId,
-      ref: 'Discussion',
+      refPath: 'commentableType',
       index: true,
       required: true
     },
@@ -35,11 +35,11 @@ const CommentSchema = new Schema(
       index: true,
       default: []
     },
-    childrenIds: {
-      type: [Schema.Types.ObjectId],
-      ref: 'Comment',
-      index: true
-    },
+    // childrenIds: {
+    //   type: [Schema.Types.ObjectId],
+    //   ref: 'Comment',
+    //   index: true
+    // },
     downVoteIds: {
       type: [Schema.Types.ObjectId],
       ref: 'User',

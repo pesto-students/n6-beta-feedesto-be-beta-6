@@ -25,7 +25,7 @@ const jwtLogin = new JwtStrategy(jwtOptions, async (req, payload, done) => {
 
 const localOptions = {
   // key in the request body that will be passed to the callback
-  usernameField: 'name',
+  usernameField: 'googleToken',
   passwordField: 'googleToken',
   // set this to true to get access to req in the callback along with usernameField, password and done callbacks
   passReqToCallback: true
@@ -40,6 +40,7 @@ const localLogin = new LocalStrategy(localOptions, async (req, name, googleToken
     done(response.done, false, null);
   } catch (error) {
     error.status = 401;
+    console.log(error);
     done(error);
   }
 });

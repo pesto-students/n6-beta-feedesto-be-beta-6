@@ -26,6 +26,8 @@ module.exports = class AuthenticationService {
 
         return resolve({ success: false });
       } catch (error) {
+        console.log(error);
+
         reject(error);
       }
     });
@@ -118,7 +120,7 @@ module.exports = class AuthenticationService {
             });
           }
         } else {
-          if (!userByEmail.key || isKeyExpired(userByEmail.keyExpiry)) {
+          if (userByEmail && (!userByEmail.key || isKeyExpired(userByEmail.keyExpiry))) {
             const key = `${Date.now()}${randomstring.generate()}`;
             const keyExpiry = moment()
               .add(3, 'M')
@@ -129,13 +131,20 @@ module.exports = class AuthenticationService {
               key,
               keyExpiry
             });
+          } else {
+            user = userByEmail;
           }
         }
 
-        const token = await signToken({ _id: user._id, key: user.key }, this.accessTokenValidity);
+        if (user) {
+          const token = await signToken({ _id: user._id, key: user.key }, this.accessTokenValidity);
 
-        return resolve({ token: `JWT ${token}`, user, success: true });
+          return resolve({ token: `JWT ${token}`, user, success: true });
+        }
+
+        return reject({ success: false });
       } catch (error) {
+        console.log(error);
         reject(error);
       }
     });

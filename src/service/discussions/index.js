@@ -1,12 +1,33 @@
 const moment = require('moment');
 
 module.exports = class DiscussionService {
-  constructor({ discussionDbModel }) {
+  constructor({ discussionDbModel, commentDbModel }) {
     this.discussionDbModel = discussionDbModel;
+    this.commentDbModel = commentDbModel;
   }
 
+  validateByUserUpdate = async ({ comment, user }, id) => {
+    try {
+      let error;
+
+      if (id) {
+        const discussion = await this.discussionDbModel.findById(id);
+        if (comment && discussion && !discussion.participantIds.map(c => c.toString()).includes(user._id.toString())) {
+          error = new Error("Sorry you can't reply to this discussion");
+          error.status = 422;
+          throw error;
+        }
+      }
+
+      return true;
+    } catch (erro) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   validate = async (
-    { title, description, startTime, endTime, participantIds, viewerIds, organizationId, user },
+    { title, description, comment, startTime, endTime, participantIds, viewerIds, organizationId, user },
     id
   ) => {
     try {
@@ -108,6 +129,8 @@ module.exports = class DiscussionService {
 
       return true;
     } catch (error) {
+      console.log(error);
+
       throw error;
     }
   };
@@ -139,6 +162,66 @@ module.exports = class DiscussionService {
       });
       return discussion;
     } catch (error) {
+      console.log(error);
+
+      throw error;
+    }
+  };
+
+  update = async (id, body, user) => {
+    try {
+      const { title, description, startTime, endTime, participantIds = [], viewerIds = [], comment = '' } = body;
+
+      let discussion;
+
+      if (user.role === 'admin') {
+        await this.validate({
+          title,
+          comment,
+          description,
+          startTime,
+          endTime,
+          participantIds,
+          viewerIds,
+          organizationId: user.organizationId,
+          user,
+          id
+        });
+
+        discussion = await this.discussionDbModel.findByIdAndUpdate(id, {
+          title,
+          description,
+          startTime: startTime ? moment(startTime).toDate() : undefined,
+          endTime: endTime ? moment(endTime).toDate() : undefined,
+          participantIds,
+          organizationId: user.organizationId,
+          viewerIds,
+          createdById: user._id
+        });
+
+        await this.commentDbModel.create({
+          title: comment,
+          commentedById: user._id,
+          commentableId: id,
+          commentableType: 'Discussion',
+          organizationId: user.organizationId
+        });
+      } else {
+        await this.validateByUserUpdate({ user, commet }, id);
+
+        await this.commentDbModel.create({
+          title: comment,
+          commentedById: user._id,
+          commentableId: id,
+          commentableType: 'Discussion',
+          organizationId: user.organizationId
+        });
+      }
+
+      return this.fetchOne(id, user);
+    } catch (error) {
+      console.log(error);
+
       throw error;
     }
   };
@@ -153,6 +236,8 @@ module.exports = class DiscussionService {
       }
       return discussions;
     } catch (error) {
+      console.log(error);
+
       throw error;
     }
   };
@@ -160,12 +245,35 @@ module.exports = class DiscussionService {
   fetchOne = async (id, user) => {
     try {
       let discussion = null;
+      let comments = null;
       if (user.role === 'admin') {
         discussion = await this.discussionDbModel.findByIdFormatted(id, user.organizationId);
+        comments = await this.commentDbModel.findAllByDisscussionId(id);
       } else {
         discussion = await this.discussionDbModel.findByIdFormatted(id, user.organizationId, user._id);
+        comments = await this.commentDbModel.findAllByDisscussionId(id, user._id);
       }
-      return discussion;
+      return { ...discussion, comments };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  delete = async (id, user) => {
+    try {
+      let error;
+
+      if (user.role !== 'admin') {
+        error = new Error('you dont have permissions to delete the discussion');
+        error.status = 422;
+        throw error;
+      }
+
+      await this.discussionDbModel.deleteById(id);
+      await this.commentDbModel.deleteByDiscussionId(id);
+
+      return { discussion: id };
     } catch (error) {
       console.log(error);
       throw error;

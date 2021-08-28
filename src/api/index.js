@@ -1,10 +1,14 @@
 const express = require('express');
+
 const authRouter = require('./auth/routes');
 
 const { container } = require('../../awilix');
+
 const { requireUserAuth } = require('./authentication');
+
 const organizationRoutes = require('./organization/routes');
 const discussionRoutes = require('./discussion/routes');
+const commentRoutes = require('./comment/routes');
 
 const router = express.Router();
 router.use(
@@ -24,6 +28,16 @@ router.use(
   },
   requireUserAuth,
   discussionRoutes
+);
+
+router.use(
+  '/comment',
+  (req, res, next) => {
+    req.container = container;
+    next();
+  },
+  requireUserAuth,
+  commentRoutes
 );
 
 router.use(

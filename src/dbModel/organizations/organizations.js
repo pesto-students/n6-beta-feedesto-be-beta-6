@@ -13,6 +13,8 @@ module.exports = class OrganizationDbModel {
     try {
       return this.mongooseModel.find({}).lean();
     } catch (error) {
+      console.log(error);
+
       throw error;
     }
   }
@@ -27,6 +29,8 @@ module.exports = class OrganizationDbModel {
       return this.mongooseModel.create(organization);
     } catch (error) {
       error.meta = { ...error.meta, 'organizationDbModel.create': { organization } };
+      console.log(error);
+
       throw error;
     }
   }
@@ -41,6 +45,8 @@ module.exports = class OrganizationDbModel {
       return this.mongooseModel.findById(organizationId).lean();
     } catch (error) {
       error.meta = { ...error.meta, 'organizationDbModel.findById': { organizationId } };
+      console.log(error);
+
       throw error;
     }
   }
@@ -56,6 +62,8 @@ module.exports = class OrganizationDbModel {
       return this.mongooseModel.findByIdAndUpdate(organizationId, updateData, { new: true }).lean();
     } catch (error) {
       error.meta = { ...error.meta, 'organizationDbModel.findByIdAndUpdate': { organizationId, updateData } };
+      console.log(error);
+
       throw error;
     }
   }
@@ -69,6 +77,8 @@ module.exports = class OrganizationDbModel {
       return this.mongooseModel.deleteOne(organizationId).lean();
     } catch (error) {
       error.meta = { ...error.meta, 'organizationDbModel.findByIdAndUpdate': { organizationId, updateData } };
+      console.log(error);
+
       throw error;
     }
   }
