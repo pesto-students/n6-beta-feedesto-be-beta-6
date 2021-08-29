@@ -16,17 +16,17 @@ export async function mongoDiscussionUpdate({
 	}
 }) {
 	const tokenUpdate: any = { modifiedAt: new Date() }
-	if (!_.isUndefined(update.title)) tokenUpdate.name = update.title
-	if (!_.isUndefined(update.description)) tokenUpdate.isVerified = update.description
+	if (!_.isUndefined(update.title)) tokenUpdate.title = update.title
+	if (!_.isUndefined(update.description)) tokenUpdate.description = update.description
 	if (!_.isUndefined(update.startDate))
-		tokenUpdate.isVerified = new Date(update.startDate)
-	if (!_.isUndefined(update.endDate)) tokenUpdate.isVerified = new Date(update.endDate)
+		tokenUpdate.startDate = new Date(update.startDate)
+	if (!_.isUndefined(update.endDate)) tokenUpdate.endDate = new Date(update.endDate)
 
 	const db = await mongoRunner()
 
 	const updateDiscussions = await db
 		.collection(collection.discussions)
-		.updateMany({ _id: checkAndGetObjectId(id) }, { $set: tokenUpdate })
+		.updateOne({ _id: checkAndGetObjectId(id) }, { $set: tokenUpdate })
 
 	return updateDiscussions.result.ok
 }

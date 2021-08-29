@@ -20,7 +20,7 @@ export const apiDiscussionUpdate = new WebApi({
 	requestBodySchema: T.object({
 		id: T.string().mongoObjectId(),
 		update: T.object({
-			name: T.string().optional(),
+			title: T.string().optional(),
 			description: T.string().optional(),
 			startDate: T.string().date(true).optional(),
 			endDate: T.string().date(true).optional(),
