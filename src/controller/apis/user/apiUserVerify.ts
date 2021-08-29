@@ -14,7 +14,7 @@ export const apiUserVerify = new WebApi({
 	endpoint: "/user/verify",
 	requestBodySchema: T.object({
 		userId: T.string().mongoObjectId(),
-		isVerified: T.boolean().optional(),
+		status: T.boolean().optional(),
 	}),
 	method: RequestMethod.PUT,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
