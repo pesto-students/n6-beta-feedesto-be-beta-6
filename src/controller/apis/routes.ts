@@ -16,6 +16,7 @@ import { apiOrganizationUpdate } from "./organization/apiOrganizationUpdate"
 import { apiUserDelete } from "./user/apiUserDelete"
 import { apiUserList } from "./user/apiUserList"
 import { apiUserUpdate } from "./user/apiUserUpdate"
+import { apiUserVerify } from "./user/apiUserVerify"
 
 export default [
 	apiOrganizationList,
@@ -25,6 +26,7 @@ export default [
 	apiAuthRegisterOrganization,
 	apiUserList,
 	apiUserUpdate,
+	apiUserVerify,
 	apiUserDelete,
 	apiDiscussionList,
 	apiDiscussionAdd,
