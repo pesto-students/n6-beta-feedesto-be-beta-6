@@ -1,5 +1,6 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
 import { mongoDiscussionAdd } from "../../../services/mongo/discussion/mongoDiscussionAdd"
+import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
 
@@ -12,6 +13,7 @@ type Context = {
 		participantIds: string[]
 		viewerIds: string[]
 	}
+	locals: RequestLocals
 }
 
 export const apiDiscussionAdd = new WebApi({
@@ -26,8 +28,9 @@ export const apiDiscussionAdd = new WebApi({
 	}),
 	method: RequestMethod.POST,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
-	handler: async ({ body }: Context) => {
-		const created = await mongoDiscussionAdd(body)
+	handler: async ({ body, locals }: Context) => {
+		const organizationId = locals.session.organizationId
+		const created = await mongoDiscussionAdd({ ...body, organizationId })
 		return { created }
 	},
 })

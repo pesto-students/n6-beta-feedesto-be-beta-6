@@ -37,7 +37,7 @@ export async function mongoDiscussionList({
 
 	const queryBuilder = db.collection(collection.discussions).find(tokenFindFilter)
 
-	queryBuilder.sort("createdAt")
+	// queryBuilder.sort("createdAt")
 
 	const userList = await queryBuilder.toArray()
 	return userList.map((el) => {

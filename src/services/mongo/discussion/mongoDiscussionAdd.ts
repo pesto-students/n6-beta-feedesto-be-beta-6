@@ -6,6 +6,7 @@ export async function mongoDiscussionAdd({
 	title,
 	description,
 	startDate,
+	organizationId,
 	endDate,
 	participantIds,
 	viewerIds,
@@ -13,6 +14,7 @@ export async function mongoDiscussionAdd({
 	title: string
 	description: string
 	startDate: string
+	organizationId: string
 	endDate: string
 	participantIds: string[]
 	viewerIds: string[]
@@ -26,6 +28,7 @@ export async function mongoDiscussionAdd({
 		endDate: new Date(endDate),
 		participantIds,
 		viewerIds,
+		organizationId,
 		createdAt: new Date(),
 		modifiedAt: new Date(),
 	})
