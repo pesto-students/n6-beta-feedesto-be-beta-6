@@ -7,6 +7,7 @@ import authMiddleware from "../../middlewares/authMiddleware"
 type Context = {
 	query: {
 		id?: string
+		participantId?: string
 		asParticipant?: boolean
 	}
 	locals: RequestLocals

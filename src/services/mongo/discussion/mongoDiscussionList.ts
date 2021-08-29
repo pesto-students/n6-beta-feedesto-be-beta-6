@@ -29,8 +29,8 @@ export async function mongoDiscussionList({
 } = {}): Promise<Discussion[]> {
 	const tokenFindFilter: any = {}
 	if (id) tokenFindFilter._id = checkAndGetObjectId(id)
-	if (participantId) tokenFindFilter.participantId = participantId
-	if (viewerId) tokenFindFilter.viewerId = viewerId
+	if (participantId) tokenFindFilter.participantIds = participantId
+	if (viewerId) tokenFindFilter.viewerIds = viewerId
 	if (organizationId) tokenFindFilter.organizationId = organizationId
 
 	const db = await mongoRunner()
