@@ -16,11 +16,14 @@ export type User = {
 
 export async function mongoUserList({
 	googleUserId,
+	organizationId,
 }: {
 	googleUserId?: string
+	organizationId?: string
 } = {}): Promise<User[]> {
 	const tokenFindFilter: any = {}
 	if (googleUserId) tokenFindFilter.googleUserId = googleUserId
+	if (organizationId) tokenFindFilter.organizationId = organizationId
 
 	const db = await mongoRunner()
 
