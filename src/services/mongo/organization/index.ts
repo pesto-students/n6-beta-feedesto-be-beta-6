@@ -48,6 +48,8 @@ export async function fetchOrganizations({
 	if (name) {
 		return await organizationModel.findBy({ name })
 	}
+
+	return organizationModel.findAll()
 }
 
 export async function updateOrganization({
