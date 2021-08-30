@@ -1,6 +1,8 @@
 import { T, WebApi } from "@hkbyte/webapi"
-import { mongoOrganizationAdd } from "../../../../services/mongo/organization/mongoOrganizationAdd"
-import { mongoOrganizationUpdate } from "../../../../services/mongo/organization/mongoOrganizationUpdate"
+import {
+	addOrganization,
+	updateOrganization,
+} from "../../../../services/mongo/organization"
 import { mongoUserAdd } from "../../../../services/mongo/user/mongoUserAdd"
 import { validateEmail } from "../../../../utils/validators"
 import { generateOrganizationAuthToken } from "../../../auth/organization"
@@ -25,7 +27,10 @@ export const apiAuthRegisterOrganization = new WebApi({
 	handler: async ({
 		body: { name, email, organizationName, googleUserId },
 	}: Context) => {
-		const organizationId = await mongoOrganizationAdd({ name: organizationName })
+		const organizationId = await addOrganization({
+			name: organizationName,
+			userId: "temp",
+		})
 
 		const userId = await mongoUserAdd({
 			email,
@@ -35,7 +40,7 @@ export const apiAuthRegisterOrganization = new WebApi({
 			isAdmin: true,
 		})
 
-		await mongoOrganizationUpdate({
+		await updateOrganization({
 			id: organizationId,
 			update: { userId },
 		})

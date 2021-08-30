@@ -1,12 +1,8 @@
-import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoOrganizationList } from "../../../services/mongo/organization/mongoOrganizationList"
+import { RequestMethod, WebApi } from "@hkbyte/webapi"
+import { fetchOrganizations } from "../../../services/mongo/organization"
 
 export const apiOrganizationList = new WebApi({
 	endpoint: "/organization",
-	requestBodySchema: T.object({}).optional(),
 	method: RequestMethod.GET,
-	middlewares: [],
-	handler: async () => {
-		return await mongoOrganizationList()
-	},
+	handler: async () => fetchOrganizations(),
 })

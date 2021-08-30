@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoOrganizationUpdate } from "../../../services/mongo/organization/mongoOrganizationUpdate"
+import { updateOrganization } from "../../../services/mongo/organization"
 import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
@@ -24,7 +24,7 @@ export const apiOrganizationUpdate = new WebApi({
 	method: RequestMethod.PUT,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
 	handler: async ({ body, locals }: Context) => {
-		await mongoOrganizationUpdate({
+		await updateOrganization({
 			id: locals.session.organizationId,
 			update: body.update,
 		})

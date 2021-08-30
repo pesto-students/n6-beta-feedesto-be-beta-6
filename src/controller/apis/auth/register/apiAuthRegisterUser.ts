@@ -1,5 +1,5 @@
 import { BadRequestError, T, WebApi, _ } from "@hkbyte/webapi"
-import { mongoOrganizationList } from "../../../../services/mongo/organization/mongoOrganizationList"
+import { fetchOrganizations } from "../../../../services/mongo/organization"
 import { mongoUserAdd } from "../../../../services/mongo/user/mongoUserAdd"
 import { validateEmail } from "../../../../utils/validators"
 import { generateUserAuthToken } from "../../../auth/user"
@@ -22,7 +22,7 @@ export const apiAuthRegisterUser = new WebApi({
 		organizationId: T.string().trim().mongoObjectId(),
 	}),
 	handler: async ({ body }: Context) => {
-		const checkOrganizationExist = await mongoOrganizationList({
+		const checkOrganizationExist = await fetchOrganizations({
 			id: body.organizationId,
 		})
 		if (_.isEmpty(checkOrganizationExist)) {
