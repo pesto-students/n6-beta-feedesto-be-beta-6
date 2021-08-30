@@ -21,7 +21,7 @@ export async function mongoAnswerAdd({
 	}
 
 	const db = await mongoRunner()
-	const insertAnswer = await db.collection(collection.discussions).insertOne({
+	const insertAnswer = await db.collection(collection.answers).insertOne({
 		content,
 		discussionId,
 		userId,

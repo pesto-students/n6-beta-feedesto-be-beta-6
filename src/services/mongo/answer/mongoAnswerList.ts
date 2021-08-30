@@ -30,7 +30,7 @@ export async function mongoAnswerList({
 
 	const queryBuilder = db.collection(collection.answers).find(tokenFindFilter)
 
-	queryBuilder.sort("createdAt")
+	queryBuilder.sort({ createdAt: 1 })
 
 	const userList = await queryBuilder.toArray()
 	return userList.map((el) => {

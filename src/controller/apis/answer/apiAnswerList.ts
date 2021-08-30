@@ -16,9 +16,9 @@ type Context = {
 export const apiAnswerList = new WebApi({
 	endpoint: "/answer",
 	requestQuerySchema: T.object({
-		id: T.string().optional(),
-		participantId: T.string().optional(),
-		asParticipant: T.boolean().optional(),
+		id: T.string().mongoObjectId().optional(),
+		discussionId: T.string().mongoObjectId().optional(),
+		userId: T.string().mongoObjectId().optional(),
 	}).optional(),
 	method: RequestMethod.GET,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION, AuthRole.USER)],
