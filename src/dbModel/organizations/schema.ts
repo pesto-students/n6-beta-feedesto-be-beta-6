@@ -1,19 +1,18 @@
-import { model, Schema } from "mongoose"
+import { Date, Document, model, Schema } from "mongoose"
 
-export interface Organization {
-	id: string
+export interface Organization extends Document {
 	name: string
 	userId: string
-	createdAt: string
-	modifiedAt: string
+	createdAt: Date
+	updatedAt: Date
 }
 
-const schema = new Schema<Organization>({
-	id: { type: String, required: true },
-	name: { type: String, required: true },
-	userId: { type: String, required: true },
-	createdAt: { type: String, required: true },
-	modifiedAt: { type: String, required: true },
-})
+const schema = new Schema<Organization>(
+	{
+		name: { type: String, required: true },
+		userId: { type: String, required: true },
+	},
+	{ timestamps: true },
+)
 
 export const OrganizationModel = model<Organization>("Organization", schema)

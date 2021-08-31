@@ -17,9 +17,7 @@ class OrganizationDbModel {
 	}
 	async create(organization: Partial<Organization>) {
 		return OrganizationModel.create({
-			...organization,
-			createdAt: new Date().toISOString(),
-			modifiedAt: new Date().toISOString(),
+			...organization
 		})
 	}
 	async deleteById(organizationId: string) {
