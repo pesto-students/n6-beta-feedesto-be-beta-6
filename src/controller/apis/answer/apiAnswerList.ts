@@ -29,7 +29,7 @@ export const apiAnswerList = new WebApi({
 		if (session.role !== AuthRole.ORGANIZATION) {
 			answerList.forEach((el) => {
 				// @ts-ignore
-				el.userId = null
+				if (session.userId != el.userId) el.userId = null
 			})
 		}
 

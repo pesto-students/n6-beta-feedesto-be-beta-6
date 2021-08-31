@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken'
-import { JWT_ISSUER, JWT_SECRET } from '.'
-import { PreconditionsFailedError } from '../../utils/errors'
+import jwt from "jsonwebtoken"
+import { JWT_ISSUER, JWT_SECRET } from "."
+import { PreconditionsFailedError } from "../../utils/errors"
 
 export type UserAuthPayload = {
 	userId: string
@@ -18,7 +18,7 @@ export function validateUserAuthToken(token: string) {
 		return userId
 	} catch (err) {
 		if (err instanceof jwt.TokenExpiredError) {
-			throw new PreconditionsFailedError('Auth Token Expired')
+			throw new PreconditionsFailedError("Auth Token Expired")
 		}
 		throw err
 	}
@@ -27,8 +27,8 @@ export function validateUserAuthToken(token: string) {
 function createUserToken(userId: string) {
 	const token = jwt.sign({ userId }, JWT_SECRET, {
 		issuer: JWT_ISSUER,
-		expiresIn: '3d',
-		subject: 'User Token',
+		expiresIn: "3d",
+		subject: "User Token",
 	})
 	return {
 		token,

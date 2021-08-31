@@ -38,8 +38,10 @@ export default function (...roles: AuthRole[]): RequestHandler {
 				if (authRole === AuthRole.USER) {
 					res.locals.session.userId = await validateUserAuthToken(token)
 				} else if (authRole === AuthRole.ORGANIZATION) {
-					res.locals.session.organizationId =
+					const { organizationId, userId } =
 						validateOrganizationAuthToken(token)
+					res.locals.session.organizationId = organizationId
+					res.locals.session.userId = userId
 				} else {
 					throw new ForbiddenError("Invalid Authentication role")
 				}

@@ -21,7 +21,10 @@ export const apiAuthLogin = new WebApi({
 		}
 
 		if (user.isAdmin) {
-			return generateOrganizationAuthToken({ organizationId: user.organizationId })
+			return generateOrganizationAuthToken({
+				organizationId: user.organizationId,
+				userId: user.id,
+			})
 		}
 
 		return generateUserAuthToken({ userId: user.id })
