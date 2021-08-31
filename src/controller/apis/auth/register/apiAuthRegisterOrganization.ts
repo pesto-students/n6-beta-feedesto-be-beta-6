@@ -47,6 +47,7 @@ export const apiAuthRegisterOrganization = new WebApi({
 
 		return generateOrganizationAuthToken({
 			organizationId,
+			userId,
 		})
 	},
 })

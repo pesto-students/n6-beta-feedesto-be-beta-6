@@ -1,6 +1,7 @@
 import { parseIsoDate } from "../../../utils/utils"
 import { collection } from "../collections"
 import { mongoRunner } from "../mongoRunner"
+import { checkAndGetObjectId } from "../utils"
 
 export type User = {
 	id: string
@@ -15,13 +16,16 @@ export type User = {
 }
 
 export async function mongoUserList({
+	id,
 	googleUserId,
 	organizationId,
 }: {
+	id?: string
 	googleUserId?: string
 	organizationId?: string
 } = {}): Promise<User[]> {
 	const tokenFindFilter: any = {}
+	if (id) tokenFindFilter._id = checkAndGetObjectId(id)
 	if (googleUserId) tokenFindFilter.googleUserId = googleUserId
 	if (organizationId) tokenFindFilter.organizationId = organizationId
 
