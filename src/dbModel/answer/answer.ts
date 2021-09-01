@@ -11,7 +11,7 @@ class AnswerDbModel {
 		id?: string
 		discussionId?: string
 		userId?: string
-	}) {
+	} = {}) {
 		const tokenFindFilter: any = {}
 		if (id) tokenFindFilter._id = checkAndGetObjectId(id)
 		if (discussionId) tokenFindFilter.discussionId = discussionId

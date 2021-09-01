@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoAnswerList } from "../../../services/mongo/answer/mongoAnswerList"
+import { fetchAnswers } from "../../../services/mongo/answer"
 import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
@@ -23,7 +23,7 @@ export const apiAnswerList = new WebApi({
 	method: RequestMethod.GET,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION, AuthRole.USER)],
 	handler: async ({ query, locals: { session } }: Context) => {
-		const answerList = await mongoAnswerList(query)
+		const answerList = await fetchAnswers(query)
 
 		// Hiding User of a given answer
 		if (session.role !== AuthRole.ORGANIZATION) {
