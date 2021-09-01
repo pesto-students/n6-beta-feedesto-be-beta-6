@@ -1,6 +1,5 @@
+import { checkAndGetObjectId } from "../../utils/utils"
 import { Comment, CommentModel } from "./schema"
-
-import { checkAndGetObjectId } from "../../services/mongo/utils"
 
 class CommentDbModel {
 	async findAll({

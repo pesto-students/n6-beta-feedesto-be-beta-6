@@ -17,13 +17,11 @@
 		"dayjs": "^1.10.6",
 		"dotenv": "^8.2.0",
 		"jsonwebtoken": "^8.5.1",
-		"mongodb": "^3.6.2",
 		"mongoose": "^6.0.2"
 	},
 	"devDependencies": {
 		"@types/bcrypt": "^3.0.0",
 		"@types/jsonwebtoken": "^8.5.0",
-		"@types/mongodb": "^3.5.33",
 		"@types/node": "12",
 		"copyfiles": "^2.4.0",
 		"rimraf": "^3.0.2",

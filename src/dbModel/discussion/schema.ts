@@ -1,5 +1,4 @@
-import { ObjectId } from "mongodb"
-import { Date, Document, model, Schema, SchemaTypeOptions } from "mongoose"
+import { Date, Document, model, Schema, SchemaTypeOptions, ObjectId } from "mongoose"
 
 export interface Discussion extends Document {
 	_id: Schema.Types.ObjectId | string

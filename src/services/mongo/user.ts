@@ -7,7 +7,7 @@ import _ from "lodash"
 import { LeanDocument } from "mongoose"
 import { User } from "../../dbModel/user/schema"
 import { useUserDbModel } from "../../dbModel/user/user"
-import { checkAndGetObjectId } from "./utils"
+import { checkAndGetObjectId } from "../../utils/utils"
 
 export async function fetchUsers({
 	id,

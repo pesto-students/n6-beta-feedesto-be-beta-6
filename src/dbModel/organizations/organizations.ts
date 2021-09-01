@@ -1,11 +1,11 @@
 import { Organization, OrganizationModel } from "./schema"
 
 class OrganizationDbModel {
-	async findAll() {
-		return OrganizationModel.find({}).lean()
-	}
-	async findBy({ name }: { name?: string }) {
-		return OrganizationModel.find({ name }).lean()
+	async findAll({ name }: { name?: string } = {}) {
+		const tokenFindFilter: any = {}
+		if (name) tokenFindFilter.name = name
+
+		return OrganizationModel.find({ tokenFindFilter }).lean()
 	}
 	async findById(organizationId: string) {
 		return OrganizationModel.findById(organizationId).lean()
@@ -17,7 +17,7 @@ class OrganizationDbModel {
 	}
 	async create(organization: Partial<Organization>) {
 		return OrganizationModel.create({
-			...organization
+			...organization,
 		})
 	}
 	async deleteById(organizationId: string) {

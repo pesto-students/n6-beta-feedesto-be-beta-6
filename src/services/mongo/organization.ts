@@ -19,7 +19,7 @@ export async function fetchOrganizations({
 		return await organizationModel.findById(id)
 	}
 	if (name) {
-		return await organizationModel.findBy({ name })
+		return await organizationModel.findAll({ name })
 	}
 
 	return organizationModel.findAll()
@@ -35,7 +35,7 @@ export async function addOrganization({
 	const organizationModel = useOrganizationDbModel()
 
 	// Check for Duplicates
-	const organizationWithName = await organizationModel.findBy({ name })
+	const [organizationWithName] = await organizationModel.findAll({ name })
 	if (organizationWithName) {
 		throw new AlreadyExistError(`Organization name: ${name} already exist`)
 	}

@@ -1,5 +1,5 @@
 import _ from "lodash"
-import { checkAndGetObjectId } from "../../services/mongo/utils"
+import { checkAndGetObjectId } from "../../utils/utils"
 import { Discussion, DiscussionModel } from "./schema"
 
 class DiscussionDbModel {

@@ -3,7 +3,7 @@ import _ from "lodash"
 import { LeanDocument } from "mongoose"
 import { useCommentDbModel } from "../../dbModel/comment/comment"
 import { Comment } from "../../dbModel/comment/schema"
-import { checkAndGetObjectId } from "./utils"
+import { checkAndGetObjectId } from "../../utils/utils"
 
 export async function fetchComments({
 	id,

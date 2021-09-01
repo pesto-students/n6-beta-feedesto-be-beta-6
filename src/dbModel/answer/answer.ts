@@ -1,6 +1,5 @@
+import { checkAndGetObjectId } from "../../utils/utils"
 import { Answer, AnswerModel } from "./schema"
-
-import { checkAndGetObjectId } from "../../services/mongo/utils"
 
 class AnswerDbModel {
 	async findAll({
