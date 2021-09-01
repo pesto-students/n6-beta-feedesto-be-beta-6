@@ -5,18 +5,18 @@ import { Discussion, DiscussionModel } from "./schema"
 
 class DiscussionDbModel {
 	async findAll({
-		id,
+		_id,
 		participantId,
 		viewerId,
 		organizationId,
 	}: {
-		id?: string
+		_id?: string
 		participantId?: string
 		viewerId?: string
 		organizationId?: string
 	} = {}) {
 		const tokenFindFilter: FilterQuery<Discussion> = {}
-		if (id) tokenFindFilter._id = checkAndGetObjectId(id)
+		if (_id) tokenFindFilter._id = checkAndGetObjectId(_id)
 		if (participantId)
 			tokenFindFilter.participantIds = { $elemMatch: { participantId } }
 		if (viewerId) tokenFindFilter.viewerIds = { $elemMatch: { participantId } }

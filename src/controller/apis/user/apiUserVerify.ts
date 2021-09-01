@@ -19,6 +19,6 @@ export const apiUserVerify = new WebApi({
 	method: RequestMethod.PUT,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
 	handler: async ({ body }: Context) => {
-		await updateUser({ id: body.userId, update: { isVerified: body.status } })
+		await updateUser({ _id: body.userId, update: { isVerified: body.status } })
 	},
 })

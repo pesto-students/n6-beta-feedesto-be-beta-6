@@ -4,16 +4,16 @@ import { Comment, CommentModel } from "./schema"
 
 class CommentDbModel {
 	async findAll({
-		id,
+		_id,
 		answerId,
 		userId,
 	}: {
-		id?: string
+		_id?: string
 		answerId?: string
 		userId?: string
 	} = {}) {
 		const tokenFindFilter: FilterQuery<Comment> = {}
-		if (id) tokenFindFilter._id = checkAndGetObjectId(id)
+		if (_id) tokenFindFilter._id = checkAndGetObjectId(_id)
 		if (answerId) tokenFindFilter.answerId = checkAndGetObjectId(answerId)
 		if (userId) tokenFindFilter.userId = checkAndGetObjectId(userId)
 

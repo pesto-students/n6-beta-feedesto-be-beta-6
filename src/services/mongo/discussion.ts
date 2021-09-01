@@ -5,20 +5,20 @@ import { useDiscussionDbModel } from "../../dbModel"
 import { Discussion } from "../../dbModel"
 
 export async function fetchDiscussions({
-	id,
+	_id,
 	participantId,
 	viewerId,
 	organizationId,
 }: {
-	id?: string
+	_id?: string
 	participantId?: string
 	viewerId?: string
 	organizationId?: string
 } = {}): Promise<LeanDocument<Discussion>[]> {
 	const discussionModel = useDiscussionDbModel()
 
-	if (id) {
-		const discussion = await discussionModel.findById(id)
+	if (_id) {
+		const discussion = await discussionModel.findById(_id)
 		return discussion ? [discussion] : []
 	}
 
@@ -69,14 +69,14 @@ export async function addDiscussion({
 		throw new InternalServerError("Something went wrong: unable to add discussion")
 	}
 
-	return insertDiscussion.id.toString()
+	return insertDiscussion._id.toString()
 }
 
 export async function updateDiscussion({
-	id,
+	_id,
 	update,
 }: {
-	id: string
+	_id: string
 	update: {
 		title?: string
 		description?: string
@@ -86,7 +86,7 @@ export async function updateDiscussion({
 }) {
 	const discussionModel = useDiscussionDbModel()
 
-	if (!id) {
+	if (!_id) {
 		throw new InvalidArgumentError("Filter missing for updating discussion")
 	}
 
@@ -97,15 +97,15 @@ export async function updateDiscussion({
 		tokenUpdate.startDate = new Date(update.startDate)
 	if (!_.isUndefined(update.endDate)) tokenUpdate.endDate = new Date(update.endDate)
 
-	await discussionModel.findByIdAndUpdate(id, tokenUpdate)
+	await discussionModel.findByIdAndUpdate(_id, tokenUpdate)
 }
 
-export async function deleteDiscussion({ id }: { id: string }) {
+export async function deleteDiscussion({ _id }: { _id: string }) {
 	const discussionModel = useDiscussionDbModel()
 
-	if (!id) {
+	if (!_id) {
 		throw new InvalidArgumentError("Filter missing for deleting discussion")
 	}
 
-	await discussionModel.deleteById(id)
+	await discussionModel.deleteById(_id)
 }

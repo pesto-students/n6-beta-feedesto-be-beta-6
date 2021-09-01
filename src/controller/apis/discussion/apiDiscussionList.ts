@@ -6,7 +6,7 @@ import authMiddleware from "../../middlewares/authMiddleware"
 
 type Context = {
 	query: {
-		id?: string
+		_id?: string
 		participantId?: string
 		asParticipant?: boolean
 	}
@@ -16,8 +16,8 @@ type Context = {
 export const apiDiscussionList = new WebApi({
 	endpoint: "/discussion",
 	requestQuerySchema: T.object({
-		id: T.string().optional(),
-		participantId: T.string().optional(),
+		_id: T.string().optional(),
+		participantId: T.string().mongoObjectId().optional(),
 		asParticipant: T.boolean().optional(),
 	}).optional(),
 	method: RequestMethod.GET,
@@ -34,7 +34,7 @@ export const apiDiscussionList = new WebApi({
 			else viewerId = locals.session.userId
 		}
 		return await fetchDiscussions({
-			id: query.id,
+			_id: query._id,
 			organizationId,
 			participantId,
 			viewerId,

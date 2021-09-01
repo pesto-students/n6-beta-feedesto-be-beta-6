@@ -5,7 +5,7 @@ import authMiddleware from "../../middlewares/authMiddleware"
 
 type Context = {
 	body: {
-		id: string
+		_id: string
 		update: {
 			name?: string
 			isVerified?: boolean
@@ -16,7 +16,7 @@ type Context = {
 export const apiUserUpdate = new WebApi({
 	endpoint: "/user",
 	requestBodySchema: T.object({
-		id: T.string().mongoObjectId(),
+		_id: T.string().mongoObjectId(),
 		update: T.object({
 			name: T.string().optional(),
 			isVerified: T.boolean().optional(),

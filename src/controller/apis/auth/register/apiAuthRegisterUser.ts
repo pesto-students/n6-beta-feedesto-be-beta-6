@@ -23,7 +23,7 @@ export const apiAuthRegisterUser = new WebApi({
 	}),
 	handler: async ({ body }: Context) => {
 		const checkOrganizationExist = await fetchOrganizations({
-			id: body.organizationId,
+			_id: body.organizationId,
 		})
 		if (_.isEmpty(checkOrganizationExist)) {
 			throw new BadRequestError("Organization not found !")

@@ -5,14 +5,14 @@ import authMiddleware from "../../middlewares/authMiddleware"
 
 type Context = {
 	body: {
-		id: string
+		_id: string
 	}
 }
 
 export const apiCommentDelete = new WebApi({
 	endpoint: "/comment",
 	requestBodySchema: T.object({
-		id: T.string().trim().mongoObjectId(),
+		_id: T.string().trim().mongoObjectId(),
 	}),
 	method: RequestMethod.DELETE,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],

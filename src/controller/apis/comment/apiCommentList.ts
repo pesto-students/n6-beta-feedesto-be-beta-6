@@ -6,7 +6,7 @@ import authMiddleware from "../../middlewares/authMiddleware"
 
 type Context = {
 	query: {
-		id?: string
+		_id?: string
 		answerId?: string
 		userId?: string
 	}
@@ -16,7 +16,7 @@ type Context = {
 export const apiCommentList = new WebApi({
 	endpoint: "/comment",
 	requestQuerySchema: T.object({
-		id: T.string().optional(),
+		_id: T.string().optional(),
 		answerId: T.string().optional(),
 		userId: T.string().optional(),
 	}).optional(),

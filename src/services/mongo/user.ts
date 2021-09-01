@@ -10,18 +10,18 @@ import { useUserDbModel } from "../../dbModel"
 import { checkAndGetObjectId } from "../../utils/utils"
 
 export async function fetchUsers({
-	id,
+	_id,
 	googleUserId,
 	organizationId,
 }: {
-	id?: string
+	_id?: string
 	googleUserId?: string
 	organizationId?: string
 } = {}): Promise<LeanDocument<User>[]> {
 	const userModel = useUserDbModel()
 
-	if (id) {
-		const user = await userModel.findById(id)
+	if (_id) {
+		const user = await userModel.findById(_id)
 		return user ? [user] : []
 	}
 
@@ -70,14 +70,14 @@ export async function addUser({
 		throw new InternalServerError("Something went wrong: unable to add user")
 	}
 
-	return insertUser.id.toString()
+	return insertUser._id.toString()
 }
 
 export async function updateUser({
-	id,
+	_id,
 	update,
 }: {
-	id: string
+	_id: string
 	update: {
 		name?: string
 		isVerified?: boolean
@@ -85,7 +85,7 @@ export async function updateUser({
 }) {
 	const userModel = useUserDbModel()
 
-	if (!id) {
+	if (!_id) {
 		throw new InvalidArgumentError("Filter missing for updating user")
 	}
 
@@ -98,15 +98,15 @@ export async function updateUser({
 		}
 	}
 
-	await userModel.findByIdAndUpdate(id, tokenUpdate)
+	await userModel.findByIdAndUpdate(_id, tokenUpdate)
 }
 
-export async function deleteUser({ id }: { id: string }) {
+export async function deleteUser({ _id }: { _id: string }) {
 	const userModel = useUserDbModel()
 
-	if (!id) {
+	if (!_id) {
 		throw new InvalidArgumentError("Filter missing for deleting user")
 	}
 
-	await userModel.deleteById(id)
+	await userModel.deleteById(_id)
 }

@@ -16,7 +16,7 @@ export const apiUserGet = new WebApi({
 		const userId = locals.session.userId
 
 		return await fetchUsers({
-			id: userId,
+			_id: userId,
 		})
 	},
 })

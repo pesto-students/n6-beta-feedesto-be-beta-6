@@ -6,7 +6,7 @@ import authMiddleware from "../../middlewares/authMiddleware"
 
 type Context = {
 	query: {
-		id?: string
+		_id?: string
 		discussionId?: string
 		userId?: string
 	}
@@ -16,7 +16,7 @@ type Context = {
 export const apiAnswerList = new WebApi({
 	endpoint: "/answer",
 	requestQuerySchema: T.object({
-		id: T.string().mongoObjectId().optional(),
+		_id: T.string().mongoObjectId().optional(),
 		discussionId: T.string().mongoObjectId().optional(),
 		userId: T.string().mongoObjectId().optional(),
 	}).optional(),

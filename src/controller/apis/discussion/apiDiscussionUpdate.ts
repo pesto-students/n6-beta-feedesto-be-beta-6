@@ -5,7 +5,7 @@ import authMiddleware from "../../middlewares/authMiddleware"
 
 type Context = {
 	body: {
-		id: string
+		_id: string
 		update: {
 			title?: string
 			description?: string
@@ -18,7 +18,7 @@ type Context = {
 export const apiDiscussionUpdate = new WebApi({
 	endpoint: "/discussion",
 	requestBodySchema: T.object({
-		id: T.string().mongoObjectId(),
+		_id: T.string().mongoObjectId(),
 		update: T.object({
 			title: T.string().optional(),
 			description: T.string().optional(),

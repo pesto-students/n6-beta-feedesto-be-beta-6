@@ -6,18 +6,18 @@ import { Comment } from "../../dbModel"
 import { checkAndGetObjectId } from "../../utils/utils"
 
 export async function fetchComments({
-	id,
+	_id,
 	answerId,
 	userId,
 }: {
-	id?: string
+	_id?: string
 	answerId?: string
 	userId?: string
 } = {}): Promise<LeanDocument<Comment>[]> {
 	const commentModel = useCommentDbModel()
 
-	if (id) {
-		const comment = await commentModel.findById(id)
+	if (_id) {
+		const comment = await commentModel.findById(_id)
 		return comment ? [comment] : []
 	}
 
@@ -52,15 +52,15 @@ export async function addComment({
 		throw new InternalServerError("Something went wrong: unable to add comment")
 	}
 
-	return insertComment.id.toString()
+	return insertComment._id.toString()
 }
 
-export async function deleteComment({ id }: { id: string }) {
+export async function deleteComment({ _id }: { _id: string }) {
 	const commentModel = useCommentDbModel()
 
-	if (!id) {
+	if (!_id) {
 		throw new InvalidArgumentError("Filter missing for deleting comment")
 	}
 
-	await commentModel.deleteById(id)
+	await commentModel.deleteById(_id)
 }

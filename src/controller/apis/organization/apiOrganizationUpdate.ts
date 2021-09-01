@@ -16,7 +16,7 @@ type Context = {
 export const apiOrganizationUpdate = new WebApi({
 	endpoint: "/organization",
 	requestBodySchema: T.object({
-		id: T.string().mongoObjectId(),
+		_id: T.string().mongoObjectId(),
 		update: T.object({
 			name: T.string().optional(),
 		}),
@@ -25,7 +25,7 @@ export const apiOrganizationUpdate = new WebApi({
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
 	handler: async ({ body, locals }: Context) => {
 		await updateOrganization({
-			id: locals.session.organizationId,
+			_id: locals.session.organizationId,
 			update: body.update,
 		})
 	},

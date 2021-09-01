@@ -7,16 +7,16 @@ import _ from "lodash"
 import { useOrganizationDbModel } from "../../dbModel"
 
 export async function fetchOrganizations({
-	id,
+	_id,
 	name,
 }: {
-	id?: string
+	_id?: string
 	name?: string
 } = {}) {
 	const organizationModel = useOrganizationDbModel()
 
-	if (id) {
-		return await organizationModel.findById(id)
+	if (_id) {
+		return await organizationModel.findById(_id)
 	}
 	if (name) {
 		return await organizationModel.findAll({ name })
@@ -48,14 +48,14 @@ export async function addOrganization({
 		throw new InternalServerError("Something went wrong: unable to add organization")
 	}
 
-	return insertOrganization.id.toString()
+	return insertOrganization._id.toString()
 }
 
 export async function updateOrganization({
-	id,
+	_id,
 	update,
 }: {
-	id: string
+	_id: string
 	update: {
 		userId?: string
 		name?: string
@@ -63,17 +63,17 @@ export async function updateOrganization({
 }) {
 	const organizationModel = useOrganizationDbModel()
 
-	if (!id) {
+	if (!_id) {
 		throw new InvalidArgumentError("Filter missing for updating organization")
 	}
 
 	const tokenFilter: any = {}
 
-	tokenFilter._id = id
+	tokenFilter._id = _id
 
 	const tokenUpdate: any = { modifiedAt: new Date() }
 	if (!_.isUndefined(update.name)) tokenUpdate.name = update.name
 	if (!_.isUndefined(update.userId)) tokenUpdate.userId = update.userId
 
-	await organizationModel.findByIdAndUpdate(id, tokenUpdate)
+	await organizationModel.findByIdAndUpdate(_id, tokenUpdate)
 }

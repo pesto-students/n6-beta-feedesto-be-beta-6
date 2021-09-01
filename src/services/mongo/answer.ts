@@ -5,18 +5,18 @@ import { useAnswerDbModel } from "../../dbModel"
 import { Answer } from "../../dbModel"
 
 export async function fetchAnswers({
-	id,
+	_id,
 	discussionId,
 	userId,
 }: {
-	id?: string
+	_id?: string
 	discussionId?: string
 	userId?: string
 } = {}): Promise<LeanDocument<Answer>[]> {
 	const answerModel = useAnswerDbModel()
 
-	if (id) {
-		const answer = await answerModel.findById(id)
+	if (_id) {
+		const answer = await answerModel.findById(_id)
 		return answer ? [answer] : []
 	}
 
@@ -51,15 +51,15 @@ export async function addAnswer({
 		throw new InternalServerError("Something went wrong: unable to add answer")
 	}
 
-	return insertAnswer.id.toString()
+	return insertAnswer._id.toString()
 }
 
-export async function deleteAnswer({ id }: { id: string }) {
+export async function deleteAnswer({ _id }: { _id: string }) {
 	const answerModel = useAnswerDbModel()
 
-	if (!id) {
+	if (!_id) {
 		throw new InvalidArgumentError("Filter missing for deleting answer")
 	}
 
-	await answerModel.deleteById(id)
+	await answerModel.deleteById(_id)
 }

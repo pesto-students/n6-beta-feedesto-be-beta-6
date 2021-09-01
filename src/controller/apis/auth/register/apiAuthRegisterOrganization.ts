@@ -41,7 +41,7 @@ export const apiAuthRegisterOrganization = new WebApi({
 		})
 
 		await updateOrganization({
-			id: organizationId,
+			_id: organizationId,
 			update: { userId },
 		})
 
