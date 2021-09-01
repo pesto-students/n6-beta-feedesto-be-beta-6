@@ -54,6 +54,62 @@ export async function addAnswer({
 	return insertAnswer.id.toString()
 }
 
+export async function addAnswerUpvote({
+	answerId,
+	userId,
+}: {
+	answerId: string
+	userId: string
+}) {
+	const answerModel = useAnswerDbModel()
+
+	const [answer] = await fetchAnswers({ id: answerId })
+	if (!answer) {
+		throw new InvalidArgumentError("Answer not found")
+	}
+
+	const findUserUpvoted = answer.upvoteIds.find((el: any) => el.toString() == userId)
+	if (findUserUpvoted) {
+		throw new InvalidArgumentError("User has already upvoted to this answer")
+	}
+
+	const updateAnswerUpvotes = await answerModel.findByIdAndUpdate(answerId, {
+		upvoteIds: [...answer.upvoteIds.map((el: any) => el.toString()), userId],
+	})
+	if (!updateAnswerUpvotes) {
+		throw new InternalServerError("Something went wrong: unable to add answer upvote")
+	}
+}
+
+export async function addAnswerDownvote({
+	answerId,
+	userId,
+}: {
+	answerId: string
+	userId: string
+}) {
+	const answerModel = useAnswerDbModel()
+
+	const [answer] = await fetchAnswers({ id: answerId })
+	if (!answer) {
+		throw new InvalidArgumentError("Answer not found")
+	}
+
+	const findUserUpvoted = answer.downvoteIds.find((el: any) => el.toString() == userId)
+	if (findUserUpvoted) {
+		throw new InvalidArgumentError("User has already downvoted to this answer")
+	}
+
+	const updateAnswerUpvotes = await answerModel.findByIdAndUpdate(answerId, {
+		downvoteIds: [...answer.downvoteIds.map((el: any) => el.toString()), userId],
+	})
+	if (!updateAnswerUpvotes) {
+		throw new InternalServerError(
+			"Something went wrong: unable to add answer downvote",
+		)
+	}
+}
+
 export async function deleteAnswer({ _id }: { _id: string }) {
 	const answerModel = useAnswerDbModel()
 
