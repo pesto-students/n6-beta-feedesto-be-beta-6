@@ -16,7 +16,7 @@ const schema = new Schema<Answer>(
 		discussionId: { type: Schema.Types.ObjectId, ref: "Discussion", required: true },
 		userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
 		upvoteIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
-		downvoteIds: { type: [Schema.Types.ObjectId], ref: "USer", default: [] },
+		downvoteIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
 	},
 	{ timestamps: true },
 )

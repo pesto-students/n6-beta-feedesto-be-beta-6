@@ -55,6 +55,64 @@ export async function addComment({
 	return insertComment._id.toString()
 }
 
+export async function addCommentUpvote({
+	commentId,
+	userId,
+}: {
+	commentId: string
+	userId: string
+}) {
+	const commentModel = useCommentDbModel()
+
+	const [comment] = await fetchComments({ _id: commentId })
+	if (!comment) {
+		throw new InvalidArgumentError("Comment not found")
+	}
+
+	const findUserUpvoted = comment.upvoteIds.find((el: any) => el.toString() == userId)
+	if (findUserUpvoted) {
+		throw new InvalidArgumentError("User has already upvoted to this comment")
+	}
+
+	const updateCommentUpvotes = await commentModel.findByIdAndUpdate(commentId, {
+		upvoteIds: [...comment.upvoteIds.map((el: any) => el.toString()), userId],
+	})
+	if (!updateCommentUpvotes) {
+		throw new InternalServerError(
+			"Something went wrong: unable to add comment upvote",
+		)
+	}
+}
+
+export async function addCommentDownvote({
+	commentId,
+	userId,
+}: {
+	commentId: string
+	userId: string
+}) {
+	const commentModel = useCommentDbModel()
+
+	const [comment] = await fetchComments({ _id: commentId })
+	if (!comment) {
+		throw new InvalidArgumentError("Comment not found")
+	}
+
+	const findUserUpvoted = comment.downvoteIds.find((el: any) => el.toString() == userId)
+	if (findUserUpvoted) {
+		throw new InvalidArgumentError("User has already downvoted to this comment")
+	}
+
+	const updateCommentUpvotes = await commentModel.findByIdAndUpdate(commentId, {
+		downvoteIds: [...comment.downvoteIds.map((el: any) => el.toString()), userId],
+	})
+	if (!updateCommentUpvotes) {
+		throw new InternalServerError(
+			"Something went wrong: unable to add comment downvote",
+		)
+	}
+}
+
 export async function deleteComment({ _id }: { _id: string }) {
 	const commentModel = useCommentDbModel()
 

@@ -30,7 +30,6 @@ export const apiDiscussionAdd = new WebApi({
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
 	handler: async ({ body, locals }: Context) => {
 		const organizationId = locals.session.organizationId
-		console.log(locals.session)
 		const created = await addDiscussion({ ...body, organizationId })
 		return { created }
 	},

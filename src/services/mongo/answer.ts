@@ -5,18 +5,18 @@ import { useAnswerDbModel } from "../../dbModel"
 import { Answer } from "../../dbModel"
 
 export async function fetchAnswers({
-	id,
+	_id,
 	discussionId,
 	userId,
 }: {
-	id?: string
+	_id?: string
 	discussionId?: string
 	userId?: string
 } = {}): Promise<LeanDocument<Answer>[]> {
 	const answerModel = useAnswerDbModel()
 
-	if (id) {
-		const answer = await answerModel.findById(id)
+	if (_id) {
+		const answer = await answerModel.findById(_id)
 		return answer ? [answer] : []
 	}
 
@@ -63,7 +63,7 @@ export async function addAnswerUpvote({
 }) {
 	const answerModel = useAnswerDbModel()
 
-	const [answer] = await fetchAnswers({ id: answerId })
+	const [answer] = await fetchAnswers({ _id: answerId })
 	if (!answer) {
 		throw new InvalidArgumentError("Answer not found")
 	}
@@ -90,7 +90,7 @@ export async function addAnswerDownvote({
 }) {
 	const answerModel = useAnswerDbModel()
 
-	const [answer] = await fetchAnswers({ id: answerId })
+	const [answer] = await fetchAnswers({ _id: answerId })
 	if (!answer) {
 		throw new InvalidArgumentError("Answer not found")
 	}

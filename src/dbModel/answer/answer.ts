@@ -29,7 +29,8 @@ class AnswerDbModel {
 		const tokenUpdate: Partial<Answer> = {}
 		if (!_.isUndefined(update.content)) tokenUpdate.content = update.content
 		if (!_.isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
-		if (!_.isUndefined(update.downvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
+		if (!_.isUndefined(update.downvoteIds))
+			tokenUpdate.downvoteIds = update.downvoteIds
 
 		return AnswerModel.findByIdAndUpdate(discussionId, tokenUpdate, {
 			new: true,

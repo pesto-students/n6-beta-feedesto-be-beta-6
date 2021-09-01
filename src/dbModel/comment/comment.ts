@@ -1,3 +1,4 @@
+import _ from "lodash"
 import { FilterQuery } from "mongoose"
 import { checkAndGetObjectId } from "../../utils/utils"
 import { Comment, CommentModel } from "./schema"
@@ -22,6 +23,18 @@ class CommentDbModel {
 
 	async findById(commentId: string) {
 		return CommentModel.findById(commentId).lean()
+	}
+
+	async findByIdAndUpdate(answerId: string, update: Partial<Comment>) {
+		const tokenUpdate: Partial<Comment> = {}
+		if (!_.isUndefined(update.content)) tokenUpdate.content = update.content
+		if (!_.isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
+		if (!_.isUndefined(update.downvoteIds))
+			tokenUpdate.downvoteIds = update.downvoteIds
+
+		return CommentModel.findByIdAndUpdate(answerId, tokenUpdate, {
+			new: true,
+		}).lean()
 	}
 
 	async create(comment: Partial<Comment>) {

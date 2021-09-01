@@ -8,7 +8,9 @@ import { apiAuthRegisterOrganization } from "./auth/register/apiAuthRegisterOrga
 import { apiAuthRegisterUser } from "./auth/register/apiAuthRegisterUser"
 import { apiCommentAdd } from "./comment/apiCommentAdd"
 import { apiCommentDelete } from "./comment/apiCommentDelete"
+import { apiCommentAddDownvote } from "./comment/apiCommentDownvoteAdd"
 import { apiCommentList } from "./comment/apiCommentList"
+import { apiCommentAddUpvote } from "./comment/apiCommentUpvoteAdd"
 import { apiDiscussionAdd } from "./discussion/apiDiscussionAdd"
 import { apiDiscussionDelete } from "./discussion/apiDiscussionDelete"
 import { apiDiscussionList } from "./discussion/apiDiscussionList"
@@ -46,4 +48,6 @@ export default [
 	apiCommentAdd,
 	apiCommentList,
 	apiCommentDelete,
+	apiCommentAddUpvote,
+	apiCommentAddDownvote,
 ]

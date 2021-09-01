@@ -48,6 +48,10 @@ export const apiAnswerList = new WebApi({
 				...answer,
 				hasUpvoted,
 				hasDownvoted,
+				upvoteCount: answer.upvoteIds.length,
+				downvoteCount: answer.downvoteIds.length,
+				downvoteIds: null,
+				upvoteIds: null,
 			}
 		})
 	},
