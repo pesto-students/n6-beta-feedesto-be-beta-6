@@ -1,8 +1,8 @@
 import { InternalServerError, InvalidArgumentError } from "@hkbyte/webapi"
 import _ from "lodash"
 import { LeanDocument } from "mongoose"
-import { useDiscussionDbModel } from "../../dbModel/discussion/discussion"
-import { Discussion } from "../../dbModel/discussion/schema"
+import { useDiscussionDbModel } from "../../dbModel"
+import { Discussion } from "../../dbModel"
 
 export async function fetchDiscussions({
 	id,

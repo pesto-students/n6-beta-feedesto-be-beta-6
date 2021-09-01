@@ -1,6 +1,6 @@
 import { NotFoundError, sendResponseError, WebApiServer } from "@hkbyte/webapi"
 import apiRoutes from "./controller/apis/routes"
-import configs from "./core/configs"
+import configs from "./utils/configs"
 import { initiateMongoClient } from "./db"
 
 const server = new WebApiServer(configs.server.port, { cors: true, helmet: true })

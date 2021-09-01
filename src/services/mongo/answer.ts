@@ -1,8 +1,8 @@
 import { InternalServerError, InvalidArgumentError } from "@hkbyte/webapi"
 import _ from "lodash"
 import { LeanDocument } from "mongoose"
-import { useAnswerDbModel } from "../../dbModel/answer/answer"
-import { Answer } from "../../dbModel/answer/schema"
+import { useAnswerDbModel } from "../../dbModel"
+import { Answer } from "../../dbModel"
 
 export async function fetchAnswers({
 	id,

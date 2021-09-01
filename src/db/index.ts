@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import configs from "../core/configs"
+import configs from "../utils/configs"
 
 const { host, port, name } = configs.mongodb
 

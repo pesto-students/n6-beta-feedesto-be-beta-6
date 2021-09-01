@@ -1,8 +1,8 @@
 import { InternalServerError, InvalidArgumentError } from "@hkbyte/webapi"
 import _ from "lodash"
 import { LeanDocument } from "mongoose"
-import { useCommentDbModel } from "../../dbModel/comment/comment"
-import { Comment } from "../../dbModel/comment/schema"
+import { useCommentDbModel } from "../../dbModel"
+import { Comment } from "../../dbModel"
 import { checkAndGetObjectId } from "../../utils/utils"
 
 export async function fetchComments({
