@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoDiscussionUpdate } from "../../../services/mongo/discussion/mongoDiscussionUpdate"
+import { updateDiscussion } from "../../../services/mongo/discussion"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
 
@@ -28,5 +28,5 @@ export const apiDiscussionUpdate = new WebApi({
 	}),
 	method: RequestMethod.PUT,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
-	handler: ({ body }: Context) => mongoDiscussionUpdate(body),
+	handler: ({ body }: Context) => updateDiscussion(body),
 })

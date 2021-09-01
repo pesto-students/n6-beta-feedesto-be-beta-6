@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoDiscussionList } from "../../../services/mongo/discussion/mongoDiscussionList"
+import { fetchDiscussions } from "../../../services/mongo/discussion"
 import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
@@ -33,7 +33,7 @@ export const apiDiscussionList = new WebApi({
 			if (query.asParticipant) participantId = locals.session.userId
 			else viewerId = locals.session.userId
 		}
-		return await mongoDiscussionList({
+		return await fetchDiscussions({
 			id: query.id,
 			organizationId,
 			participantId,

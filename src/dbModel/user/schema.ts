@@ -1,4 +1,4 @@
-import { model, Schema, Document, Date } from "mongoose"
+import { model, Schema, Document, Date, SchemaTypeOptions } from "mongoose"
 
 export interface User extends Document {
 	name: string
@@ -7,7 +7,7 @@ export interface User extends Document {
 	organizationId: Schema.Types.ObjectId
 	isAdmin?: boolean
 	isVerified?: boolean
-	verifiedAt: string
+	verifiedAt: SchemaTypeOptions<Date> | string
 	createdAt: Date
 	updatedAt: Date
 }
@@ -16,7 +16,6 @@ const schema = new Schema<User>(
 	{
 		name: { type: String, required: true },
 		email: { type: String, required: true },
-		verifiedAt: { type: String, required: true },
 		googleUserId: { type: String, required: true },
 		organizationId: {
 			type: Schema.Types.ObjectId,
@@ -25,6 +24,7 @@ const schema = new Schema<User>(
 		},
 		isAdmin: { type: Boolean, default: false },
 		isVerified: { type: Boolean, default: false },
+		verifiedAt: { type: Date, required: true },
 	},
 	{ timestamps: true },
 )

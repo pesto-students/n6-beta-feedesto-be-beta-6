@@ -5,8 +5,8 @@ export interface Discussion extends Document {
 	_id: Schema.Types.ObjectId | string
 	title: string
 	description: string
-	startDate: Schema.Types.Date | string
-	organizationId: SchemaTypeOptions<Date> | string
+	organizationId: Schema.Types.ObjectId | string
+	startDate: SchemaTypeOptions<Date> | string
 	endDate: SchemaTypeOptions<Date> | string
 	participantIds: SchemaTypeOptions<ObjectId[]> | string[]
 	viewerIds: SchemaTypeOptions<ObjectId[]> | string[]
@@ -28,9 +28,9 @@ const schema = new Schema<Discussion>(
 		},
 		endDate: { type: Schema.Types.Date },
 		participantIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
-		viewerIds: { type: [Schema.Types.ObjectId], ref: "USer", default: [] },
+		viewerIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
 		upvoteIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
-		downvoteIds: { type: [Schema.Types.ObjectId], ref: "USer", default: [] },
+		downvoteIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
 	},
 	{ timestamps: true },
 )

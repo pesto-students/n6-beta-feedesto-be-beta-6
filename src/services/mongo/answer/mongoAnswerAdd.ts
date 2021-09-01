@@ -1,6 +1,6 @@
 import { ForbiddenError, InternalServerError } from "@hkbyte/webapi"
 import { collection } from "../collections"
-import { mongoDiscussionList } from "../discussion/mongoDiscussionList"
+import { fetchDiscussions } from "../discussion"
 import { mongoRunner } from "../mongoRunner"
 
 export async function mongoAnswerAdd({
@@ -12,7 +12,7 @@ export async function mongoAnswerAdd({
 	userId: string
 	content: string
 }): Promise<string> {
-	const [discussion] = await mongoDiscussionList({
+	const [discussion] = await fetchDiscussions({
 		id: discussionId,
 		participantId: userId,
 	})

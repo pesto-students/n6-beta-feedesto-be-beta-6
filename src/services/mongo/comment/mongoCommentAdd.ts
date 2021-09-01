@@ -1,8 +1,8 @@
 import { ForbiddenError, InternalServerError } from "@hkbyte/webapi"
-import { collection } from "../collections"
 import { mongoAnswerList } from "../answer/mongoAnswerList"
+import { collection } from "../collections"
+import { fetchDiscussions } from "../discussion"
 import { mongoRunner } from "../mongoRunner"
-import { mongoDiscussionList } from "../discussion/mongoDiscussionList"
 
 export async function mongoCommentAdd({
 	content,
@@ -16,7 +16,7 @@ export async function mongoCommentAdd({
 	const [answer] = await mongoAnswerList({ id: answerId })
 	const discussionId = answer.discussionId
 
-	const [discussion] = await mongoDiscussionList({
+	const [discussion] = await fetchDiscussions({
 		id: discussionId,
 		participantId: userId,
 	})

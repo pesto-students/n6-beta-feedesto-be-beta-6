@@ -66,7 +66,7 @@ export async function addUser({
 		isAdmin,
 	})
 	if (!insertUser) {
-		throw new InternalServerError("Something went wrong: unable to add organization")
+		throw new InternalServerError("Something went wrong: unable to add user")
 	}
 
 	return insertUser.id.toString()

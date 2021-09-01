@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoDiscussionAdd } from "../../../services/mongo/discussion/mongoDiscussionAdd"
+import { addDiscussion } from "../../../services/mongo/discussion"
 import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
@@ -30,7 +30,7 @@ export const apiDiscussionAdd = new WebApi({
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
 	handler: async ({ body, locals }: Context) => {
 		const organizationId = locals.session.organizationId
-		const created = await mongoDiscussionAdd({ ...body, organizationId })
+		const created = await addDiscussion({ ...body, organizationId })
 		return { created }
 	},
 })
