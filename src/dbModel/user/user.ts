@@ -1,4 +1,6 @@
 import _ from "lodash"
+import { FilterQuery } from "mongoose"
+import { checkAndGetObjectId } from "../../utils/utils"
 
 import { User, UserModel } from "./schema"
 
@@ -10,11 +12,12 @@ class UserDbModel {
 		organizationId?: string
 		googleUserId?: string
 	} = {}) {
-		const tokenFindFilter: any = {}
+		const tokenFindFilter: FilterQuery<User> = {}
 		if (googleUserId) tokenFindFilter.googleUserId = googleUserId
-		if (organizationId) tokenFindFilter.organizationId = organizationId
+		if (organizationId)
+			tokenFindFilter.organizationId = checkAndGetObjectId(organizationId)
 
-		return UserModel.find({ tokenFindFilter }).lean()
+		return UserModel.find(tokenFindFilter).lean()
 	}
 
 	async findById(userId: string) {

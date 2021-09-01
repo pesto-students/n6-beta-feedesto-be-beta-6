@@ -24,7 +24,7 @@ const schema = new Schema<User>(
 		},
 		isAdmin: { type: Boolean, default: false },
 		isVerified: { type: Boolean, default: false },
-		verifiedAt: { type: Date, required: true },
+		verifiedAt: { type: Date },
 	},
 	{ timestamps: true },
 )

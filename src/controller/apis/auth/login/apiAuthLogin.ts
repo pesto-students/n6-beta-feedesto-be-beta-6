@@ -1,10 +1,12 @@
-import { ForbiddenError, T, WebApi, _ } from "@hkbyte/webapi"
+import { ForbiddenError, T, WebApi } from "@hkbyte/webapi"
 import { fetchUsers } from "../../../../services/mongo/user"
+import { AuthRole } from "../../../auth"
 import { generateOrganizationAuthToken } from "../../../auth/organization"
 import { generateUserAuthToken } from "../../../auth/user"
 
 type Context = {
 	body: {
+		loginType: AuthRole
 		googleUserId: string
 	}
 }
@@ -12,21 +14,23 @@ type Context = {
 export const apiAuthLogin = new WebApi({
 	endpoint: "/auth/login",
 	requestBodySchema: T.object({
+		loginType: T.string().trim().nonEmpty(),
 		googleUserId: T.string().trim().nonEmpty(),
 	}),
-	handler: async ({ body: { googleUserId } }: Context) => {
+	handler: async ({ body: { loginType, googleUserId } }: Context) => {
 		const [user] = await fetchUsers({ googleUserId })
+
 		if (!user) {
 			throw new ForbiddenError("User does not exist")
 		}
 
-		if (user.isAdmin) {
+		if (loginType == AuthRole.ORGANIZATION && user.isAdmin) {
 			return generateOrganizationAuthToken({
 				organizationId: user.organizationId.instance,
 				userId: user.id,
 			})
 		}
 
-		return generateUserAuthToken({ userId: user.id })
+		return generateUserAuthToken({ userId: user._id })
 	},
 })

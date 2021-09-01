@@ -1,11 +1,12 @@
+import { FilterQuery } from "mongoose"
 import { Organization, OrganizationModel } from "./schema"
 
 class OrganizationDbModel {
 	async findAll({ name }: { name?: string } = {}) {
-		const tokenFindFilter: any = {}
+		const tokenFindFilter: FilterQuery<Organization> = {}
 		if (name) tokenFindFilter.name = name
 
-		return OrganizationModel.find({ tokenFindFilter }).lean()
+		return OrganizationModel.find(tokenFindFilter).lean()
 	}
 	async findById(organizationId: string) {
 		return OrganizationModel.findById(organizationId).lean()

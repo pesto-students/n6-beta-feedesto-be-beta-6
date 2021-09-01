@@ -1,3 +1,4 @@
+import { FilterQuery } from "mongoose"
 import { checkAndGetObjectId } from "../../utils/utils"
 import { Comment, CommentModel } from "./schema"
 
@@ -11,12 +12,12 @@ class CommentDbModel {
 		answerId?: string
 		userId?: string
 	} = {}) {
-		const tokenFindFilter: any = {}
+		const tokenFindFilter: FilterQuery<Comment> = {}
 		if (id) tokenFindFilter._id = checkAndGetObjectId(id)
-		if (answerId) tokenFindFilter.answerId = answerId
-		if (userId) tokenFindFilter.userId = userId
+		if (answerId) tokenFindFilter.answerId = checkAndGetObjectId(answerId)
+		if (userId) tokenFindFilter.userId = checkAndGetObjectId(userId)
 
-		return CommentModel.find({ tokenFindFilter }).lean()
+		return CommentModel.find(tokenFindFilter).lean()
 	}
 
 	async findById(commentId: string) {

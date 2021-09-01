@@ -1,4 +1,5 @@
 import _ from "lodash"
+import { FilterQuery } from "mongoose"
 import { checkAndGetObjectId } from "../../utils/utils"
 import { Discussion, DiscussionModel } from "./schema"
 
@@ -14,13 +15,13 @@ class DiscussionDbModel {
 		viewerId?: string
 		organizationId?: string
 	} = {}) {
-		const tokenFindFilter: any = {}
+		const tokenFindFilter: FilterQuery<Discussion> = {}
 		if (id) tokenFindFilter._id = checkAndGetObjectId(id)
 		if (participantId) tokenFindFilter.participantIds = { $elemMatch: participantId }
 		if (viewerId) tokenFindFilter.viewerIds = { $elemMatch: participantId }
 		if (organizationId) tokenFindFilter.organizationId = organizationId
 
-		return DiscussionModel.find({ tokenFindFilter }).lean()
+		return DiscussionModel.find(tokenFindFilter).lean()
 	}
 
 	async findById(discussionId: string) {

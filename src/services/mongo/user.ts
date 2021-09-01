@@ -26,7 +26,8 @@ export async function fetchUsers({
 	}
 
 	if (googleUserId) {
-		return userModel.findAll({ googleUserId })
+		const users = await userModel.findAll({ googleUserId })
+		return users
 	}
 
 	if (organizationId) {
