@@ -33,6 +33,22 @@ export const apiAnswerList = new WebApi({
 			})
 		}
 
-		return answerList
+		return answerList.map((answer) => {
+			const hasUpvoted: boolean =
+				answer.upvoteIds.findIndex((id: any) => {
+					return session.userId == id.toString()
+				}) > -1
+
+			const hasDownvoted: boolean =
+				answer.downvoteIds.findIndex((id: any) => {
+					return session.userId == id.toString()
+				}) > -1
+
+			return {
+				...answer,
+				hasUpvoted,
+				hasDownvoted,
+			}
+		})
 	},
 })

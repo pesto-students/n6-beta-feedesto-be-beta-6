@@ -1,5 +1,6 @@
 import { apiAnswerAdd } from "./answer/apiAnswerAdd"
 import { apiAnswerDelete } from "./answer/apiAnswerDelete"
+import { apiAnswerAddDownvote } from "./answer/apiAnswerDownvoteAdd"
 import { apiAnswerList } from "./answer/apiAnswerList"
 import { apiAnswerAddUpvote } from "./answer/apiAnswerUpvoteAdd"
 import { apiAuthLogin } from "./auth/login/apiAuthLogin"
@@ -41,6 +42,7 @@ export default [
 	apiAnswerList,
 	apiAnswerDelete,
 	apiAnswerAddUpvote,
+	apiAnswerAddDownvote,
 	apiCommentAdd,
 	apiCommentList,
 	apiCommentDelete,
