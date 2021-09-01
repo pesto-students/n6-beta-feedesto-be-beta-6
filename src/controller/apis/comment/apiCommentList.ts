@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoCommentList } from "../../../services/mongo/comment/mongoCommentList"
+import { fetchComments } from "../../../services/mongo/comment"
 import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
@@ -23,7 +23,7 @@ export const apiCommentList = new WebApi({
 	method: RequestMethod.GET,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION, AuthRole.USER)],
 	handler: async ({ query, locals: { session } }: Context) => {
-		const commentList = await mongoCommentList(query)
+		const commentList = await fetchComments(query)
 
 		// Hiding User of a given comment
 		if (session.role !== AuthRole.ORGANIZATION) {

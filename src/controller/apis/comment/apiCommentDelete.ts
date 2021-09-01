@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoCommentDelete } from "../../../services/mongo/comment/mongoCommentDelete"
+import { deleteComment } from "../../../services/mongo/comment"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
 
@@ -16,5 +16,5 @@ export const apiCommentDelete = new WebApi({
 	}),
 	method: RequestMethod.DELETE,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
-	handler: ({ body }: Context) => mongoCommentDelete(body),
+	handler: ({ body }: Context) => deleteComment(body),
 })

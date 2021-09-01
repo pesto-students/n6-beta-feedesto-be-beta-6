@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoCommentAdd } from "../../../services/mongo/comment/mongoCommentAdd"
+import { addComment } from "../../../services/mongo/comment"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
 
@@ -21,7 +21,7 @@ export const apiCommentAdd = new WebApi({
 	method: RequestMethod.POST,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION, AuthRole.USER)],
 	handler: async ({ body }: Context) => {
-		const created = await mongoCommentAdd(body)
+		const created = await addComment(body)
 		return { created }
 	},
 })

@@ -11,7 +11,7 @@ class CommentDbModel {
 		id?: string
 		answerId?: string
 		userId?: string
-	}) {
+	} = {}) {
 		const tokenFindFilter: any = {}
 		if (id) tokenFindFilter._id = checkAndGetObjectId(id)
 		if (answerId) tokenFindFilter.answerId = answerId
