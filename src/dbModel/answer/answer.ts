@@ -14,8 +14,8 @@ class AnswerDbModel {
 	} = {}) {
 		const tokenFindFilter: FilterQuery<Answer> = {}
 		if (_id) tokenFindFilter._id = checkAndGetObjectId(_id)
-		if (discussionId) tokenFindFilter.discussionId = discussionId
-		if (userId) tokenFindFilter.userId = userId
+		if (discussionId) tokenFindFilter.discussionId = checkAndGetObjectId(discussionId)
+		if (userId) tokenFindFilter.userId = checkAndGetObjectId(userId)
 
 		return AnswerModel.find(tokenFindFilter).sort({ upvoteIds: -1 }).lean()
 	}

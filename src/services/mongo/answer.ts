@@ -5,18 +5,18 @@ import { useAnswerDbModel } from "../../dbModel"
 import { Answer } from "../../dbModel"
 
 export async function fetchAnswers({
-	_id,
+	id,
 	discussionId,
 	userId,
 }: {
-	_id?: string
+	id?: string
 	discussionId?: string
 	userId?: string
 } = {}): Promise<LeanDocument<Answer>[]> {
 	const answerModel = useAnswerDbModel()
 
-	if (_id) {
-		const answer = await answerModel.findById(_id)
+	if (id) {
+		const answer = await answerModel.findById(id)
 		return answer ? [answer] : []
 	}
 
@@ -51,7 +51,7 @@ export async function addAnswer({
 		throw new InternalServerError("Something went wrong: unable to add answer")
 	}
 
-	return insertAnswer._id.toString()
+	return insertAnswer.id.toString()
 }
 
 export async function deleteAnswer({ _id }: { _id: string }) {

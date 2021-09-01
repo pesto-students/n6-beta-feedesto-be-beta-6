@@ -17,10 +17,10 @@ class DiscussionDbModel {
 	} = {}) {
 		const tokenFindFilter: FilterQuery<Discussion> = {}
 		if (_id) tokenFindFilter._id = checkAndGetObjectId(_id)
-		if (participantId)
-			tokenFindFilter.participantIds = { $elemMatch: { participantId } }
-		if (viewerId) tokenFindFilter.viewerIds = { $elemMatch: { participantId } }
-		if (organizationId) tokenFindFilter.organizationId = organizationId
+		if (participantId) tokenFindFilter.participantIds = participantId
+		if (viewerId) tokenFindFilter.viewerIds = viewerId
+		if (organizationId)
+			tokenFindFilter.organizationId = checkAndGetObjectId(organizationId)
 
 		return DiscussionModel.find(tokenFindFilter).lean()
 	}
