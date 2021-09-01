@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoUserUpdate } from "../../../services/mongo/user/mongoUserUpdate"
+import { updateUser } from "../../../services/mongo/user"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
 
@@ -19,6 +19,6 @@ export const apiUserVerify = new WebApi({
 	method: RequestMethod.PUT,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
 	handler: async ({ body }: Context) => {
-		await mongoUserUpdate({ id: body.userId, update: { isVerified: body.status } })
+		await updateUser({ id: body.userId, update: { isVerified: body.status } })
 	},
 })

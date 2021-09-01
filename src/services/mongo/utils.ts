@@ -1,7 +1,7 @@
 import { InternalServerError } from "@hkbyte/webapi"
-import { ObjectId } from "mongodb"
+import { isValidObjectId, ObjectId } from "mongoose"
 
 export function checkAndGetObjectId(val: string) {
-	if (ObjectId.isValid(val)) return new ObjectId(val)
+	if (isValidObjectId(val)) return val as unknown as ObjectId
 	throw new InternalServerError("Id is invalid")
 }

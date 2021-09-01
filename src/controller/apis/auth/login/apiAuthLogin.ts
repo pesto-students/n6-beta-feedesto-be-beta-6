@@ -1,5 +1,5 @@
 import { ForbiddenError, T, WebApi, _ } from "@hkbyte/webapi"
-import { mongoUserList } from "../../../../services/mongo/user/mongoUserList"
+import { fetchUsers } from "../../../../services/mongo/user"
 import { generateOrganizationAuthToken } from "../../../auth/organization"
 import { generateUserAuthToken } from "../../../auth/user"
 
@@ -15,14 +15,14 @@ export const apiAuthLogin = new WebApi({
 		googleUserId: T.string().trim().nonEmpty(),
 	}),
 	handler: async ({ body: { googleUserId } }: Context) => {
-		const [user] = await mongoUserList({ googleUserId })
+		const [user] = await fetchUsers({ googleUserId })
 		if (!user) {
 			throw new ForbiddenError("User does not exist")
 		}
 
 		if (user.isAdmin) {
 			return generateOrganizationAuthToken({
-				organizationId: user.organizationId,
+				organizationId: user.organizationId.instance,
 				userId: user.id,
 			})
 		}

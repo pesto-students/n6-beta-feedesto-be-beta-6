@@ -1,4 +1,4 @@
-import isUndefined from "lodash/isUndefined"
+import _ from "lodash"
 
 import { User, UserModel } from "./schema"
 
@@ -9,7 +9,7 @@ class UserDbModel {
 	}: {
 		organizationId?: string
 		googleUserId?: string
-	}) {
+	} = {}) {
 		const tokenFindFilter: any = {}
 		if (googleUserId) tokenFindFilter.googleUserId = googleUserId
 		if (organizationId) tokenFindFilter.organizationId = organizationId
@@ -21,18 +21,8 @@ class UserDbModel {
 		return UserModel.findById(userId).lean()
 	}
 
-	async findByIdAndUpdate(
-		userId: string,
-		update: {
-			name?: string
-			isVerified?: boolean
-		},
-	) {
-		const tokenUpdate: any = {}
-		if (isUndefined(update.name)) tokenUpdate.name = update.name
-		if (isUndefined(update.isVerified)) tokenUpdate.isVerified = update.isVerified
-
-		return UserModel.findByIdAndUpdate(userId, tokenUpdate, {
+	async findByIdAndUpdate(userId: string, update: Partial<User>) {
+		return UserModel.findByIdAndUpdate(userId, update, {
 			new: true,
 		}).lean()
 	}

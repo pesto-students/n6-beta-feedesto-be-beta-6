@@ -2,10 +2,6 @@ import jwt from "jsonwebtoken"
 import { JWT_ISSUER, JWT_SECRET } from "."
 import { PreconditionsFailedError } from "../../utils/errors"
 
-export type OrganizationAuthPayload = {
-	organizationId: string
-}
-
 export async function generateOrganizationAuthToken({
 	organizationId,
 	userId,

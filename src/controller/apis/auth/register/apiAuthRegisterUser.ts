@@ -1,6 +1,6 @@
 import { BadRequestError, T, WebApi, _ } from "@hkbyte/webapi"
 import { fetchOrganizations } from "../../../../services/mongo/organization"
-import { mongoUserAdd } from "../../../../services/mongo/user/mongoUserAdd"
+import { addUser } from "../../../../services/mongo/user"
 import { validateEmail } from "../../../../utils/validators"
 import { generateUserAuthToken } from "../../../auth/user"
 
@@ -29,7 +29,7 @@ export const apiAuthRegisterUser = new WebApi({
 			throw new BadRequestError("Organization not found !")
 		}
 
-		const userId = await mongoUserAdd(body)
+		const userId = await addUser(body)
 
 		return generateUserAuthToken({
 			userId,

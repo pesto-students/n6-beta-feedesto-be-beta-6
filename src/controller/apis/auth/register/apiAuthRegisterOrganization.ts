@@ -3,7 +3,7 @@ import {
 	addOrganization,
 	updateOrganization,
 } from "../../../../services/mongo/organization"
-import { mongoUserAdd } from "../../../../services/mongo/user/mongoUserAdd"
+import { addUser } from "../../../../services/mongo/user"
 import { validateEmail } from "../../../../utils/validators"
 import { generateOrganizationAuthToken } from "../../../auth/organization"
 
@@ -32,7 +32,7 @@ export const apiAuthRegisterOrganization = new WebApi({
 			userId: "temp",
 		})
 
-		const userId = await mongoUserAdd({
+		const userId = await addUser({
 			email,
 			name,
 			organizationId,

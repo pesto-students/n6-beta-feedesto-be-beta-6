@@ -4,8 +4,26 @@ import {
 	InvalidArgumentError,
 } from "@hkbyte/webapi"
 import _ from "lodash"
-import { useOrganizationDbModel } from "../../../dbModel"
-import { checkAndGetObjectId } from "../utils"
+import { useOrganizationDbModel } from "../../dbModel"
+
+export async function fetchOrganizations({
+	id,
+	name,
+}: {
+	id?: string
+	name?: string
+} = {}) {
+	const organizationModel = useOrganizationDbModel()
+
+	if (id) {
+		return await organizationModel.findById(id)
+	}
+	if (name) {
+		return await organizationModel.findBy({ name })
+	}
+
+	return organizationModel.findAll()
+}
 
 export async function addOrganization({
 	name,
@@ -33,25 +51,6 @@ export async function addOrganization({
 	return insertOrganization.id.toString()
 }
 
-export async function fetchOrganizations({
-	id,
-	name,
-}: {
-	id?: string
-	name?: string
-} = {}) {
-	const organizationModel = useOrganizationDbModel()
-
-	if (id) {
-		return await organizationModel.findById(id)
-	}
-	if (name) {
-		return await organizationModel.findBy({ name })
-	}
-
-	return organizationModel.findAll()
-}
-
 export async function updateOrganization({
 	id,
 	update,
@@ -70,7 +69,7 @@ export async function updateOrganization({
 
 	const tokenFilter: any = {}
 
-	tokenFilter._id = checkAndGetObjectId(id)
+	tokenFilter._id = id
 
 	const tokenUpdate: any = { modifiedAt: new Date() }
 	if (!_.isUndefined(update.name)) tokenUpdate.name = update.name

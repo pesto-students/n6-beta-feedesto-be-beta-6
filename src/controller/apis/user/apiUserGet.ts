@@ -1,5 +1,5 @@
 import { RequestMethod, WebApi } from "@hkbyte/webapi"
-import { mongoUserList } from "../../../services/mongo/user/mongoUserList"
+import { fetchUsers } from "../../../services/mongo/user"
 import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
@@ -15,7 +15,7 @@ export const apiUserGet = new WebApi({
 	handler: async ({ locals }: Context) => {
 		const userId = locals.session.userId
 
-		return await mongoUserList({
+		return await fetchUsers({
 			id: userId,
 		})
 	},

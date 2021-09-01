@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { mongoUserUpdate } from "../../../services/mongo/user/mongoUserUpdate"
+import { updateUser } from "../../../services/mongo/user"
 import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
 
@@ -25,6 +25,6 @@ export const apiUserUpdate = new WebApi({
 	method: RequestMethod.PUT,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
 	handler: async ({ body }: Context) => {
-		await mongoUserUpdate(body)
+		await updateUser(body)
 	},
 })

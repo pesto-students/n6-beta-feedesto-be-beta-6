@@ -36,8 +36,9 @@ class DiscussionDbModel {
 		if (!isUndefined(update.downvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
 
 		if (!isUndefined(update.startDate))
-			tokenUpdate.startDate = new Date(update.startDate)
-		if (!isUndefined(update.endDate)) tokenUpdate.endDate = new Date(update.endDate)
+			tokenUpdate.startDate = new Date(update.startDate.toString())
+		if (!isUndefined(update.endDate))
+			tokenUpdate.endDate = new Date(update.endDate.toString())
 
 		return DiscussionModel.findByIdAndUpdate(discussionId, tokenUpdate, {
 			new: true,
