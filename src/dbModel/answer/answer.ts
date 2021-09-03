@@ -1,7 +1,10 @@
 import _ from "lodash"
-import { FilterQuery, PopulateOptions } from "mongoose"
+import { FilterQuery, PopulateOptions, Types } from "mongoose"
+
 import { checkAndGetObjectId } from "../../utils/utils"
 import { Answer, AnswerModel } from "./schema"
+
+const { ObjectId } = Types
 
 class AnswerDbModel {
 	async findAll({
@@ -14,22 +17,67 @@ class AnswerDbModel {
 		userId?: string
 	} = {}) {
 		const tokenFindFilter: FilterQuery<Answer> = {}
-		if (_id) tokenFindFilter._id = checkAndGetObjectId(_id)
-		if (discussionId) tokenFindFilter.discussionId = checkAndGetObjectId(discussionId)
-		if (userId) tokenFindFilter.userId = checkAndGetObjectId(userId)
+		if (_id) tokenFindFilter._id = ObjectId(checkAndGetObjectId(_id))
+		if (discussionId) tokenFindFilter.discussionId = ObjectId(checkAndGetObjectId(discussionId))
+		if (userId) tokenFindFilter.userId = ObjectId(checkAndGetObjectId(userId))
 
-		return AnswerModel.find(tokenFindFilter)
-			.populate(<PopulateOptions>{
-				path: "userId upvoteIds downvoteIds",
-			})
-			.populate(<PopulateOptions>{
-				path: "commentIds",
-				populate: {
-					path: "userId upvoteIds downvoteIds",
-				},
-			})
-			.sort({ upvoteIds: -1 })
-			.lean()
+		const query: any = [
+			{ $match: tokenFindFilter },
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'userId',
+					foreignField: '_id',
+					as: 'userId'
+				}
+			},
+			{ $unwind: '$userId' },
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'upvoteIds',
+					foreignField: '_id',
+					as: 'upvoteIds'
+				}
+			},
+			{ $unwind: '$upvoteIds' },
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'downvoteIds',
+					foreignField: '_id',
+					as: 'downvoteIds'
+				}
+			},
+			{ $unwind: '$downvoteIds' },
+			{
+				$lookup: {
+					from: 'comments',
+					let: { answerId: '$_id' },
+					pipeline: [
+						{ $match: { $expr: { $eq: ['$answerId', '$$answerId'] } } }
+					],
+					as: 'comments'
+				}
+			},
+			{ $sort: { upvoteIds: -1 } }
+
+		]
+
+		// return AnswerModel.find(tokenFindFilter)
+		// 	.populate(<PopulateOptions>{
+		// 		path: "userId upvoteIds downvoteIds",
+		// 	})
+		// 	.populate(<PopulateOptions>{
+		// 		path: "commentIds",
+		// 		populate: {
+		// 			path: "userId upvoteIds downvoteIds",
+		// 		},
+		// 	})
+		// 	.sort({ upvoteIds: -1 })
+		// 	.lean()
+
+		return AnswerModel.aggregate(query).allowDiskUse(true)
 	}
 
 	async findById(answerId: string) {
