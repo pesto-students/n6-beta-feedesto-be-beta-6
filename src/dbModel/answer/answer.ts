@@ -47,7 +47,6 @@ class AnswerDbModel {
 					as: 'upvoteIds'
 				}
 			},
-			{ $unwind: '$upvoteIds' },
 			{
 				$lookup: {
 					from: 'users',
@@ -56,7 +55,6 @@ class AnswerDbModel {
 					as: 'downvoteIds'
 				}
 			},
-			{ $unwind: '$downvoteIds' },
 			{
 				$lookup: {
 					from: 'comments',
