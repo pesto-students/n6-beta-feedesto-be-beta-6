@@ -6,6 +6,7 @@ export interface Answer extends Document {
 	content: string
 	upvoteIds: SchemaTypeOptions<ObjectId> | string[]
 	downvoteIds: SchemaTypeOptions<ObjectId> | string[]
+	commentIds: SchemaTypeOptions<ObjectId> | string[]
 	createdAt: Date
 	updatedAt: Date
 }
@@ -17,6 +18,7 @@ const schema = new Schema<Answer>(
 		userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
 		upvoteIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
 		downvoteIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
+		commentIds: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
 	},
 	{ timestamps: true },
 )

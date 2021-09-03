@@ -1,4 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
+import { Comment, User } from "../../../dbModel"
 import { fetchAnswers } from "../../../services/mongo/answer"
 import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
@@ -35,14 +36,34 @@ export const apiAnswerList = new WebApi({
 
 		return answerList.map((answer) => {
 			const hasUpvoted: boolean =
-				answer.upvoteIds.findIndex((id: any) => {
-					return session.userId == id.toString()
+				answer.upvoteIds.findIndex((user: User) => {
+					return session.userId == user._id.toString()
 				}) > -1
 
 			const hasDownvoted: boolean =
-				answer.downvoteIds.findIndex((id: any) => {
-					return session.userId == id.toString()
+				answer.downvoteIds.findIndex((user: User) => {
+					return session.userId == user._id.toString()
 				}) > -1
+
+			answer.commentIds = answer.commentIds.map((comment: Comment) => {
+				const hasUpvoted: boolean =
+					comment.upvoteIds.findIndex((user: User) => {
+						return session.userId == user._id.toString()
+					}) > -1
+
+				const hasDownvoted: boolean =
+					comment.downvoteIds.findIndex((user: User) => {
+						return session.userId == user._id.toString()
+					}) > -1
+				return {
+					...comment,
+					hasUpvoted,
+					hasDownvoted,
+					upvoteCount: comment.upvoteIds.length,
+					downvoteCount: comment.downvoteIds.length,
+					userId: undefined,
+				}
+			})
 
 			return {
 				...answer,
@@ -50,8 +71,12 @@ export const apiAnswerList = new WebApi({
 				hasDownvoted,
 				upvoteCount: answer.upvoteIds.length,
 				downvoteCount: answer.downvoteIds.length,
-				downvoteIds: null,
-				upvoteIds: null,
+				comments: answer.commentIds,
+				commentIds: undefined,
+				downvotes: answer.downvoteIds,
+				downvoteIds: undefined,
+				upvotes: answer.upvoteIds,
+				upvoteIds: undefined,
 			}
 		})
 	},

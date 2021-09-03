@@ -1,5 +1,5 @@
 import _ from "lodash"
-import { FilterQuery } from "mongoose"
+import { FilterQuery, PopulateOptions } from "mongoose"
 import { checkAndGetObjectId } from "../../utils/utils"
 import { Answer, AnswerModel } from "./schema"
 
@@ -18,7 +18,18 @@ class AnswerDbModel {
 		if (discussionId) tokenFindFilter.discussionId = checkAndGetObjectId(discussionId)
 		if (userId) tokenFindFilter.userId = checkAndGetObjectId(userId)
 
-		return AnswerModel.find(tokenFindFilter).sort({ upvoteIds: -1 }).lean()
+		return AnswerModel.find(tokenFindFilter)
+			.populate(<PopulateOptions>{
+				path: "userId upvoteIds downvoteIds",
+			})
+			.populate(<PopulateOptions>{
+				path: "commentIds",
+				populate: {
+					path: "userId upvoteIds downvoteIds",
+				},
+			})
+			.sort({ upvoteIds: -1 })
+			.lean()
 	}
 
 	async findById(answerId: string) {
@@ -31,6 +42,7 @@ class AnswerDbModel {
 		if (!_.isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
 		if (!_.isUndefined(update.downvoteIds))
 			tokenUpdate.downvoteIds = update.downvoteIds
+		if (!_.isUndefined(update.commentIds)) tokenUpdate.commentIds = update.commentIds
 
 		return AnswerModel.findByIdAndUpdate(discussionId, tokenUpdate, {
 			new: true,

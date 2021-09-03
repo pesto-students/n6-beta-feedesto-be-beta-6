@@ -1,7 +1,7 @@
 import { InternalServerError, InvalidArgumentError } from "@hkbyte/webapi"
 import _ from "lodash"
 import { LeanDocument } from "mongoose"
-import { useCommentDbModel } from "../../dbModel"
+import { useAnswerDbModel, useCommentDbModel } from "../../dbModel"
 import { Comment } from "../../dbModel"
 import { checkAndGetObjectId } from "../../utils/utils"
 
@@ -42,12 +42,23 @@ export async function addComment({
 	content: string
 }): Promise<string> {
 	const commentModel = useCommentDbModel()
+	const answerModel = useAnswerDbModel()
+
+	const answer = await answerModel.findById(answerId)
+	if (!answer) {
+		throw new InternalServerError("Something went wrong: answer not found")
+	}
 
 	const insertComment = await commentModel.create({
 		content,
 		answerId: checkAndGetObjectId(answerId),
 		userId: checkAndGetObjectId(userId),
 	})
+
+	await answerModel.findByIdAndUpdate(answerId, {
+		commentIds: [...answer.commentIds.map((e: any) => e), insertComment._id],
+	})
+
 	if (!insertComment) {
 		throw new InternalServerError("Something went wrong: unable to add comment")
 	}
