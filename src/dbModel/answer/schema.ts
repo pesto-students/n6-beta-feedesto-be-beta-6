@@ -1,8 +1,8 @@
-import { Date, model, Schema, Document, SchemaTypeOptions, ObjectId } from "mongoose"
+import { Date, model, Schema, Types, Document, SchemaTypeOptions, ObjectId } from "mongoose"
 
 export interface Answer extends Document {
-	discussionId: Schema.Types.ObjectId | string
-	userId: Schema.Types.ObjectId | string
+	discussionId: Types.ObjectId | string
+	userId: Types.ObjectId | string
 	content: string
 	upvoteIds: SchemaTypeOptions<ObjectId> | string[]
 	downvoteIds: SchemaTypeOptions<ObjectId> | string[]

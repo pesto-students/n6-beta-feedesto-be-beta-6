@@ -17,9 +17,9 @@ class AnswerDbModel {
 		userId?: string
 	} = {}) {
 		const tokenFindFilter: FilterQuery<Answer> = {}
-		if (_id) tokenFindFilter._id = ObjectId(checkAndGetObjectId(_id))
-		if (discussionId) tokenFindFilter.discussionId = ObjectId(checkAndGetObjectId(discussionId))
-		if (userId) tokenFindFilter.userId = ObjectId(checkAndGetObjectId(userId))
+		if (_id) tokenFindFilter._id = new ObjectId(_id)
+		if (discussionId) tokenFindFilter.discussionId = new ObjectId(discussionId)
+		if (userId) tokenFindFilter.userId = new ObjectId(userId)
 
 		const query: any = [
 			{ $match: tokenFindFilter },
