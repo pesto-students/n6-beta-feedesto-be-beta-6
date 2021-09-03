@@ -9,10 +9,14 @@ const { ObjectId } = Types
 class AnswerDbModel {
 	async findAll({
 		_id,
+		pageNumber = 1,
+		limit = 10,
 		discussionId,
 		userId,
 	}: {
-		_id?: string
+		_id?: string,
+		pageNumber?: number
+		limit?: number
 		discussionId?: string
 		userId?: string
 	} = {}) {
@@ -20,6 +24,9 @@ class AnswerDbModel {
 		if (_id) tokenFindFilter._id = new ObjectId(_id)
 		if (discussionId) tokenFindFilter.discussionId = new ObjectId(discussionId)
 		if (userId) tokenFindFilter.userId = new ObjectId(userId)
+
+		let skip = (pageNumber - 1) * limit;
+
 
 		const query: any = [
 			{ $match: tokenFindFilter },
@@ -60,7 +67,21 @@ class AnswerDbModel {
 					as: 'comments'
 				}
 			},
-			{ $sort: { upvoteIds: -1 } }
+			{ $sort: { upvoteIds: -1 } },
+			{
+				$facet: {
+					metadata: [{ $count: 'total' }, { $addFields: { pageNumber, limit, skip } }],
+					documents: [
+						{ $skip: skip },
+						{ $limit: limit },]
+				}
+			},
+			{
+				$project: {
+					metadata: { $ifNull: [{ $arrayElemAt: ['$metadata', 0] }, { count: 0, pageNumber, limit, skip }] },
+					documents: 1,
+				},
+			}
 
 		]
 
