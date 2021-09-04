@@ -37,7 +37,7 @@ class UserDbModel {
 		})
 	}
 	async deleteById(userId: string) {
-		return UserModel.deleteOne({ userId }).lean()
+		return UserModel.deleteOne({ _id: userId }).lean()
 	}
 }
 

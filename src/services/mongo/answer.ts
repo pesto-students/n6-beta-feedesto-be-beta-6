@@ -1,7 +1,6 @@
 import { InternalServerError, InvalidArgumentError } from "@hkbyte/webapi"
 import { LeanDocument } from "mongoose"
 import { Answer, Comment, useAnswerDbModel, User } from "../../dbModel"
-import { checkAndGetObjectId } from "../../utils/utils"
 
 export async function fetchAnswers({
 	_id,
@@ -83,7 +82,8 @@ export async function fetchUserAnswers({
 					return userId == user._id.toString()
 				}) > -1
 
-			const isUserComment = comment.userId == checkAndGetObjectId(userId)
+			//@ts-ignore
+			const isUserComment = comment.userId._id == userId
 
 			return {
 				...comment,
@@ -105,7 +105,10 @@ export async function fetchUserAnswers({
 			answer.downvoteIds.findIndex((user: User) => {
 				return userId == user._id.toString()
 			}) > -1
-		const isUserAnswer = answer.userId == userId
+
+		//@ts-ignore
+		const isUserAnswer = answer.userId._id == userId
+
 		return {
 			...answer,
 			comments: answerComments,

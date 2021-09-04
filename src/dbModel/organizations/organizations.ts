@@ -22,7 +22,7 @@ class OrganizationDbModel {
 		})
 	}
 	async deleteById(organizationId: string) {
-		return OrganizationModel.deleteOne({ organizationId }).lean()
+		return OrganizationModel.deleteOne({ _id: organizationId }).lean()
 	}
 }
 

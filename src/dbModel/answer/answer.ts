@@ -133,7 +133,7 @@ class AnswerDbModel {
 		})
 	}
 	async deleteById(answerId: string) {
-		return AnswerModel.deleteOne({ answerId }).lean()
+		return AnswerModel.deleteOne({ _id: answerId }).lean()
 	}
 }
 

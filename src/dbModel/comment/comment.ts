@@ -43,7 +43,7 @@ class CommentDbModel {
 		})
 	}
 	async deleteById(commentId: string) {
-		return CommentModel.deleteOne({ commentId }).lean()
+		return CommentModel.deleteOne({ _id: commentId }).lean()
 	}
 }
 

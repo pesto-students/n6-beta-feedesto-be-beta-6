@@ -54,7 +54,7 @@ class DiscussionDbModel {
 	}
 
 	async deleteById(discussionId: string) {
-		return DiscussionModel.deleteOne({ discussionId }).lean()
+		return DiscussionModel.deleteOne({ _id: discussionId }).lean()
 	}
 }
 

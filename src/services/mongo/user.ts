@@ -96,9 +96,7 @@ export async function updateUser({
 	if (!_.isUndefined(update.name)) tokenUpdate.name = update.name
 	if (!_.isUndefined(update.isVerified)) {
 		tokenUpdate.isVerified = update.isVerified
-		if (update.isVerified) {
-			tokenUpdate.verifiedAt = new Date().toISOString()
-		}
+		tokenUpdate.verifiedAt = new Date().toISOString()
 	}
 
 	await userModel.findByIdAndUpdate(_id, tokenUpdate)
