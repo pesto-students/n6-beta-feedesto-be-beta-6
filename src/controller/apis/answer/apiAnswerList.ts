@@ -1,5 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
-import { Comment, User } from "../../../dbModel"
+import { Answer, Comment, User } from "../../../dbModel"
 import { fetchAnswers } from "../../../services/mongo/answer"
 import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
@@ -24,7 +24,8 @@ export const apiAnswerList = new WebApi({
 	method: RequestMethod.GET,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION, AuthRole.USER)],
 	handler: async ({ query, locals: { session } }: Context) => {
-		const answerList = await fetchAnswers(query)
+		const [{ documents: answerList }]: { documents: Answer[] }[] =
+			(await fetchAnswers(query)) as any
 
 		// Hiding User of a given answer
 		if (session.role !== AuthRole.ORGANIZATION) {
@@ -45,7 +46,7 @@ export const apiAnswerList = new WebApi({
 					return session.userId == user._id.toString()
 				}) > -1
 
-			answer.commentIds = answer.commentIds.map((comment: Comment) => {
+			const answerComments = answer.comments.map((comment: Comment) => {
 				const hasUpvoted: boolean =
 					comment.upvoteIds.findIndex((user: User) => {
 						return session.userId == user._id.toString()
@@ -61,6 +62,8 @@ export const apiAnswerList = new WebApi({
 					hasDownvoted,
 					upvoteCount: comment.upvoteIds.length,
 					downvoteCount: comment.downvoteIds.length,
+					upvoteIds: undefined,
+					downvoteIds: undefined,
 					userId: undefined,
 				}
 			})
@@ -71,7 +74,7 @@ export const apiAnswerList = new WebApi({
 				hasDownvoted,
 				upvoteCount: answer.upvoteIds.length,
 				downvoteCount: answer.downvoteIds.length,
-				comments: answer.commentIds,
+				comments: answerComments,
 				commentIds: undefined,
 				downvotes: answer.downvoteIds,
 				downvoteIds: undefined,

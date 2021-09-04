@@ -1,7 +1,5 @@
 import _ from "lodash"
-import { FilterQuery, PopulateOptions, Types } from "mongoose"
-
-import { checkAndGetObjectId } from "../../utils/utils"
+import { FilterQuery, Types } from "mongoose"
 import { Answer, AnswerModel } from "./schema"
 
 const { ObjectId } = Types
@@ -14,7 +12,7 @@ class AnswerDbModel {
 		discussionId,
 		userId,
 	}: {
-		_id?: string,
+		_id?: string
 		pageNumber?: number
 		limit?: number
 		discussionId?: string
@@ -25,62 +23,66 @@ class AnswerDbModel {
 		if (discussionId) tokenFindFilter.discussionId = new ObjectId(discussionId)
 		if (userId) tokenFindFilter.userId = new ObjectId(userId)
 
-		let skip = (pageNumber - 1) * limit;
-
+		let skip = (pageNumber - 1) * limit
 
 		const query: any = [
 			{ $match: tokenFindFilter },
 			{
 				$lookup: {
-					from: 'users',
-					localField: 'userId',
-					foreignField: '_id',
-					as: 'userId'
-				}
+					from: "users",
+					localField: "userId",
+					foreignField: "_id",
+					as: "userId",
+				},
 			},
-			{ $unwind: '$userId' },
+			{ $unwind: "$userId" },
 			{
 				$lookup: {
-					from: 'users',
-					localField: 'upvoteIds',
-					foreignField: '_id',
-					as: 'upvoteIds'
-				}
-			},
-			{
-				$lookup: {
-					from: 'users',
-					localField: 'downvoteIds',
-					foreignField: '_id',
-					as: 'downvoteIds'
-				}
+					from: "users",
+					localField: "upvoteIds",
+					foreignField: "_id",
+					as: "upvoteIds",
+				},
 			},
 			{
 				$lookup: {
-					from: 'comments',
-					let: { answerId: '$_id' },
+					from: "users",
+					localField: "downvoteIds",
+					foreignField: "_id",
+					as: "downvoteIds",
+				},
+			},
+			{
+				$lookup: {
+					from: "comments",
+					let: { answerId: "$_id" },
 					pipeline: [
-						{ $match: { $expr: { $eq: ['$answerId', '$$answerId'] } } }
+						{ $match: { $expr: { $eq: ["$answerId", "$$answerId"] } } },
 					],
-					as: 'comments'
-				}
+					as: "comments",
+				},
 			},
 			{ $sort: { upvoteIds: -1 } },
 			{
 				$facet: {
-					metadata: [{ $count: 'total' }, { $addFields: { pageNumber, limit, skip } }],
-					documents: [
-						{ $skip: skip },
-						{ $limit: limit },]
-				}
+					metadata: [
+						{ $count: "total" },
+						{ $addFields: { pageNumber, limit, skip } },
+					],
+					documents: [{ $skip: skip }, { $limit: limit }],
+				},
 			},
 			{
 				$project: {
-					metadata: { $ifNull: [{ $arrayElemAt: ['$metadata', 0] }, { count: 0, pageNumber, limit, skip }] },
+					metadata: {
+						$ifNull: [
+							{ $arrayElemAt: ["$metadata", 0] },
+							{ count: 0, pageNumber, limit, skip },
+						],
+					},
 					documents: 1,
 				},
-			}
-
+			},
 		]
 
 		// return AnswerModel.find(tokenFindFilter)

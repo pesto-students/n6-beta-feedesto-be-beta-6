@@ -1,4 +1,13 @@
-import { Date, model, Schema, Types, Document, SchemaTypeOptions, ObjectId } from "mongoose"
+import {
+	Date,
+	model,
+	Schema,
+	Types,
+	Document,
+	SchemaTypeOptions,
+	ObjectId,
+} from "mongoose"
+import { Comment } from ".."
 
 export interface Answer extends Document {
 	discussionId: Types.ObjectId | string
@@ -7,6 +16,7 @@ export interface Answer extends Document {
 	upvoteIds: SchemaTypeOptions<ObjectId> | string[]
 	downvoteIds: SchemaTypeOptions<ObjectId> | string[]
 	commentIds: SchemaTypeOptions<ObjectId> | string[]
+	comments: Comment[]
 	createdAt: Date
 	updatedAt: Date
 }
