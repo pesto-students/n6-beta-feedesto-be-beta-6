@@ -6,6 +6,7 @@ import { initiateMongoClient } from "./db"
 import { agenda } from "./agenda"
 
 import eventEmitter from "./eventEmitter"
+import { sendMail } from "./mailer"
 
 const frontEndWebsocket = require("./socket")
 
@@ -39,6 +40,11 @@ server.start().then((port) => {
 				agenda.schedule(new Date(time), "endDiscussion", {
 					discussionId: object._id,
 				})
+			}
+		})
+		eventEmitter.on("sendMail", async ({ object }: any) => {
+			if (object) {
+				await sendMail(object)
 			}
 		})
 

@@ -13,12 +13,14 @@
 	"private": "false",
 	"dependencies": {
 		"@hkbyte/webapi": "^3.0.4",
+		"@types/nodemailer": "^6.4.4",
 		"agenda": "^4.2.1",
 		"bcrypt": "^5.0.0",
 		"dayjs": "^1.10.6",
 		"dotenv": "^8.2.0",
 		"jsonwebtoken": "^8.5.1",
 		"mongoose": "^6.0.2",
+		"nodemailer": "^6.6.3",
 		"socket.io": "^4.2.0"
 	},
 	"devDependencies": {
