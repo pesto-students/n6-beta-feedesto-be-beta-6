@@ -107,23 +107,26 @@ class AnswerDbModel {
 
 	async findByIdAndUpdate(answerId: string, update: Partial<Answer>) {
 		const tokenUpdate: Partial<Answer> = {}
-		if (isUndefined(update.content)) tokenUpdate.content = update.content
-		if (isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
-		if (isUndefined(update.downvoteIds))
-			tokenUpdate.downvoteIds = update.downvoteIds
-		if (isUndefined(update.commentIds)) tokenUpdate.commentIds = update.commentIds
+		if (!isUndefined(update.content)) tokenUpdate.content = update.content
+		if (!isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
+		if (!isUndefined(update.downvoteIds)) tokenUpdate.downvoteIds = update.downvoteIds
+		if (!isUndefined(update.commentIds)) tokenUpdate.commentIds = update.commentIds
 
 		return AnswerModel.findByIdAndUpdate(answerId, tokenUpdate, {
 			new: true,
 		}).lean()
 	}
 
-	async findByIdAndUpvoteOrDownvote(answerId: string, update: {upVoteId?:string,downVoteId?:string}) {
+	async findByIdAndUpvoteOrDownvote(
+		answerId: string,
+		update: { upVoteId?: string; downVoteId?: string },
+	) {
 		const tokenUpdate: any = {}
 
-		if(update.upVoteId)tokenUpdate.$addToSet = {upvoteIds:new ObjectId(update.upVoteId)}
-		if(update.downVoteId)tokenUpdate.$addToSet =  {downvoteIds:new ObjectId(update.downVoteId)}
-
+		if (update.upVoteId)
+			tokenUpdate.$addToSet = { upvoteIds: new ObjectId(update.upVoteId) }
+		if (update.downVoteId)
+			tokenUpdate.$addToSet = { downvoteIds: new ObjectId(update.downVoteId) }
 
 		return AnswerModel.findByIdAndUpdate(answerId, tokenUpdate, {
 			new: true,

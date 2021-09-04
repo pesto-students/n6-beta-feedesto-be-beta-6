@@ -3,7 +3,7 @@ import {
 	InternalServerError,
 	InvalidArgumentError,
 } from "@hkbyte/webapi"
-import _ from "lodash"
+import isUndefined from "lodash/isUndefined"
 import { LeanDocument } from "mongoose"
 import { User } from "../../dbModel"
 import { useUserDbModel } from "../../dbModel"
@@ -90,8 +90,8 @@ export async function updateUser({
 	}
 
 	const tokenUpdate: Partial<User> = {}
-	if (!_.isUndefined(update.name)) tokenUpdate.name = update.name
-	if (!_.isUndefined(update.isVerified)) {
+	if (!isUndefined(update.name)) tokenUpdate.name = update.name
+	if (!isUndefined(update.isVerified)) {
 		tokenUpdate.isVerified = update.isVerified
 		if (update.isVerified) {
 			tokenUpdate.verifiedAt = new Date().toISOString()
