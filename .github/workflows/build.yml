@@ -6,7 +6,7 @@ on:
       - main
       - master
       - develop
-      - ci-test
+      - build-tsc-ci-cd
   pull_request:
     branches:
       - main
