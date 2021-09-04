@@ -58,6 +58,15 @@ class AnswerDbModel {
 					let: { answerId: "$_id" },
 					pipeline: [
 						{ $match: { $expr: { $eq: ["$answerId", "$$answerId"] } } },
+						{
+							$lookup: {
+								from: "users",
+								localField: "userId",
+								foreignField: "_id",
+								as: "userId",
+							},
+						},
+						{ $unwind: "$userId" },
 					],
 					as: "comments",
 				},

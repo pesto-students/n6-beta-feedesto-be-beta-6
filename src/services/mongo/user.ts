@@ -41,12 +41,14 @@ export async function addUser({
 	name,
 	email,
 	googleUserId,
+	googleAvatarUrl,
 	organizationId,
 	isAdmin = false,
 }: {
 	name: string
 	email: string
 	googleUserId: string
+	googleAvatarUrl?: string
 	organizationId: string
 	isAdmin?: boolean
 }): Promise<string> {
@@ -63,6 +65,7 @@ export async function addUser({
 		name,
 		email,
 		googleUserId,
+		googleAvatarUrl,
 		organizationId: checkAndGetObjectId(organizationId),
 		isAdmin,
 	})

@@ -1,8 +1,7 @@
 import { InternalServerError, InvalidArgumentError } from "@hkbyte/webapi"
-import _ from "lodash"
 import { LeanDocument } from "mongoose"
-import { useAnswerDbModel } from "../../dbModel"
-import { Answer } from "../../dbModel"
+import { Answer, Comment, useAnswerDbModel, User } from "../../dbModel"
+import { checkAndGetObjectId } from "../../utils/utils"
 
 export async function fetchAnswers({
 	_id,
@@ -29,6 +28,99 @@ export async function fetchAnswers({
 	}
 
 	return answerModel.findAll()
+}
+
+export async function fetchOrganizationAnswers({
+	discussionId,
+	limit,
+	pageNumber,
+}: { discussionId?: string; limit?: number; pageNumber?: number } = {}) {
+	const answerModel = useAnswerDbModel()
+	const [{ documents: answerList }]: { documents: Answer[] }[] =
+		(await answerModel.findAll({ discussionId, limit, pageNumber })) as any
+
+	return answerList.map((answer) => {
+		const answerComments = answer.comments.map((comment: Comment) => {
+			return {
+				...comment,
+				upvoteCount: comment.upvoteIds.length,
+				downvoteCount: comment.downvoteIds.length,
+			}
+		})
+		return {
+			...answer,
+			comments: answerComments,
+			upvoteCount: answer.upvoteIds.length,
+			downvoteCount: answer.downvoteIds.length,
+		}
+	})
+}
+
+export async function fetchUserAnswers({
+	userId,
+	discussionId,
+	limit,
+	pageNumber,
+}: {
+	userId: string
+	discussionId?: string
+	limit?: number
+	pageNumber?: number
+}) {
+	const answerModel = useAnswerDbModel()
+	const [{ documents: answerList }]: { documents: Answer[] }[] =
+		(await answerModel.findAll({ discussionId, limit, pageNumber })) as any
+
+	return answerList.map((answer) => {
+		const answerComments = answer.comments.map((comment: Comment) => {
+			// Checking Upvotes & Downvotes
+			const hasUpvoted: boolean =
+				comment.upvoteIds.findIndex((user: User) => {
+					return userId == user._id.toString()
+				}) > -1
+			const hasDownvoted: boolean =
+				comment.downvoteIds.findIndex((user: User) => {
+					return userId == user._id.toString()
+				}) > -1
+
+			const isUserComment = comment.userId == checkAndGetObjectId(userId)
+
+			return {
+				...comment,
+				hasUpvoted,
+				hasDownvoted,
+				upvoteCount: comment.upvoteIds.length,
+				downvoteCount: comment.downvoteIds.length,
+				upvoteIds: undefined,
+				downvoteIds: undefined,
+				userId: isUserComment ? comment.userId : undefined,
+			}
+		})
+
+		const hasUpvoted: boolean =
+			answer.upvoteIds.findIndex((user: User) => {
+				return userId == user._id.toString()
+			}) > -1
+		const hasDownvoted: boolean =
+			answer.downvoteIds.findIndex((user: User) => {
+				return userId == user._id.toString()
+			}) > -1
+		const isUserAnswer = answer.userId == userId
+		return {
+			...answer,
+			comments: answerComments,
+			commentIds: undefined,
+			upvotes: undefined,
+			upvoteIds: undefined,
+			hasUpvoted,
+			upvoteCount: answer.upvoteIds.length,
+			downvotes: undefined,
+			downvoteIds: undefined,
+			hasDownvoted,
+			downvoteCount: answer.downvoteIds.length,
+			userId: isUserAnswer ? answer.userId : undefined,
+		}
+	})
 }
 
 export async function addAnswer({

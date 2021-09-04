@@ -4,6 +4,7 @@ export interface User extends Document {
 	name: string
 	email: string
 	googleUserId: string
+	googleAvatarUrl?: string
 	organizationId: Schema.Types.ObjectId
 	isAdmin?: boolean
 	isVerified?: boolean
@@ -17,6 +18,7 @@ const schema = new Schema<User>(
 		name: { type: String, required: true },
 		email: { type: String, required: true },
 		googleUserId: { type: String, required: true },
+		googleAvatarUrl: { type: String },
 		organizationId: {
 			type: Schema.Types.ObjectId,
 			ref: "Organization",

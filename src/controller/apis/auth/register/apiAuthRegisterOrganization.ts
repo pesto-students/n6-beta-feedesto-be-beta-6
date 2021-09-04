@@ -13,6 +13,7 @@ type Context = {
 		organizationName: string
 		email: string
 		googleUserId: string
+		googleAvatarUrl?: string
 	}
 }
 
@@ -23,9 +24,10 @@ export const apiAuthRegisterOrganization = new WebApi({
 		organizationName: T.string().trim().nonEmpty(),
 		email: validateEmail(),
 		googleUserId: T.string().trim().nonEmpty(),
+		googleAvatarUrl: T.string().trim().optional(),
 	}),
 	handler: async ({
-		body: { name, email, organizationName, googleUserId },
+		body: { name, email, organizationName, googleUserId, googleAvatarUrl },
 	}: Context) => {
 		const organizationId = await addOrganization({
 			name: organizationName,
@@ -37,6 +39,7 @@ export const apiAuthRegisterOrganization = new WebApi({
 			name,
 			organizationId,
 			googleUserId,
+			googleAvatarUrl,
 			isAdmin: true,
 		})
 
