@@ -6,7 +6,7 @@ dotenv.config()
 export default {
 	server: {
 		environment: (process.env.NODE_ENV as Environment) ?? Environment.DEVELOPMENT,
-		port: process.env.PORT,
+		port: process.env.PORT||3500,
 		name: process.env.APP_NAME ?? "serverName",
 	},
 	mongodb: {
