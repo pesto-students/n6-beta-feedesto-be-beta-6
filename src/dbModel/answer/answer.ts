@@ -1,4 +1,4 @@
-import _ from "lodash"
+import isUndefined from "lodash/isUndefined"
 import { FilterQuery, Types } from "mongoose"
 import { Answer, AnswerModel } from "./schema"
 
@@ -107,11 +107,11 @@ class AnswerDbModel {
 
 	async findByIdAndUpdate(answerId: string, update: Partial<Answer>) {
 		const tokenUpdate: Partial<Answer> = {}
-		if (!_.isUndefined(update.content)) tokenUpdate.content = update.content
-		if (!_.isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
-		if (!_.isUndefined(update.downvoteIds))
+		if (isUndefined(update.content)) tokenUpdate.content = update.content
+		if (isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
+		if (isUndefined(update.downvoteIds))
 			tokenUpdate.downvoteIds = update.downvoteIds
-		if (!_.isUndefined(update.commentIds)) tokenUpdate.commentIds = update.commentIds
+		if (isUndefined(update.commentIds)) tokenUpdate.commentIds = update.commentIds
 
 		return AnswerModel.findByIdAndUpdate(answerId, tokenUpdate, {
 			new: true,

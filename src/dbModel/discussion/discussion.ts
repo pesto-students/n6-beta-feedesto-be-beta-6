@@ -1,5 +1,6 @@
 import _ from "lodash"
 import { FilterQuery } from "mongoose"
+import eventEmitter from "../../eventEmitter"
 import { checkAndGetObjectId } from "../../utils/utils"
 import { Discussion, DiscussionModel } from "./schema"
 
@@ -47,10 +48,39 @@ class DiscussionDbModel {
 		}).lean()
 	}
 
+	async findByIdAndUpdateStatus(discussionId: string, update: { isLive: boolean }) {
+		return DiscussionModel.findByIdAndUpdate(
+			discussionId,
+			{ isLive: update.isLive },
+			{
+				new: true,
+			},
+		).lean()
+	}
+
 	async create(discussion: Partial<Discussion>) {
-		return DiscussionModel.create({
+		const object = await DiscussionModel.create({
 			...discussion,
 		})
+		if (discussion.startDate)
+			eventEmitter.emit("startDiscussion", {
+				topic: "discussion",
+				model: "discussionDbModel",
+				time: object.startDate,
+				object,
+				action: "create",
+			})
+
+		if (discussion.endDate)
+			eventEmitter.emit("endDiscussion", {
+				topic: "discussion",
+				model: "discussionDbModel",
+				time: object.endDate,
+				object,
+				action: "create",
+			})
+
+		return object
 	}
 
 	async deleteById(discussionId: string) {
