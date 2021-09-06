@@ -3,10 +3,11 @@ import {
 	InternalServerError,
 	InvalidArgumentError,
 } from "@hkbyte/webapi"
-import _ from "lodash"
+import isUndefined from "lodash/isUndefined"
 import { LeanDocument } from "mongoose"
 import { User } from "../../dbModel"
 import { useUserDbModel } from "../../dbModel"
+import eventEmitter from "../../eventEmitter"
 import { checkAndGetObjectId } from "../../utils/utils"
 
 export async function fetchUsers({
@@ -92,14 +93,23 @@ export async function updateUser({
 		throw new InvalidArgumentError("Filter missing for updating user")
 	}
 
+	const oldUser = await userModel.findById(_id)
+
 	const tokenUpdate: Partial<User> = {}
-	if (!_.isUndefined(update.name)) tokenUpdate.name = update.name
-	if (!_.isUndefined(update.isVerified)) {
+	if (!isUndefined(update.name)) tokenUpdate.name = update.name
+	if (!isUndefined(update.isVerified)) {
 		tokenUpdate.isVerified = update.isVerified
 		tokenUpdate.verifiedAt = new Date().toISOString()
 	}
 
-	await userModel.findByIdAndUpdate(_id, tokenUpdate)
+	const user = await userModel.findByIdAndUpdate(_id, tokenUpdate)
+	if (oldUser && !oldUser.isVerified && user && user.isVerified) {
+		eventEmitter.emit("sendMail", {
+			object: { email: user.email, text: `and can start using feedesto` },
+		})
+	}
+
+	return user
 }
 
 export async function deleteUser({ _id }: { _id: string }) {

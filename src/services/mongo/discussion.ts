@@ -1,5 +1,5 @@
 import { InternalServerError, InvalidArgumentError } from "@hkbyte/webapi"
-import _ from "lodash"
+import isUndefined from "lodash/isUndefined"
 import { LeanDocument } from "mongoose"
 import { useDiscussionDbModel } from "../../dbModel"
 import { Discussion } from "../../dbModel"
@@ -91,11 +91,10 @@ export async function updateDiscussion({
 	}
 
 	const tokenUpdate: Partial<Discussion> = {}
-	if (!_.isUndefined(update.title)) tokenUpdate.title = update.title
-	if (!_.isUndefined(update.description)) tokenUpdate.description = update.description
-	if (!_.isUndefined(update.startDate))
-		tokenUpdate.startDate = new Date(update.startDate)
-	if (!_.isUndefined(update.endDate)) tokenUpdate.endDate = new Date(update.endDate)
+	if (!isUndefined(update.title)) tokenUpdate.title = update.title
+	if (!isUndefined(update.description)) tokenUpdate.description = update.description
+	if (!isUndefined(update.startDate)) tokenUpdate.startDate = new Date(update.startDate)
+	if (!isUndefined(update.endDate)) tokenUpdate.endDate = new Date(update.endDate)
 
 	await discussionModel.findByIdAndUpdate(_id, tokenUpdate)
 }

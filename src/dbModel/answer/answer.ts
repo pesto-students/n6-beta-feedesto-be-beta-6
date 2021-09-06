@@ -1,4 +1,4 @@
-import _ from "lodash"
+import isUndefined from "lodash/isUndefined"
 import { FilterQuery, Types } from "mongoose"
 import { Answer, AnswerModel } from "./schema"
 
@@ -8,7 +8,7 @@ class AnswerDbModel {
 	async findAll({
 		_id,
 		pageNumber = 1,
-		limit = 10,
+		limit = 25,
 		discussionId,
 		userId,
 	}: {
@@ -114,15 +114,30 @@ class AnswerDbModel {
 		return AnswerModel.findById(answerId).lean()
 	}
 
-	async findByIdAndUpdate(discussionId: string, update: Partial<Answer>) {
+	async findByIdAndUpdate(answerId: string, update: Partial<Answer>) {
 		const tokenUpdate: Partial<Answer> = {}
-		if (!_.isUndefined(update.content)) tokenUpdate.content = update.content
-		if (!_.isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
-		if (!_.isUndefined(update.downvoteIds))
-			tokenUpdate.downvoteIds = update.downvoteIds
-		if (!_.isUndefined(update.commentIds)) tokenUpdate.commentIds = update.commentIds
+		if (!isUndefined(update.content)) tokenUpdate.content = update.content
+		if (!isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
+		if (!isUndefined(update.downvoteIds)) tokenUpdate.downvoteIds = update.downvoteIds
+		if (!isUndefined(update.commentIds)) tokenUpdate.commentIds = update.commentIds
 
-		return AnswerModel.findByIdAndUpdate(discussionId, tokenUpdate, {
+		return AnswerModel.findByIdAndUpdate(answerId, tokenUpdate, {
+			new: true,
+		}).lean()
+	}
+
+	async findByIdAndUpvoteOrDownvote(
+		answerId: string,
+		update: { upVoteId?: string; downVoteId?: string },
+	) {
+		const tokenUpdate: any = {}
+
+		if (update.upVoteId)
+			tokenUpdate.$addToSet = { upvoteIds: new ObjectId(update.upVoteId) }
+		if (update.downVoteId)
+			tokenUpdate.$addToSet = { downvoteIds: new ObjectId(update.downVoteId) }
+
+		return AnswerModel.findByIdAndUpdate(answerId, tokenUpdate, {
 			new: true,
 		}).lean()
 	}

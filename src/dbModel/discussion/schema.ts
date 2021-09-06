@@ -11,6 +11,7 @@ export interface Discussion extends Document {
 	viewerIds: SchemaTypeOptions<ObjectId[]> | string[]
 	upvoteIds: SchemaTypeOptions<ObjectId[]> | string[]
 	downvoteIds: SchemaTypeOptions<ObjectId[]> | string[]
+	isLive?: boolean
 	createdAt: Date
 	updatedAt: Date
 }
@@ -26,6 +27,7 @@ const schema = new Schema<Discussion>(
 			required: true,
 		},
 		endDate: { type: Schema.Types.Date },
+		isLive: { type: Boolean, default: false },
 		participantIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
 		viewerIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
 		upvoteIds: { type: [Schema.Types.ObjectId], ref: "User", default: [] },

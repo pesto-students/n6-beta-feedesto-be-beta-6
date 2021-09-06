@@ -3,7 +3,7 @@ import {
 	InternalServerError,
 	InvalidArgumentError,
 } from "@hkbyte/webapi"
-import _ from "lodash"
+import isUndefined from "lodash/isUndefined"
 import { useOrganizationDbModel } from "../../dbModel"
 
 export async function fetchOrganizations({
@@ -72,8 +72,8 @@ export async function updateOrganization({
 	tokenFilter._id = _id
 
 	const tokenUpdate: any = { modifiedAt: new Date() }
-	if (!_.isUndefined(update.name)) tokenUpdate.name = update.name
-	if (!_.isUndefined(update.userId)) tokenUpdate.userId = update.userId
+	if (!isUndefined(update.name)) tokenUpdate.name = update.name
+	if (!isUndefined(update.userId)) tokenUpdate.userId = update.userId
 
 	await organizationModel.findByIdAndUpdate(_id, tokenUpdate)
 }

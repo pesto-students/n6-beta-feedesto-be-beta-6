@@ -13,16 +13,21 @@
 	"private": "false",
 	"dependencies": {
 		"@hkbyte/webapi": "^3.0.4",
+		"agenda": "^4.2.1",
 		"bcrypt": "^5.0.0",
 		"dayjs": "^1.10.6",
 		"dotenv": "^8.2.0",
 		"jsonwebtoken": "^8.5.1",
-		"mongoose": "^6.0.2"
+		"mongoose": "^6.0.2",
+		"nodemailer": "^6.6.3",
+		"socket.io": "^4.2.0"
 	},
 	"devDependencies": {
 		"@types/bcrypt": "^3.0.0",
 		"@types/jsonwebtoken": "^8.5.0",
 		"@types/node": "12",
+		"@types/nodemailer": "^6.4.4",
+		"@types/socket.io": "^3.0.2",
 		"copyfiles": "^2.4.0",
 		"rimraf": "^3.0.2",
 		"ts-node": "^9.0.0",
