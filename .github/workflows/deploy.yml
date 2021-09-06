@@ -1,0 +1,59 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - build-tsc-ci-cd
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: Install NPM packages
+        run: yarn install
+        
+      # - name: Test project
+      #   run: yarn test
+
+      - name: Build project
+        run: yarn build
+
+      - name: Upload Dist
+        uses: actions/upload-artifact@v1
+        with:
+          name: production-code
+          path: lib
+
+  deploy:
+    needs: build
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: production-code
+          path: lib
+
+      - name: Upload ftp
+        uses: sebastianpopp/ftp-action@releases/v2
+        with:
+          host: ftp://api.feedesto.com/com.feedesto.api
+          user: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          localDir: "lib"
+          remoteDir: "lib"
