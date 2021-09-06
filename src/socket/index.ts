@@ -1,7 +1,6 @@
-//@ts-ignore
-const io = require("socket.io")
+import { Server } from "socket.io"
 
-const frontEndWebsocket = io()
+const frontEndWebsocket = new Server()
 frontEndWebsocket.listen(6000)
 
-module.exports = frontEndWebsocket
+export default frontEndWebsocket

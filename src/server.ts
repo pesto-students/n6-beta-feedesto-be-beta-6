@@ -8,7 +8,7 @@ import { agenda } from "./agenda"
 import eventEmitter from "./eventEmitter"
 import { sendMail } from "./mailer"
 
-const frontEndWebsocket = require("./socket")
+import frontEndWebsocket from "./socket"
 
 const server = new WebApiServer(configs.server.port, { cors: true, helmet: true })
 
