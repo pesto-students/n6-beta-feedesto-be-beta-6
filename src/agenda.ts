@@ -10,7 +10,7 @@ const { host, port, name } = configs.mongodb
 export const agenda = new Agenda()
 
 agenda.database(`mongodb://${host}:${port}/${name}`, `agendaJobs`)
-;(async function () {
+const defineAgendas = async function () {
 	//define job consumers here
 	agenda.define("send email report", { concurrency: 1 }, (job, done) => {
 		console.log("ada", job)
@@ -95,4 +95,6 @@ agenda.database(`mongodb://${host}:${port}/${name}`, `agendaJobs`)
 	agenda.on("fail", (error, job) => {
 		console.log(`Job <${job.attrs.name}> failed:`, error)
 	})
-})()
+}
+
+defineAgendas()

@@ -5,6 +5,7 @@ import {
 	sendResponseError,
 } from "@hkbyte/webapi"
 import _ from "lodash"
+import { fetchUsers } from "../../services/mongo/user"
 import { AuthRole } from "../auth"
 import { validateOrganizationAuthToken } from "../auth/organization"
 import { validateUserAuthToken } from "../auth/user"
@@ -44,6 +45,13 @@ export default function (...roles: AuthRole[]): RequestHandler {
 					res.locals.session.userId = userId
 				} else {
 					throw new ForbiddenError("Invalid Authentication role")
+				}
+
+				const [checkUserExists] = await fetchUsers({
+					_id: res.locals.session.userId,
+				})
+				if (!checkUserExists) {
+					throw new ForbiddenError("User does not exist!")
 				}
 			} else {
 				if (!_.isEmpty(roles)) throw new ForbiddenError("Authentication missing")
