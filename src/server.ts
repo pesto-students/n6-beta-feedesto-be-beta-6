@@ -4,13 +4,18 @@ import configs from "./utils/configs"
 import { initiateMongoClient } from "./db"
 
 import { agenda } from "./agenda"
+import bugsnag from "./bugsnag"
 
 import eventEmitter from "./eventEmitter"
 import { sendMail } from "./mailer"
 
 import frontEndWebsocket from "./socket"
 
+const middleware = bugsnag.getPlugin("express")
+
 const server = new WebApiServer(configs.server.port, { cors: true, helmet: true })
+
+if (middleware?.requestHandler) server.server.use(middleware.requestHandler)
 
 server.addWebApis(...apiRoutes)
 
@@ -58,5 +63,7 @@ server.start().then((port) => {
 
 	console.log(`Server listening on port: ${port}`)
 })
+
+if (middleware?.errorHandler) server.server.use(middleware.errorHandler)
 
 export default server
