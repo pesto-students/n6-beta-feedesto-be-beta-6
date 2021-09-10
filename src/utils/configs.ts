@@ -19,4 +19,5 @@ export default {
 		pass: process.env.SENDGRID_PASS || "",
 	},
 	bugSnagKey: process.env.BUGSNAG_KEY || "",
+	bugSnagClientKey: process.env.BUGSNAG_CLIENT_KEY || "",
 }
