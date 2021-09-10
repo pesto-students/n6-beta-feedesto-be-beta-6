@@ -18,5 +18,5 @@ export default {
 		user: process.env.SENDGRID_USER || "",
 		pass: process.env.SENDGRID_PASS || "",
 	},
-	bugSnagKey: "",
+	bugSnagKey: process.env.BUGSNAG_KEY || "",
 }
