@@ -15,6 +15,7 @@ import { apiDiscussionAdd } from "./discussion/apiDiscussionAdd"
 import { apiDiscussionDelete } from "./discussion/apiDiscussionDelete"
 import { apiDiscussionList } from "./discussion/apiDiscussionList"
 import { apiDiscussionUpdate } from "./discussion/apiDiscussionUpdate"
+import { apiMiscBugSnagKeyGet } from "./misc/apiBugSnagKeyGet"
 import { apiOrganizationAdd } from "./organization/apiOrganizationAdd"
 import { apiOrganizationList } from "./organization/apiOrganizationList"
 import { apiOrganizationUpdate } from "./organization/apiOrganizationUpdate"
@@ -50,4 +51,5 @@ export default [
 	apiCommentDelete,
 	apiCommentAddUpvote,
 	apiCommentAddDownvote,
+	apiMiscBugSnagKeyGet,
 ]
