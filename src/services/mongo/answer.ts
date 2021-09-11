@@ -158,7 +158,9 @@ export async function addAnswerUpvote({
 }) {
 	const answerModel = useAnswerDbModel()
 
-	const updateAnswerUpvotes = await answerModel.findByIdAndUpvoteOrDownvote(answerId, {upVoteId:userId})
+	const updateAnswerUpvotes = await answerModel.findByIdAndUpvoteOrDownvote(answerId, {
+		upVoteId: userId,
+	})
 
 	return updateAnswerUpvotes
 }
@@ -172,11 +174,18 @@ export async function addAnswerDownvote({
 }) {
 	const answerModel = useAnswerDbModel()
 
-
-	const updateAnswerUpvotes = await answerModel.findByIdAndUpvoteOrDownvote(answerId, {downVoteId:userId	})
+	const updateAnswerUpvotes = await answerModel.findByIdAndUpvoteOrDownvote(answerId, {
+		downVoteId: userId,
+	})
 
 	return updateAnswerUpvotes
+}
+export async function findScoreByDiscussion({ _id }: { _id: string }) {
+	const answerModel = useAnswerDbModel()
 
+	const answers = await answerModel.findScoreByDiscussionId(_id)
+
+	return answers
 }
 
 export async function deleteAnswer({ _id }: { _id: string }) {
