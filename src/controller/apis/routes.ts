@@ -14,6 +14,7 @@ import { apiCommentAddUpvote } from "./comment/apiCommentUpvoteAdd"
 import { apiDiscussionAdd } from "./discussion/apiDiscussionAdd"
 import { apiDiscussionDelete } from "./discussion/apiDiscussionDelete"
 import { apiDiscussionList } from "./discussion/apiDiscussionList"
+import { apiDiscussionScoreList } from "./discussion/apiDiscussionScore"
 import { apiDiscussionUpdate } from "./discussion/apiDiscussionUpdate"
 import { apiMiscBugSnagKeyGet } from "./misc/apiBugSnagKeyGet"
 import { apiOrganizationAdd } from "./organization/apiOrganizationAdd"
@@ -41,6 +42,7 @@ export default [
 	apiDiscussionAdd,
 	apiDiscussionUpdate,
 	apiDiscussionDelete,
+	apiDiscussionScoreList,
 	apiAnswerAdd,
 	apiAnswerList,
 	apiAnswerDelete,

@@ -4,17 +4,17 @@ import { AuthRole } from "../../auth"
 import authMiddleware from "../../middlewares/authMiddleware"
 
 type Context = {
-	body: {
+	query: {
 		_id: string
 	}
 }
 
-export const apiDiscussionUpdate = new WebApi({
+export const apiDiscussionScoreList = new WebApi({
 	endpoint: "/discussion/score",
-	requestBodySchema: T.object({
+	requestQuerySchema: T.object({
 		_id: T.string().mongoObjectId(),
 	}),
-	method: RequestMethod.POST,
+	method: RequestMethod.GET,
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
-	handler: ({ body }: Context) => findScoreByDiscussion(body),
+	handler: ({ query }: Context) => findScoreByDiscussion(query),
 })
