@@ -20,6 +20,7 @@
 		"dayjs": "^1.10.6",
 		"dotenv": "^8.2.0",
 		"jsonwebtoken": "^8.5.1",
+		"moment": "^2.29.1",
 		"mongoose": "^6.0.2",
 		"nodemailer": "^6.6.3",
 		"socket.io": "^4.2.0",
