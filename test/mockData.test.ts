@@ -1,14 +1,16 @@
 import { expect } from "chai"
-import { Organization, User } from "../src/dbModel"
+import { Discussion, Organization, User } from "../src/dbModel"
+import { fetchDiscussions } from "../src/services/mongo/discussion"
 import { fetchOrganizations } from "../src/services/mongo/organization"
 import { fetchUsers } from "../src/services/mongo/user"
 import { cleanDatabase } from "./db"
+import { generateDiscussion } from "./resources/dicussion"
 import { generateOrganization } from "./resources/organization"
 import { generateUser } from "./resources/user"
 
 let users: User[] = []
 let organizations: Organization[] = []
-// let discussions: Discussion[] = []
+let discussions: Discussion[] = []
 // let answers: Answer[] = []
 
 describe("mock test:", () => {
@@ -31,7 +33,7 @@ describe("mock test:", () => {
 	})
 
 	it("generates users", async () => {
-		const generateUserCount: number = 50
+		const generateUserCount: number = 200
 
 		for (let i = 0; i < generateUserCount; i++) {
 			const organizationId = organizations[i % 10]._id
@@ -42,6 +44,24 @@ describe("mock test:", () => {
 			users = userList as User[]
 		}
 
-		expect(users.length).to.equal(50)
+		expect(users.length).to.equal(200)
+	})
+
+	it("generates discussions", async () => {
+		const generateDiscussionCount: number = 50
+
+		for (let i = 0; i < generateDiscussionCount; i++) {
+			const organizationId = organizations[i % 10]._id
+			await generateDiscussion({
+				organizationId,
+			})
+		}
+
+		const discussionList = await fetchDiscussions()
+		if (discussionList) {
+			discussions = discussionList as Discussion[]
+		}
+
+		expect(discussions.length).to.equal(50)
 	})
 })
