@@ -8,12 +8,12 @@ export async function generateUser({
 	organizationId: string
 	isAdmin?: boolean
 }) {
-	let name = faker.name.firstName()
+	let name = faker.name.firstName() + " " + faker.name.lastName()
 	let email = faker.internet.email()
 	const created = await addUser({
 		name,
 		email,
-		googleUserId: email,
+		googleUserId: "",
 		organizationId,
 		isAdmin,
 	})

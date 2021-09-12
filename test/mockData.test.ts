@@ -19,14 +19,18 @@ let discussions: Discussion[] = []
 let answers: Answer[] = []
 let comments: Comment[] = []
 
+const generateOrganizationCount: number = 10
+const generateUserCount: number = 300
+const generateDiscussionCount: number = 100
+const generateAnswerCount: number = 1000
+const generateCommentCount: number = 500
+
 describe("mock test:", () => {
 	before(async () => {
 		await cleanDatabase()
 	})
 
-	it("generates organizations", async () => {
-		const generateOrganizationCount: number = 10
-
+	it(`generates organizations: ${generateOrganizationCount}`, async () => {
 		for (let i = 0; i < generateOrganizationCount; i++) {
 			await generateOrganization()
 		}
@@ -35,12 +39,10 @@ describe("mock test:", () => {
 			organizations = organizationList as Organization[]
 		}
 
-		expect(organizations.length).to.equal(10)
+		expect(organizations.length).to.equal(generateOrganizationCount)
 	})
 
-	it("generates users", async () => {
-		const generateUserCount: number = 200
-
+	it(`generates users: ${generateUserCount}`, async () => {
 		for (let i = 0; i < generateUserCount; i++) {
 			const organizationId = randomValueFromArray(organizations)._id
 			await generateUser({
@@ -53,12 +55,10 @@ describe("mock test:", () => {
 			users = userList as User[]
 		}
 
-		expect(users.length).to.equal(200)
+		expect(users.length).to.equal(generateUserCount)
 	})
 
-	it("generates discussions", async () => {
-		const generateDiscussionCount: number = 50
-
+	it(`generates discussions: ${generateDiscussionCount}`, async () => {
 		for (let i = 0; i < generateDiscussionCount; i++) {
 			const organizationId = organizations[i % 10]._id
 			await generateDiscussion({
@@ -71,12 +71,10 @@ describe("mock test:", () => {
 			discussions = discussionList as Discussion[]
 		}
 
-		expect(discussions.length).to.equal(50)
+		expect(discussions.length).to.equal(generateDiscussionCount)
 	})
 
-	it("generates answers", async () => {
-		const generateAnswerCount: number = 500
-
+	it(`generates answers: ${generateAnswerCount}`, async () => {
 		for (let i = 0; i < generateAnswerCount; i++) {
 			const discussion = randomValueFromArray(discussions)
 
@@ -90,12 +88,10 @@ describe("mock test:", () => {
 			answers = answerList as Answer[]
 		}
 
-		expect(answers.length).to.equal(500)
+		expect(answers.length).to.equal(generateAnswerCount)
 	})
 
-	it("generates comments", async () => {
-		const generateCommentCount: number = 500
-
+	it(`generates comments: ${generateCommentCount}`, async () => {
 		for (let i = 0; i < generateCommentCount; i++) {
 			const answer = randomValueFromArray(answers)
 
@@ -109,6 +105,6 @@ describe("mock test:", () => {
 			comments = commentList as Comment[]
 		}
 
-		expect(comments.length).to.equal(500)
+		expect(comments.length).to.equal(generateCommentCount)
 	})
 })

@@ -58,10 +58,12 @@ export async function addUser({
 	const userModel = useUserDbModel()
 
 	// Check for Duplicates
-	const [user] = await userModel.findAll({ googleUserId })
+	if (googleUserId) {
+		const [user] = await userModel.findAll({ googleUserId })
 
-	if (user) {
-		throw new AlreadyExistError(`User with this account already exist`)
+		if (user) {
+			throw new AlreadyExistError(`User with this account already exist`)
+		}
 	}
 
 	const insertUser = await userModel.create({
