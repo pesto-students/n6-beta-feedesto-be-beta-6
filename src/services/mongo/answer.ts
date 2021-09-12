@@ -6,10 +6,12 @@ export async function fetchAnswers({
 	_id,
 	discussionId,
 	userId,
+	limit,
 }: {
 	_id?: string
 	discussionId?: string
 	userId?: string
+	limit?: number
 } = {}): Promise<LeanDocument<Answer>[]> {
 	const answerModel = useAnswerDbModel()
 
@@ -26,7 +28,7 @@ export async function fetchAnswers({
 		return answerModel.findAll({ userId })
 	}
 
-	return answerModel.findAll()
+	return answerModel.findAll({ limit })
 }
 
 export async function fetchOrganizationAnswers({

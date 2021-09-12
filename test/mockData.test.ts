@@ -1,10 +1,12 @@
 import { expect } from "chai"
-import { Discussion, Organization, User } from "../src/dbModel"
+import { Answer, Discussion, Organization, User } from "../src/dbModel"
+import { fetchAnswers } from "../src/services/mongo/answer"
 import { fetchDiscussions } from "../src/services/mongo/discussion"
 import { fetchOrganizations } from "../src/services/mongo/organization"
 import { fetchUsers } from "../src/services/mongo/user"
 import { randomValueFromArray } from "../src/utils/utils"
 import { cleanDatabase } from "./db"
+import { generateAnswer } from "./resources/answer"
 import { generateDiscussion } from "./resources/dicussion"
 import { generateOrganization } from "./resources/organization"
 import { generateUser } from "./resources/user"
@@ -12,7 +14,7 @@ import { generateUser } from "./resources/user"
 let users: User[] = []
 let organizations: Organization[] = []
 let discussions: Discussion[] = []
-// let answers: Answer[] = []
+let answers: Answer[] = []
 
 describe("mock test:", () => {
 	before(async () => {
@@ -67,5 +69,33 @@ describe("mock test:", () => {
 		}
 
 		expect(discussions.length).to.equal(50)
+	})
+
+	it("generates answers", async () => {
+		const generateAnswerCount: number = 500
+
+		for (let i = 0; i < generateAnswerCount; i++) {
+			const discussion = randomValueFromArray(discussions)
+			const orgUsers = (
+				(await fetchUsers({
+					organizationId: discussion.organizationId.toString(),
+				})) as User[]
+			).filter((el) => !el.isAdmin)
+			const userId = randomValueFromArray(orgUsers)._id.toString()
+
+			await generateAnswer({
+				discussionId: discussion._id.toString(),
+				userId,
+			})
+		}
+
+		const [answerData] = await fetchAnswers({ limit: generateAnswerCount })
+
+		if (answerData) {
+			const { documents: answerList } = answerData as any
+			answers = answerList as Answer[]
+		}
+
+		expect(answers.length).to.equal(500)
 	})
 })
