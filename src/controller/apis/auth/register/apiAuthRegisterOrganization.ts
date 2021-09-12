@@ -37,6 +37,7 @@ export const apiAuthRegisterOrganization = new WebApi({
 			googleUserId,
 			googleAvatarUrl,
 			isAdmin: true,
+			isVerified: true,
 		})
 
 		return generateOrganizationAuthToken({

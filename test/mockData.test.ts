@@ -3,6 +3,7 @@ import { Discussion, Organization, User } from "../src/dbModel"
 import { fetchDiscussions } from "../src/services/mongo/discussion"
 import { fetchOrganizations } from "../src/services/mongo/organization"
 import { fetchUsers } from "../src/services/mongo/user"
+import { randomValueFromArray } from "../src/utils/utils"
 import { cleanDatabase } from "./db"
 import { generateDiscussion } from "./resources/dicussion"
 import { generateOrganization } from "./resources/organization"
@@ -36,8 +37,11 @@ describe("mock test:", () => {
 		const generateUserCount: number = 200
 
 		for (let i = 0; i < generateUserCount; i++) {
-			const organizationId = organizations[i % 10]._id
-			await generateUser({ organizationId, isAdmin: i % 10 === 0 ? true : false })
+			const organizationId = randomValueFromArray(organizations)._id
+			await generateUser({
+				organizationId,
+				isAdmin: i % 10 === 0 ? true : false,
+			})
 		}
 		const userList = await fetchUsers()
 		if (userList) {
