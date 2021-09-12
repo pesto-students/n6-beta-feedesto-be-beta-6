@@ -1,7 +1,13 @@
 import faker from "faker"
 import { addUser } from "../../src/services/mongo/user"
 
-export async function generateUser({ organizationId }: { organizationId: string }) {
+export async function generateUser({
+	organizationId,
+	isAdmin,
+}: {
+	organizationId: string
+	isAdmin?: boolean
+}) {
 	let name = faker.name.firstName()
 	let email = faker.internet.email()
 	const created = await addUser({
@@ -9,6 +15,7 @@ export async function generateUser({ organizationId }: { organizationId: string 
 		email,
 		googleUserId: email,
 		organizationId,
+		isAdmin,
 	})
 	return created
 }

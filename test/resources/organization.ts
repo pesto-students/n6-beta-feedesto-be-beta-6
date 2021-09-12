@@ -3,9 +3,6 @@ import { addOrganization } from "../../src/services/mongo/organization"
 
 export async function generateOrganization({ name }: { name?: string } = {}) {
 	if (!name) name = faker.company.companyName()
-	const created = await addOrganization({
-		name,
-		userId: "temp",
-	})
+	const created = await addOrganization({ name })
 	return created
 }

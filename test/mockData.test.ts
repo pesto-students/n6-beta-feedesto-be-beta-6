@@ -1,11 +1,7 @@
 import { expect } from "chai"
 import { Organization, User } from "../src/dbModel"
-import {
-	fetchOrganizations,
-	updateOrganization,
-} from "../src/services/mongo/organization"
+import { fetchOrganizations } from "../src/services/mongo/organization"
 import { fetchUsers } from "../src/services/mongo/user"
-import { randomValueFromArray } from "../src/utils/utils"
 import { cleanDatabase } from "./db"
 import { generateOrganization } from "./resources/organization"
 import { generateUser } from "./resources/user"
@@ -38,12 +34,8 @@ describe("mock test:", () => {
 		const generateUserCount: number = 50
 
 		for (let i = 0; i < generateUserCount; i++) {
-			const organizationId = randomValueFromArray(organizations)._id
-			const userId = await generateUser({ organizationId })
-			await updateOrganization({
-				_id: organizationId,
-				update: { userId },
-			})
+			const organizationId = organizations[i % 10]._id
+			await generateUser({ organizationId, isAdmin: i % 10 === 0 ? true : false })
 		}
 		const userList = await fetchUsers()
 		if (userList) {

@@ -1,8 +1,5 @@
 import { T, WebApi } from "@hkbyte/webapi"
-import {
-	addOrganization,
-	updateOrganization,
-} from "../../../../services/mongo/organization"
+import { addOrganization } from "../../../../services/mongo/organization"
 import { addUser } from "../../../../services/mongo/user"
 import { validateEmail } from "../../../../utils/validators"
 import { generateOrganizationAuthToken } from "../../../auth/organization"
@@ -31,7 +28,6 @@ export const apiAuthRegisterOrganization = new WebApi({
 	}: Context) => {
 		const organizationId = await addOrganization({
 			name: organizationName,
-			userId: "temp",
 		})
 
 		const userId = await addUser({
@@ -41,11 +37,6 @@ export const apiAuthRegisterOrganization = new WebApi({
 			googleUserId,
 			googleAvatarUrl,
 			isAdmin: true,
-		})
-
-		await updateOrganization({
-			_id: organizationId,
-			update: { userId },
 		})
 
 		return generateOrganizationAuthToken({
