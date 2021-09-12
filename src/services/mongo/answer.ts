@@ -132,10 +132,16 @@ export async function addAnswer({
 	content,
 	discussionId,
 	userId,
+	commentIds,
+	upvoteIds,
+	downvoteIds,
 }: {
 	discussionId: string
 	userId: string
 	content: string
+	commentIds?: string[]
+	upvoteIds?: string[]
+	downvoteIds?: string[]
 }): Promise<string> {
 	const answerModel = useAnswerDbModel()
 
@@ -143,6 +149,9 @@ export async function addAnswer({
 		content,
 		discussionId,
 		userId,
+		commentIds,
+		upvoteIds,
+		downvoteIds,
 	})
 	if (!insertAnswer) {
 		throw new InternalServerError("Something went wrong: unable to add answer")
