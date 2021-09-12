@@ -1,12 +1,14 @@
 import { expect } from "chai"
-import { Answer, Discussion, Organization, User } from "../src/dbModel"
+import { Answer, Comment, Discussion, Organization, User } from "../src/dbModel"
 import { fetchAnswers } from "../src/services/mongo/answer"
+import { fetchComments } from "../src/services/mongo/comment"
 import { fetchDiscussions } from "../src/services/mongo/discussion"
 import { fetchOrganizations } from "../src/services/mongo/organization"
 import { fetchUsers } from "../src/services/mongo/user"
 import { randomValueFromArray } from "../src/utils/utils"
 import { cleanDatabase } from "./db"
 import { generateAnswer } from "./resources/answer"
+import { generateComment } from "./resources/comment"
 import { generateDiscussion } from "./resources/dicussion"
 import { generateOrganization } from "./resources/organization"
 import { generateUser } from "./resources/user"
@@ -15,6 +17,7 @@ let users: User[] = []
 let organizations: Organization[] = []
 let discussions: Discussion[] = []
 let answers: Answer[] = []
+let comments: Comment[] = []
 
 describe("mock test:", () => {
 	before(async () => {
@@ -76,17 +79,8 @@ describe("mock test:", () => {
 
 		for (let i = 0; i < generateAnswerCount; i++) {
 			const discussion = randomValueFromArray(discussions)
-			const orgUsers = (
-				(await fetchUsers({
-					organizationId: discussion.organizationId.toString(),
-				})) as User[]
-			).filter((el) => !el.isAdmin)
-			const userId = randomValueFromArray(orgUsers)._id.toString()
 
-			await generateAnswer({
-				discussionId: discussion._id.toString(),
-				userId,
-			})
+			await generateAnswer({ discussionId: discussion._id.toString() })
 		}
 
 		const [answerData] = await fetchAnswers({ limit: generateAnswerCount })
@@ -97,5 +91,24 @@ describe("mock test:", () => {
 		}
 
 		expect(answers.length).to.equal(500)
+	})
+
+	it("generates comments", async () => {
+		const generateCommentCount: number = 500
+
+		for (let i = 0; i < generateCommentCount; i++) {
+			const answer = randomValueFromArray(answers)
+
+			await generateComment({
+				answerId: answer._id.toString(),
+			})
+		}
+
+		const commentList = await fetchComments()
+		if (commentList) {
+			comments = commentList as Comment[]
+		}
+
+		expect(comments.length).to.equal(500)
 	})
 })

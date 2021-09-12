@@ -1,39 +1,29 @@
 import faker from "faker"
 import { random } from "lodash"
-import { User } from "../../src/dbModel"
 import { addAnswer } from "../../src/services/mongo/answer"
 import { fetchDiscussions } from "../../src/services/mongo/discussion"
-import { fetchUsers } from "../../src/services/mongo/user"
 import { randomValueFromArray } from "../../src/utils/utils"
 
-export async function generateAnswer({
-	discussionId,
-	userId,
-}: {
-	discussionId: string
-	userId: string
-}) {
+export async function generateAnswer({ discussionId }: { discussionId: string }) {
 	const content = faker.lorem.lines(3)
 
-	const [discussion] = await fetchDiscussions({
-		_id: discussionId,
-	})
+	const [discussion] = await fetchDiscussions({ _id: discussionId })
 
-	const orgUsers = (
-		(await fetchUsers({
-			organizationId: discussion.organizationId.toString(),
-		})) as User[]
-	).filter((el) => !el.isAdmin)
+	const discussionParticipants = discussion.participantIds as string[]
+	const discussionViewers = discussion.viewerIds as string[]
+	const discussionUsers = discussionParticipants.concat(discussionViewers)
+
+	const userId = randomValueFromArray(discussionParticipants).toString()
 
 	const upvoteIds: string[] = []
 
-	for (let i = 0; i < random(0, orgUsers.length); i++) {
-		upvoteIds.push(randomValueFromArray(orgUsers)._id)
+	for (let i = 0; i < random(0, discussionUsers.length); i++) {
+		upvoteIds.push(randomValueFromArray(discussionUsers))
 	}
 
 	const downvoteIds: string[] = []
-	for (let i = 0; i < random(0, orgUsers.length); i++) {
-		downvoteIds.push(randomValueFromArray(orgUsers)._id)
+	for (let i = 0; i < random(0, discussionUsers.length); i++) {
+		downvoteIds.push(randomValueFromArray(discussionUsers))
 	}
 
 	const created = await addAnswer({
