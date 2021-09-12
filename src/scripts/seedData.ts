@@ -19,12 +19,21 @@ let organizations: any = []
 let discussions: any = []
 let answers: any = []
 
-mongoose
-	.connect("mongodb://localhost:27017/mongo2", {
+const clearDatabase = async () => {
+	const instance = await mongoose.connect("mongodb://localhost:27017/mongo2", {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 	})
-	.then(async () => {
+
+	await instance.connection.dropDatabase()
+}
+
+const seedData = async () => {
+	try {
+		const instance = await mongoose.connect("mongodb://localhost:27017/mongo2", {
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+		})
 		console.log("Database connected!")
 
 		const createOrganization = async () => {
@@ -123,5 +132,13 @@ mongoose
 
 		await createComments()
 		console.log("done executing")
-	})
-	.catch((err) => console.log(err))
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+export const initializeSeeding = async () => {
+	await clearDatabase()
+	await seedData()
+}
+initializeSeeding()

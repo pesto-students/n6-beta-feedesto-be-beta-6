@@ -1,33 +1,34 @@
-[{
-    "name" : "Feedesto Official",
-    "email" : "feedestoofficial@gmail.com",
-    "googleUserId" : "106393911219559234350",
-    "organizationId" : null,
-    "isAdmin" : true,
-    "isVerified" : false
-},
-{
-    "name" : "user name-1",
-    "email" : "user@gmail.com",
-    "googleUserId" : "106393911219559234350",
-    "organizationId" : null,
-    "isAdmin" : false,
-    "isVerified" : true
-},
-{
-    "name" : "user name-2",
-    "email" : "use2@gmail.com",
-    "googleUserId" : "106393911219559234350",
-    "organizationId" : null,
-    "isAdmin" : false,
-    "isVerified" : true
-},
-{
-    "name" : "user name-3",
-    "email" : "use3@gmail.com",
-    "googleUserId" : "106393911219559234350",
-    "organizationId" : null,
-    "isAdmin" : false,
-    "isVerified" : true
-}
+[
+	{
+		"name": "Feedesto Official",
+		"email": "feedestoofficial@gmail.com",
+		"googleUserId": "106393911219559234350",
+		"organizationId": null,
+		"isAdmin": true,
+		"isVerified": false
+	},
+	{
+		"name": "user name-1",
+		"email": "user@gmail.com",
+		"googleUserId": "",
+		"organizationId": null,
+		"isAdmin": false,
+		"isVerified": true
+	},
+	{
+		"name": "user name-2",
+		"email": "use2@gmail.com",
+		"googleUserId": "",
+		"organizationId": null,
+		"isAdmin": false,
+		"isVerified": true
+	},
+	{
+		"name": "user name-3",
+		"email": "use3@gmail.com",
+		"googleUserId": "",
+		"organizationId": null,
+		"isAdmin": false,
+		"isVerified": true
+	}
 ]

@@ -1,72 +1,62 @@
 [
-    {
-        "title" : "how covid impacted our business",
-        "description" : "give your honest answers",
-        "startDate" : null,
-        "organizationId" : null,
-        "endDate" : null,
-        "isLive" : true,
-        "participantIds" : [ 
-            
-        ],
-        "viewerIds" : [],
-        "upvoteIds" : [],
-        "downvoteIds" : []
-    },
-    {
-        "title" : "how covid impacted our business",
-        "description" : "give your honest answers",
-        "startDate" : null,
-        "organizationId" : null,
-        "endDate" : null,
-        "isLive" : true,
-        "participantIds" : [ 
-            
-        ],
-        "viewerIds" : [],
-        "upvoteIds" : [],
-        "downvoteIds" : []
-    },
-    {
-        "title" : "how covid impacted our business",
-        "description" : "give your honest answers",
-        "startDate" : null,
-        "organizationId" : null,
-        "endDate" : null,
-        "isLive" : true,
-        "participantIds" : [ 
-            
-        ],
-        "viewerIds" : [],
-        "upvoteIds" : [],
-        "downvoteIds" : []
-    },
-    {
-        "title" : "how covid impacted our business",
-        "description" : "give your honest answers",
-        "startDate" : null,
-        "organizationId" : null,
-        "endDate" : null,
-        "isLive" : true,
-        "participantIds" : [ 
-            
-        ],
-        "viewerIds" : [],
-        "upvoteIds" : [],
-        "downvoteIds" : []
-    },
-    {
-        "title" : "how covid impacted our business",
-        "description" : "give your honest answers",
-        "startDate" : null,
-        "organizationId" : null,
-        "endDate" : null,
-        "isLive" : true,
-        "participantIds" : [ 
-            
-        ],
-        "viewerIds" : [],
-        "upvoteIds" : [],
-        "downvoteIds" : []
-    }
+	{
+		"title": "how covid impacted our business",
+		"description": "give your honest answers",
+		"startDate": null,
+		"organizationId": null,
+		"endDate": null,
+		"isLive": true,
+		"participantIds": [],
+		"viewerIds": [],
+		"upvoteIds": [],
+		"downvoteIds": []
+	},
+	{
+		"title": "how covid impacted our business",
+		"description": "give your honest answers",
+		"startDate": null,
+		"organizationId": null,
+		"endDate": null,
+		"isLive": true,
+		"participantIds": [],
+		"viewerIds": [],
+		"upvoteIds": [],
+		"downvoteIds": []
+	},
+	{
+		"title": "how covid impacted our business",
+		"description": "give your honest answers",
+		"startDate": null,
+		"organizationId": null,
+		"endDate": null,
+		"isLive": true,
+		"participantIds": [],
+		"viewerIds": [],
+		"upvoteIds": [],
+		"downvoteIds": []
+	},
+	{
+		"title": "how covid impacted our business",
+		"description": "give your honest answers",
+		"startDate": null,
+		"organizationId": null,
+		"endDate": null,
+		"isLive": true,
+		"participantIds": [],
+		"viewerIds": [],
+		"upvoteIds": [],
+		"downvoteIds": []
+	},
+	{
+		"title": "how covid impacted our business",
+		"description": "give your honest answers",
+		"startDate": null,
+		"organizationId": null,
+		"endDate": null,
+		"isLive": true,
+		"participantIds": [],
+		"viewerIds": [],
+		"upvoteIds": [],
+		"downvoteIds": []
+	}
 ]
