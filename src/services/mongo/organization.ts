@@ -25,13 +25,7 @@ export async function fetchOrganizations({
 	return organizationModel.findAll()
 }
 
-export async function addOrganization({
-	name,
-	userId,
-}: {
-	name: string
-	userId: string
-}): Promise<string> {
+export async function addOrganization({ name }: { name: string }): Promise<string> {
 	const organizationModel = useOrganizationDbModel()
 
 	// Check for Duplicates
@@ -42,7 +36,6 @@ export async function addOrganization({
 
 	const insertOrganization = await organizationModel.create({
 		name,
-		userId,
 	})
 	if (!insertOrganization) {
 		throw new InternalServerError("Something went wrong: unable to add organization")
@@ -57,7 +50,6 @@ export async function updateOrganization({
 }: {
 	_id: string
 	update: {
-		userId?: string
 		name?: string
 	}
 }) {
@@ -73,7 +65,6 @@ export async function updateOrganization({
 
 	const tokenUpdate: any = { modifiedAt: new Date() }
 	if (!isUndefined(update.name)) tokenUpdate.name = update.name
-	if (!isUndefined(update.userId)) tokenUpdate.userId = update.userId
 
 	await organizationModel.findByIdAndUpdate(_id, tokenUpdate)
 }

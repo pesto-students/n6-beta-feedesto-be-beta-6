@@ -9,6 +9,7 @@ type Context = {
 		update: {
 			name?: string
 			isVerified?: boolean
+			googleUserId?: string
 		}
 	}
 }
@@ -20,6 +21,7 @@ export const apiUserUpdate = new WebApi({
 		update: T.object({
 			name: T.string().optional(),
 			isVerified: T.boolean().optional(),
+			googleUserId: T.string().optional(),
 		}),
 	}),
 	method: RequestMethod.PUT,

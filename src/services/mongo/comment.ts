@@ -36,10 +36,14 @@ export async function addComment({
 	content,
 	answerId,
 	userId,
+	upvoteIds,
+	downvoteIds,
 }: {
 	answerId: string
 	userId: string
 	content: string
+	upvoteIds?: string[]
+	downvoteIds?: string[]
 }): Promise<string> {
 	const commentModel = useCommentDbModel()
 	const answerModel = useAnswerDbModel()
@@ -53,6 +57,8 @@ export async function addComment({
 		content,
 		answerId: checkAndGetObjectId(answerId),
 		userId: checkAndGetObjectId(userId),
+		upvoteIds,
+		downvoteIds,
 	})
 
 	await answerModel.findByIdAndUpdate(answerId, {
