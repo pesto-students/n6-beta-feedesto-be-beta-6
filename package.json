@@ -3,7 +3,8 @@
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
-		"test": "NODE_ENV=test && mocha",
+		"test": "NODE_ENV=test && mocha apis",
+		"seed": "NODE_ENV=test && mocha mock",
 		"dev": "nodemon src/server.ts",
 		"clean": "rimraf lib/",
 		"build": "npm run clean && tsc"
