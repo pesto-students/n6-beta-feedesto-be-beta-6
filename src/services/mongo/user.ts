@@ -45,6 +45,7 @@ export async function addUser({
 	googleAvatarUrl,
 	organizationId,
 	isAdmin = false,
+	isVerified = false,
 }: {
 	name: string
 	email: string
@@ -52,14 +53,17 @@ export async function addUser({
 	googleAvatarUrl?: string
 	organizationId: string
 	isAdmin?: boolean
+	isVerified?: boolean
 }): Promise<string> {
 	const userModel = useUserDbModel()
 
 	// Check for Duplicates
-	const [user] = await userModel.findAll({ googleUserId })
+	if (googleUserId) {
+		const [user] = await userModel.findAll({ googleUserId })
 
-	if (user) {
-		throw new AlreadyExistError(`User with this account already exist`)
+		if (user) {
+			throw new AlreadyExistError(`User with this account already exist`)
+		}
 	}
 
 	const insertUser = await userModel.create({
@@ -69,6 +73,7 @@ export async function addUser({
 		googleAvatarUrl,
 		organizationId: checkAndGetObjectId(organizationId),
 		isAdmin,
+		isVerified,
 	})
 	if (!insertUser) {
 		throw new InternalServerError("Something went wrong: unable to add user")
@@ -85,6 +90,7 @@ export async function updateUser({
 	update: {
 		name?: string
 		isVerified?: boolean
+		googleUserId?: string
 	}
 }) {
 	const userModel = useUserDbModel()
@@ -97,6 +103,7 @@ export async function updateUser({
 
 	const tokenUpdate: Partial<User> = {}
 	if (!isUndefined(update.name)) tokenUpdate.name = update.name
+	if (!isUndefined(update.googleUserId)) tokenUpdate.googleUserId = update.googleUserId
 	if (!isUndefined(update.isVerified)) {
 		tokenUpdate.isVerified = update.isVerified
 		tokenUpdate.verifiedAt = new Date().toISOString()

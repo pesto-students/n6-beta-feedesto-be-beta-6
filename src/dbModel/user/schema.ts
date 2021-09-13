@@ -17,7 +17,7 @@ const schema = new Schema<User>(
 	{
 		name: { type: String, required: true },
 		email: { type: String, required: true },
-		googleUserId: { type: String, required: true },
+		googleUserId: { type: String, required: false },
 		googleAvatarUrl: { type: String },
 		organizationId: {
 			type: Schema.Types.ObjectId,
