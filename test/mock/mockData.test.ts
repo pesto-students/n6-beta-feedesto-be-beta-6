@@ -25,7 +25,7 @@ const generateDiscussionCount: number = 100
 const generateAnswerCount: number = 1000
 const generateCommentCount: number = 500
 
-describe("mock test:", () => {
+describe("Clean database and Seed data", () => {
 	before(async () => {
 		await cleanDatabase()
 	})
