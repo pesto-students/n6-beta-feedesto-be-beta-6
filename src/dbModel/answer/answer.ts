@@ -114,6 +114,33 @@ class AnswerDbModel {
 		return AnswerModel.findById(answerId).lean()
 	}
 
+	async findScoreByDiscussionId(discussionId: string) {
+		const query = [
+			{ $match: { discussionId: new ObjectId(discussionId) } },
+			{
+				$lookup: {
+					from: "users",
+					localField: "userId",
+					foreignField: "_id",
+					as: "userId",
+				},
+			},
+			{ $unwind: "$userId" },
+			{
+				$addFields: {
+					numberOfUpvotes: { $size: "$upvoteIds" },
+					numberOfDownvotes: { $size: "$downvoteIds" },
+					score: {
+						$subtract: [{ $size: "$upvoteIds" }, { $size: "$downvoteIds" }],
+					},
+				},
+			},
+			{ $sort: { score: -1 } },
+		]
+
+		return AnswerModel.aggregate(query).allowDiskUse(true)
+	}
+
 	async findByIdAndUpdate(answerId: string, update: Partial<Answer>) {
 		const tokenUpdate: Partial<Answer> = {}
 		if (!isUndefined(update.content)) tokenUpdate.content = update.content

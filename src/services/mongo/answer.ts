@@ -6,10 +6,12 @@ export async function fetchAnswers({
 	_id,
 	discussionId,
 	userId,
+	limit,
 }: {
 	_id?: string
 	discussionId?: string
 	userId?: string
+	limit?: number
 } = {}): Promise<LeanDocument<Answer>[]> {
 	const answerModel = useAnswerDbModel()
 
@@ -26,7 +28,7 @@ export async function fetchAnswers({
 		return answerModel.findAll({ userId })
 	}
 
-	return answerModel.findAll()
+	return answerModel.findAll({ limit })
 }
 
 export async function fetchOrganizationAnswers({
@@ -130,10 +132,16 @@ export async function addAnswer({
 	content,
 	discussionId,
 	userId,
+	commentIds,
+	upvoteIds,
+	downvoteIds,
 }: {
 	discussionId: string
 	userId: string
 	content: string
+	commentIds?: string[]
+	upvoteIds?: string[]
+	downvoteIds?: string[]
 }): Promise<string> {
 	const answerModel = useAnswerDbModel()
 
@@ -141,6 +149,9 @@ export async function addAnswer({
 		content,
 		discussionId,
 		userId,
+		commentIds,
+		upvoteIds,
+		downvoteIds,
 	})
 	if (!insertAnswer) {
 		throw new InternalServerError("Something went wrong: unable to add answer")
@@ -158,7 +169,9 @@ export async function addAnswerUpvote({
 }) {
 	const answerModel = useAnswerDbModel()
 
-	const updateAnswerUpvotes = await answerModel.findByIdAndUpvoteOrDownvote(answerId, {upVoteId:userId})
+	const updateAnswerUpvotes = await answerModel.findByIdAndUpvoteOrDownvote(answerId, {
+		upVoteId: userId,
+	})
 
 	return updateAnswerUpvotes
 }
@@ -172,11 +185,18 @@ export async function addAnswerDownvote({
 }) {
 	const answerModel = useAnswerDbModel()
 
-
-	const updateAnswerUpvotes = await answerModel.findByIdAndUpvoteOrDownvote(answerId, {downVoteId:userId	})
+	const updateAnswerUpvotes = await answerModel.findByIdAndUpvoteOrDownvote(answerId, {
+		downVoteId: userId,
+	})
 
 	return updateAnswerUpvotes
+}
+export async function findScoreByDiscussion({ _id }: { _id: string }) {
+	const answerModel = useAnswerDbModel()
 
+	const answers = await answerModel.findScoreByDiscussionId(_id)
+
+	return answers
 }
 
 export async function deleteAnswer({ _id }: { _id: string }) {
