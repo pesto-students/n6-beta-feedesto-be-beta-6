@@ -4,6 +4,7 @@ import { cleanDatabase } from "../../db"
 import { generateOrganization } from "../../resources/organization"
 
 const endpoint = "/organization"
+
 describe(`API: ${endpoint}`, () => {
 	before(async () => {
 		await cleanDatabase()

@@ -9,7 +9,7 @@ import { randomValueFromArray } from "../../src/utils/utils"
 import { cleanDatabase } from "../db"
 import { generateAnswer } from "../resources/answer"
 import { generateComment } from "../resources/comment"
-import { generateDiscussion } from "../resources/dicussion"
+import { generateDiscussion } from "../resources/discussion"
 import { generateOrganization } from "../resources/organization"
 import { generateUser } from "../resources/user"
 
