@@ -103,7 +103,23 @@ export async function updateUser({
 
 	const tokenUpdate: Partial<User> = {}
 	if (!isUndefined(update.name)) tokenUpdate.name = update.name
-	if (!isUndefined(update.googleUserId)) tokenUpdate.googleUserId = update.googleUserId
+	if (!isUndefined(update.googleUserId)) {
+		// Setting All other users using this Google ID to null
+		const [findUserWithGoogleId] = (await userModel.findAll({
+			googleUserId: update.googleUserId,
+		})) as User[]
+
+		if (findUserWithGoogleId) {
+			await updateUser({
+				_id: findUserWithGoogleId._id,
+				update: {
+					googleUserId: "",
+				},
+			})
+		}
+
+		tokenUpdate.googleUserId = update.googleUserId
+	}
 	if (!isUndefined(update.isVerified)) {
 		tokenUpdate.isVerified = update.isVerified
 		tokenUpdate.verifiedAt = new Date().toISOString()
