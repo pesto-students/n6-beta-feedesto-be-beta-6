@@ -109,7 +109,11 @@ export async function updateUser({
 			googleUserId: update.googleUserId,
 		})) as User[]
 
-		if (findUserWithGoogleId && findUserWithGoogleId.googleUserId) {
+		if (
+			findUserWithGoogleId &&
+			checkAndGetObjectId(findUserWithGoogleId._id).toString() !==
+				checkAndGetObjectId(_id).toString()
+		) {
 			await updateUser({
 				_id: findUserWithGoogleId._id,
 				update: {
