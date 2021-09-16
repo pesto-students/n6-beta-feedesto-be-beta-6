@@ -24,12 +24,20 @@ export async function generateDiscussion({ organizationId }: { organizationId: s
 
 	const participantIds: string[] = []
 	for (let i = 0; i < random(1, orgUsers.length); i++) {
-		participantIds.push(randomValueFromArray(orgUsers)._id)
+		const user = randomValueFromArray(orgUsers)
+		const findUser = participantIds.find((el) => el == user._id)
+		if (!findUser) {
+			participantIds.push(user._id)
+		}
 	}
 
 	const viewerIds: string[] = []
 	for (let i = 0; i < random(0, orgUsers.length); i++) {
-		viewerIds.push(randomValueFromArray(orgUsers)._id)
+		const user = randomValueFromArray(orgUsers)
+		const findUser = viewerIds.find((el) => el == user._id)
+		if (!findUser) {
+			viewerIds.push(user._id)
+		}
 	}
 
 	const created = await addDiscussion({
