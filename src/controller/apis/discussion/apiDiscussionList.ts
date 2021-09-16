@@ -27,12 +27,15 @@ export const apiDiscussionList = new WebApi({
 		let participantId: string | undefined
 		let viewerId: string | undefined
 
+		// Setting filters depending on Auth role
 		if (locals.session.role == AuthRole.ORGANIZATION) {
 			organizationId = locals.session.organizationId
 		} else if (locals.session.role == AuthRole.USER) {
 			if (query.asParticipant) participantId = locals.session.userId
 			else viewerId = locals.session.userId
 		}
+
+		// Filtering response data based on Auth role
 		return (
 			await fetchDiscussions({
 				_id: query._id,
