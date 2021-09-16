@@ -19,9 +19,10 @@ class AnswerDbModel {
 		userId?: string
 	} = {}) {
 		const tokenFindFilter: FilterQuery<Answer> = {}
-		if (_id) tokenFindFilter._id = new ObjectId(_id)
-		if (discussionId) tokenFindFilter.discussionId = new ObjectId(discussionId)
-		if (userId) tokenFindFilter.userId = new ObjectId(userId)
+		if (!isUndefined(_id)) tokenFindFilter._id = new ObjectId(_id)
+		if (!isUndefined(discussionId))
+			tokenFindFilter.discussionId = new ObjectId(discussionId)
+		if (!isUndefined(userId)) tokenFindFilter.userId = new ObjectId(userId)
 
 		let skip = (pageNumber - 1) * limit
 

@@ -9,7 +9,10 @@
 		"clean": "rimraf lib/",
 		"build": "npm run clean && tsc"
 	},
-	"repository": "https://github.com/pesto-students/n6-beta-feedesto-be-beta-6.git",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/pesto-students/n6-beta-feedesto-be-beta-6.git"
+	},
 	"license": "MIT",
 	"private": "false",
 	"dependencies": {

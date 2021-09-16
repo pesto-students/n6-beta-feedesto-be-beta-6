@@ -105,9 +105,11 @@ export async function updateUser({
 	if (!isUndefined(update.name)) tokenUpdate.name = update.name
 	if (!isUndefined(update.googleUserId)) {
 		// Setting All other users using this Google ID to null
-		const [findUserWithGoogleId] = (await userModel.findAll({
+		const findUsersWithGoogleId = (await userModel.findAll({
 			googleUserId: update.googleUserId,
 		})) as User[]
+
+		const [findUserWithGoogleId] = findUsersWithGoogleId
 
 		if (
 			findUserWithGoogleId &&

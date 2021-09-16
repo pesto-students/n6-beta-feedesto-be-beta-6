@@ -11,6 +11,7 @@ export async function generateUser({
 } = {}) {
 	let name = faker.name.firstName() + " " + faker.name.lastName()
 	let email = faker.internet.email()
+	let googleAvatarUrl = faker.internet.avatar()
 	if (!organizationId) {
 		organizationId = (await generateOrganization()).id
 	}
@@ -21,6 +22,7 @@ export async function generateUser({
 		googleUserId: "",
 		organizationId,
 		isAdmin,
+		googleAvatarUrl,
 	})
 	return { id: created, name, email, organizationId }
 }

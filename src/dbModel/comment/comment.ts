@@ -1,4 +1,4 @@
-import _ from "lodash"
+import { isUndefined } from "lodash"
 import { FilterQuery } from "mongoose"
 import { checkAndGetObjectId } from "../../utils/utils"
 import { Comment, CommentModel } from "./schema"
@@ -14,9 +14,10 @@ class CommentDbModel {
 		userId?: string
 	} = {}) {
 		const tokenFindFilter: FilterQuery<Comment> = {}
-		if (_id) tokenFindFilter._id = checkAndGetObjectId(_id)
-		if (answerId) tokenFindFilter.answerId = checkAndGetObjectId(answerId)
-		if (userId) tokenFindFilter.userId = checkAndGetObjectId(userId)
+		if (!isUndefined(_id)) tokenFindFilter._id = checkAndGetObjectId(_id)
+		if (!isUndefined(answerId))
+			tokenFindFilter.answerId = checkAndGetObjectId(answerId)
+		if (!isUndefined(userId)) tokenFindFilter.userId = checkAndGetObjectId(userId)
 
 		return CommentModel.find(tokenFindFilter).lean()
 	}
@@ -27,10 +28,9 @@ class CommentDbModel {
 
 	async findByIdAndUpdate(answerId: string, update: Partial<Comment>) {
 		const tokenUpdate: Partial<Comment> = {}
-		if (!_.isUndefined(update.content)) tokenUpdate.content = update.content
-		if (!_.isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
-		if (!_.isUndefined(update.downvoteIds))
-			tokenUpdate.downvoteIds = update.downvoteIds
+		if (!isUndefined(update.content)) tokenUpdate.content = update.content
+		if (!isUndefined(update.upvoteIds)) tokenUpdate.upvoteIds = update.upvoteIds
+		if (!isUndefined(update.downvoteIds)) tokenUpdate.downvoteIds = update.downvoteIds
 
 		return CommentModel.findByIdAndUpdate(answerId, tokenUpdate, {
 			new: true,
