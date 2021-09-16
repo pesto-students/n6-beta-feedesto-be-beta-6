@@ -81,12 +81,11 @@ describe("Clean database and Seed data", () => {
 			await generateAnswer({ discussionId: discussion._id.toString() })
 		}
 
-		const [answerData] = await fetchAnswers({ limit: generateAnswerCount })
+		const answerList = (await fetchAnswers({
+			limit: generateAnswerCount,
+		})) as Answer[]
 
-		if (answerData) {
-			const { documents: answerList } = answerData as any
-			answers = answerList as Answer[]
-		}
+		answers = answerList as Answer[]
 
 		expect(answers.length).to.equal(generateAnswerCount)
 	})
