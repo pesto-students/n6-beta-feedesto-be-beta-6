@@ -1,61 +1,58 @@
-import chai, { expect } from "chai"
-import chaiHttp from "chai-http"
-import chaiThings from "chai-things"
+import { expect } from "chai"
 import _ from "lodash"
-import { generateUserAuthToken } from "../src/controller/auth/user"
-import webApiServer from "../src/server"
-import { generateUser } from "./resources/user"
+import { AuthRole } from "../src/controller/auth"
+import { generateAuthToken } from "./resources/auth"
+import { requester, WebApiResponseStatus } from "./setup"
 
-chai.use(chaiHttp)
-chai.use(chaiThings)
-export let requester: ChaiHttp.Agent
-
-export async function httpRequest(
+export async function webApiRequest(
 	endpoint: string,
 	{
+		method = "post",
 		body,
+		query,
 		auth,
 		expectedStatus = WebApiResponseStatus.SUCCESS,
 	}: {
+		method?: "post" | "get" | "put" | "delete"
 		body?: string | object
-		auth?: string | boolean | { userId: string }
+		query?: string | object
+		auth?: string | AuthObject
 		expectedStatus?: WebApiResponseStatus
 	} = {},
 ): Promise<any> {
-	const client = requester.post(endpoint)
-	if (auth) {
-		if (_.isString(auth)) client.set("Authorization", auth)
-		else {
-			const userId = _.isObject(auth)
-				? auth.userId
-				: await generateUser({ organizationId: "" })
-			client.set("Authorization", (await generateUserAuthToken({ userId })).token)
-		}
-	}
+	const client = method === "post" ? requester.post(endpoint) : requester.get(endpoint)
+	const authToken = auth
+		? _.isString(auth)
+			? auth
+			: await generateAuthToken(auth)
+		: null
 
-	const res = await client.send(body)
+	if (authToken) client.set("Authorization", authToken)
+	if (body) client.send(body)
+	if (query) client.query(query)
+
+	const res = await executeHttpRequest(client)
 	expect(res.status).equal(
 		expectedStatus,
 		res.body?.error?.message + " " + res.body?.error?.stack,
 	)
-
 	return res.body.data
 }
 
-before(async () => {
-	requester = chai.request(webApiServer.server).keepOpen()
-})
+function executeHttpRequest(
+	client: ReturnType<typeof requester.post>,
+): Promise<ChaiHttp.Response> {
+	return new Promise((resolve, reject) => {
+		client.then((res) => resolve(res)).catch((err) => reject(err))
+	})
+}
 
-after(async () => {
-	requester.close()
-})
+export type AuthObject = {
+	role?: AuthRole
+	organizationId?: string
+	userId?: string
+}
 
-export enum WebApiResponseStatus {
-	SUCCESS = 200,
-	CREATED = 201,
-	BAD_REQUEST = 400,
-	UNAUTHORISED = 401,
-	FORBIDDEN = 403,
-	NOT_FOUND = 404,
-	UNPROCESSABLE = 422,
+export function expectArrayKeys(list: any[], keys: string[]) {
+	expect(list).to.be.an("array").contain.a.thing.with.keys(keys)
 }

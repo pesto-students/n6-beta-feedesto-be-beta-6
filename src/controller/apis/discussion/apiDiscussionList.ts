@@ -33,11 +33,21 @@ export const apiDiscussionList = new WebApi({
 			if (query.asParticipant) participantId = locals.session.userId
 			else viewerId = locals.session.userId
 		}
-		return await fetchDiscussions({
-			_id: query._id,
-			organizationId,
-			participantId,
-			viewerId,
+		return (
+			await fetchDiscussions({
+				_id: query._id,
+				organizationId,
+				participantId,
+				viewerId,
+			})
+		).map((el) => {
+			return {
+				...el,
+				participants: organizationId ? el.participants : undefined,
+				participantIds: organizationId ? el.participantIds : undefined,
+				viewers: organizationId ? el.viewers : undefined,
+				viewerIds: organizationId ? el.viewerIds : undefined,
+			}
 		})
 	},
 })

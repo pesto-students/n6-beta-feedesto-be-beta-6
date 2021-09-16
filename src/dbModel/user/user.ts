@@ -1,7 +1,6 @@
-import _ from "lodash"
 import { FilterQuery } from "mongoose"
+import { isUndefined } from "lodash"
 import { checkAndGetObjectId } from "../../utils/utils"
-
 import { User, UserModel } from "./schema"
 
 class UserDbModel {
@@ -13,15 +12,15 @@ class UserDbModel {
 		googleUserId?: string
 	} = {}) {
 		const tokenFindFilter: FilterQuery<User> = {}
-		if (googleUserId) tokenFindFilter.googleUserId = googleUserId
-		if (organizationId)
+		if (!isUndefined(googleUserId)) tokenFindFilter.googleUserId = googleUserId
+		if (!isUndefined(organizationId))
 			tokenFindFilter.organizationId = checkAndGetObjectId(organizationId)
 
-		return UserModel.find(tokenFindFilter).lean()
+		return UserModel.find(tokenFindFilter).populate("organization").lean()
 	}
 
 	async findById(userId: string) {
-		return UserModel.findById(userId).lean()
+		return UserModel.findById(userId).populate("organization").lean()
 	}
 
 	async findByIdAndUpdate(userId: string, update: Partial<User>) {

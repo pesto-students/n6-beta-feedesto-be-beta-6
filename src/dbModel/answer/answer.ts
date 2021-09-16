@@ -1,5 +1,5 @@
 import isUndefined from "lodash/isUndefined"
-import { FilterQuery, Types } from "mongoose"
+import { FilterQuery, PopulateOptions, Types } from "mongoose"
 import { Answer, AnswerModel } from "./schema"
 
 const { ObjectId } = Types
@@ -19,95 +19,30 @@ class AnswerDbModel {
 		userId?: string
 	} = {}) {
 		const tokenFindFilter: FilterQuery<Answer> = {}
-		if (_id) tokenFindFilter._id = new ObjectId(_id)
-		if (discussionId) tokenFindFilter.discussionId = new ObjectId(discussionId)
-		if (userId) tokenFindFilter.userId = new ObjectId(userId)
+		if (!isUndefined(_id)) tokenFindFilter._id = new ObjectId(_id)
+		if (!isUndefined(discussionId))
+			tokenFindFilter.discussionId = new ObjectId(discussionId)
+		if (!isUndefined(userId)) tokenFindFilter.userId = new ObjectId(userId)
 
 		let skip = (pageNumber - 1) * limit
-
-		const query: any = [
-			{ $match: tokenFindFilter },
-			{
-				$lookup: {
-					from: "users",
-					localField: "userId",
-					foreignField: "_id",
-					as: "userId",
+		return AnswerModel.find(tokenFindFilter)
+			.populate(<PopulateOptions[]>[
+				{
+					path: "user upvoters downvoters",
 				},
-			},
-			{ $unwind: "$userId" },
-			{
-				$lookup: {
-					from: "users",
-					localField: "upvoteIds",
-					foreignField: "_id",
-					as: "upvoteIds",
-				},
-			},
-			{
-				$lookup: {
-					from: "users",
-					localField: "downvoteIds",
-					foreignField: "_id",
-					as: "downvoteIds",
-				},
-			},
-			{
-				$lookup: {
-					from: "comments",
-					let: { answerId: "$_id" },
-					pipeline: [
-						{ $match: { $expr: { $eq: ["$answerId", "$$answerId"] } } },
-						{
-							$lookup: {
-								from: "users",
-								localField: "userId",
-								foreignField: "_id",
-								as: "userId",
-							},
-						},
-						{ $unwind: "$userId" },
-					],
-					as: "comments",
-				},
-			},
-			{ $sort: { upvoteIds: -1 } },
-			{
-				$facet: {
-					metadata: [
-						{ $count: "total" },
-						{ $addFields: { pageNumber, limit, skip } },
-					],
-					documents: [{ $skip: skip }, { $limit: limit }],
-				},
-			},
-			{
-				$project: {
-					metadata: {
-						$ifNull: [
-							{ $arrayElemAt: ["$metadata", 0] },
-							{ count: 0, pageNumber, limit, skip },
-						],
+				{
+					path: "comments",
+					populate: {
+						path: "user upvoters downvoters",
 					},
-					documents: 1,
 				},
-			},
-		]
+			])
+			.limit(limit)
+			.skip(skip)
+			.sort({ upvoteIds: -1 })
+			.lean()
 
-		// return AnswerModel.find(tokenFindFilter)
-		// 	.populate(<PopulateOptions>{
-		// 		path: "userId upvoteIds downvoteIds",
-		// 	})
-		// 	.populate(<PopulateOptions>{
-		// 		path: "commentIds",
-		// 		populate: {
-		// 			path: "userId upvoteIds downvoteIds",
-		// 		},
-		// 	})
-		// 	.sort({ upvoteIds: -1 })
-		// 	.lean()
-
-		return AnswerModel.aggregate(query).allowDiskUse(true)
+		// return AnswerModel.find().aggregate(query).allowDiskUse(true)
 	}
 
 	async findById(answerId: string) {

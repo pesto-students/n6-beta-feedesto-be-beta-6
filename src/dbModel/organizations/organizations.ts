@@ -1,10 +1,11 @@
 import { FilterQuery } from "mongoose"
 import { Organization, OrganizationModel } from "./schema"
+import { isUndefined } from "lodash"
 
 class OrganizationDbModel {
 	async findAll({ name }: { name?: string } = {}) {
 		const tokenFindFilter: FilterQuery<Organization> = {}
-		if (name) tokenFindFilter.name = name
+		if (!isUndefined(name)) tokenFindFilter.name = name
 
 		return OrganizationModel.find(tokenFindFilter).lean()
 	}

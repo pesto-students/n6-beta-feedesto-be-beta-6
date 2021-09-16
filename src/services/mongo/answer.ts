@@ -37,8 +37,11 @@ export async function fetchOrganizationAnswers({
 	pageNumber,
 }: { discussionId?: string; limit?: number; pageNumber?: number } = {}) {
 	const answerModel = useAnswerDbModel()
-	const [{ documents: answerList }]: { documents: Answer[] }[] =
-		(await answerModel.findAll({ discussionId, limit, pageNumber })) as any
+	const answerList: Answer[] = (await answerModel.findAll({
+		discussionId,
+		limit,
+		pageNumber,
+	})) as Answer[]
 
 	return answerList.map((answer) => {
 		const answerComments = answer.comments.map((comment: Comment) => {
@@ -69,8 +72,11 @@ export async function fetchUserAnswers({
 	pageNumber?: number
 }) {
 	const answerModel = useAnswerDbModel()
-	const [{ documents: answerList }]: { documents: Answer[] }[] =
-		(await answerModel.findAll({ discussionId, limit, pageNumber })) as any
+	const answerList: Answer[] = (await answerModel.findAll({
+		discussionId,
+		limit,
+		pageNumber,
+	})) as Answer[]
 
 	return answerList.map((answer) => {
 		const answerComments = answer.comments.map((comment: Comment) => {
@@ -94,8 +100,11 @@ export async function fetchUserAnswers({
 				upvoteCount: comment.upvoteIds.length,
 				downvoteCount: comment.downvoteIds.length,
 				upvoteIds: undefined,
+				upvoters: undefined,
 				downvoteIds: undefined,
+				downvoters: undefined,
 				userId: isUserComment ? comment.userId : undefined,
+				user: isUserComment ? comment.user : undefined,
 			}
 		})
 
@@ -115,15 +124,16 @@ export async function fetchUserAnswers({
 			...answer,
 			comments: answerComments,
 			commentIds: undefined,
-			upvotes: undefined,
-			upvoteIds: undefined,
 			hasUpvoted,
-			upvoteCount: answer.upvoteIds.length,
-			downvotes: undefined,
-			downvoteIds: undefined,
 			hasDownvoted,
+			upvoteCount: answer.upvoteIds.length,
 			downvoteCount: answer.downvoteIds.length,
+			upvoteIds: undefined,
+			upvoters: undefined,
+			downvoteIds: undefined,
+			downvoters: undefined,
 			userId: isUserAnswer ? answer.userId : undefined,
+			user: isUserAnswer ? answer.user : undefined,
 		}
 	})
 }
