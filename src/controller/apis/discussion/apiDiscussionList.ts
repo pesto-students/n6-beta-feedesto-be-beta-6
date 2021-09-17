@@ -53,11 +53,14 @@ export const apiDiscussionList = new WebApi({
 			)
 
 			const now = new Date()
-
-			const isInputAllowed =
-				isParticipant &&
+			const isLive =
 				dayjs(el.startDate.toString()).isBefore(now) &&
 				dayjs(el.endDate.toString()).isAfter(now)
+
+			const isInputAllowed =
+				isParticipant && isLive && locals.session.role === AuthRole.USER
+			const isActionAllowed =
+				isViewer && isLive && locals.session.role === AuthRole.USER
 
 			return {
 				...el,
@@ -66,6 +69,7 @@ export const apiDiscussionList = new WebApi({
 				isViewer,
 				isParticipant,
 				isInputAllowed,
+				isActionAllowed,
 				viewers: organizationId ? el.viewers : undefined,
 				viewerIds: organizationId ? el.viewerIds : undefined,
 			}
