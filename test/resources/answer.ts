@@ -27,7 +27,8 @@ export async function generateAnswer({ discussionId }: { discussionId: string })
 	const downvoteIds: string[] = []
 	for (let i = 0; i < random(0, discussionUsers.length); i++) {
 		const user = randomValueFromArray(discussionUsers)
-		const findUser = downvoteIds.find((el) => el == user)
+		const findUser =
+			upvoteIds.find((el) => el == user) ?? downvoteIds.find((el) => el == user)
 		if (!findUser) {
 			downvoteIds.push(user)
 		}

@@ -1,4 +1,5 @@
 import { RequestMethod, T, WebApi } from "@hkbyte/webapi"
+import dayjs from "dayjs"
 import { fetchDiscussions } from "../../../services/mongo/discussion"
 import { RequestLocals } from "../../../utils/types"
 import { AuthRole } from "../../auth"
@@ -44,10 +45,27 @@ export const apiDiscussionList = new WebApi({
 				viewerId,
 			})
 		).map((el) => {
+			const isViewer = el.viewerIds.find(
+				(el: string) => el == locals.session.userId,
+			)
+			const isParticipant = el.participantIds.find(
+				(el: string) => el == locals.session.userId,
+			)
+
+			const now = new Date()
+
+			const isInputAllowed =
+				isParticipant &&
+				dayjs(el.startDate.toString()).isBefore(now) &&
+				dayjs(el.endDate.toString()).isAfter(now)
+
 			return {
 				...el,
 				participants: organizationId ? el.participants : undefined,
 				participantIds: organizationId ? el.participantIds : undefined,
+				isViewer,
+				isParticipant,
+				isInputAllowed,
 				viewers: organizationId ? el.viewers : undefined,
 				viewerIds: organizationId ? el.viewerIds : undefined,
 			}

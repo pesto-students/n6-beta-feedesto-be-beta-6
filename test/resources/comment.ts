@@ -38,7 +38,8 @@ export async function generateComment({ answerId }: { answerId: string }) {
 		const user = randomValueFromArray(discussionUsers)
 
 		// Filling only unique user ids
-		const findUser = downvoteIds.find((el) => el == user)
+		const findUser =
+			upvoteIds.find((el) => el == user) ?? downvoteIds.find((el) => el == user)
 		if (!findUser) {
 			downvoteIds.push(user)
 		}
