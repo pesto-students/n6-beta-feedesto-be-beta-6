@@ -15,7 +15,7 @@ export const apiUserList = new WebApi({
 	endpoint: "/user",
 	method: RequestMethod.GET,
 	requestQuerySchema: T.object({
-		isSuperAdmin: T.boolean(),
+		isSuperAdmin: T.boolean().optional(),
 	}),
 	middlewares: [authMiddleware(AuthRole.ORGANIZATION)],
 	handler: async ({ locals, query: { isSuperAdmin } }: Context) => {

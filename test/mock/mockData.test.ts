@@ -1,4 +1,5 @@
 import { expect } from "chai"
+import dayjs from "dayjs"
 import { Answer, Comment, Discussion, Organization, User } from "../../src/dbModel"
 import { fetchAnswers } from "../../src/services/mongo/answer"
 import { fetchComments } from "../../src/services/mongo/comment"
@@ -76,17 +77,27 @@ describe("Clean database and Seed data", () => {
 
 	it(`generates answers: ${generateAnswerCount}`, async () => {
 		for (let i = 0; i < generateAnswerCount; i++) {
-			const discussion = randomValueFromArray(discussions)
+			// Filtering Live discussions
+			const discussion = randomValueFromArray(
+				discussions.filter(
+					(el) =>
+						dayjs(el.startDate.toString()).isBefore(new Date()) &&
+						dayjs(el.endDate.toString()).isAfter(new Date()),
+				),
+			)
+			if (!discussion) {
+				i--
+				continue
+			}
 
 			await generateAnswer({ discussionId: discussion._id.toString() })
 		}
 
-		const [answerData] = await fetchAnswers({ limit: generateAnswerCount })
+		const answerList = (await fetchAnswers({
+			limit: generateAnswerCount,
+		})) as Answer[]
 
-		if (answerData) {
-			const { documents: answerList } = answerData as any
-			answers = answerList as Answer[]
-		}
+		answers = answerList as Answer[]
 
 		expect(answers.length).to.equal(generateAnswerCount)
 	})

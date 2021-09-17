@@ -4,12 +4,12 @@ const unhandledRejection = require("unhandled-rejection")
 
 import configs from "./utils/configs"
 
-const appVersion = require("../package.json").version
+import packageFile from "../package.json"
 
 export default bugsnag.createClient({
 	apiKey: configs.bugSnagKey,
 	plugins: [BugsnagPluginExpress],
-	appVersion,
+	appVersion: packageFile.version,
 })
 
 let rejectionEmitter = unhandledRejection({ timeout: 20 })

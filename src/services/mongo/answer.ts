@@ -1,6 +1,6 @@
 import { InternalServerError, InvalidArgumentError } from "@hkbyte/webapi"
 import { LeanDocument } from "mongoose"
-import { Answer, Comment, useAnswerDbModel, User } from "../../dbModel"
+import { Answer, Comment, useAnswerDbModel, useCommentDbModel, User } from "../../dbModel"
 
 export async function fetchAnswers({
 	_id,
@@ -203,10 +203,71 @@ export async function addAnswerDownvote({
 }
 export async function findScoreByDiscussion({ _id }: { _id: string }) {
 	const answerModel = useAnswerDbModel()
+	const commentModel = useCommentDbModel()
 
-	const answers = await answerModel.findScoreByDiscussionId(_id)
+	const answers = (await answerModel.findAll({
+		discussionId: _id,
+	})) as Answer[]
 
-	return answers
+	let usersWithScore: (Partial<User> & {
+		numberOfUpvotes: number
+		numberOfDownvotes: number
+		score: number
+		answers: Answer[]
+		comments: Comment[]
+	})[] = []
+
+	for (let i = 0; i < answers.length; i++) {
+		const answer = answers[i]
+		const findAnswerUser = usersWithScore.find(
+			(user) => user._id.toString() == answer.user?._id.toString(),
+		)
+
+		if (!findAnswerUser) {
+			usersWithScore.push({
+				...answer.user,
+				answers: [answer],
+				comments: [],
+				numberOfUpvotes: answer.upvoteIds.length,
+				numberOfDownvotes: answer.downvoteIds.length,
+				score: answer.upvoteIds.length - answer.downvoteIds.length,
+			})
+		} else {
+			findAnswerUser.answers.push(answer)
+			findAnswerUser.numberOfUpvotes += answer.upvoteIds.length
+			findAnswerUser.numberOfDownvotes += answer.downvoteIds.length
+			findAnswerUser.score =
+				findAnswerUser.numberOfUpvotes - findAnswerUser.numberOfDownvotes
+		}
+
+		const comments = (await commentModel.findAll({
+			answerId: answer._id,
+		})) as Comment[]
+
+		comments.forEach((comment) => {
+			const findUser = usersWithScore.find(
+				(user) => user._id.toString() == comment.user?._id.toString(),
+			)
+
+			if (!findUser) {
+				usersWithScore.push({
+					...comment.user,
+					answers: [],
+					comments: [comment],
+					numberOfUpvotes: comment.upvoteIds.length,
+					numberOfDownvotes: comment.downvoteIds.length,
+					score: comment.upvoteIds.length - comment.downvoteIds.length,
+				})
+			} else {
+				findUser.comments.push(comment)
+				findUser.numberOfUpvotes += comment.upvoteIds.length
+				findUser.numberOfDownvotes += comment.downvoteIds.length
+				findUser.score = findUser.numberOfUpvotes - findUser.numberOfDownvotes
+			}
+		})
+	}
+
+	return usersWithScore
 }
 
 export async function deleteAnswer({ _id }: { _id: string }) {

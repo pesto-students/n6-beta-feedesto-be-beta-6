@@ -16,14 +16,22 @@ export async function generateAnswer({ discussionId }: { discussionId: string })
 	const userId = randomValueFromArray(discussionParticipants).toString()
 
 	const upvoteIds: string[] = []
-
 	for (let i = 0; i < random(0, discussionUsers.length); i++) {
-		upvoteIds.push(randomValueFromArray(discussionUsers))
+		const user = randomValueFromArray(discussionUsers)
+		const findUser = upvoteIds.find((el) => el == user)
+		if (!findUser) {
+			upvoteIds.push(user)
+		}
 	}
 
 	const downvoteIds: string[] = []
 	for (let i = 0; i < random(0, discussionUsers.length); i++) {
-		downvoteIds.push(randomValueFromArray(discussionUsers))
+		const user = randomValueFromArray(discussionUsers)
+		const findUser =
+			upvoteIds.find((el) => el == user) ?? downvoteIds.find((el) => el == user)
+		if (!findUser) {
+			downvoteIds.push(user)
+		}
 	}
 
 	const created = await addAnswer({

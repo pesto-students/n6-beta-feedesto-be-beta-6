@@ -1,5 +1,5 @@
 import { isUndefined } from "lodash"
-import { FilterQuery } from "mongoose"
+import { FilterQuery, PopulateOptions } from "mongoose"
 import { checkAndGetObjectId } from "../../utils/utils"
 import { Comment, CommentModel } from "./schema"
 
@@ -19,7 +19,13 @@ class CommentDbModel {
 			tokenFindFilter.answerId = checkAndGetObjectId(answerId)
 		if (!isUndefined(userId)) tokenFindFilter.userId = checkAndGetObjectId(userId)
 
-		return CommentModel.find(tokenFindFilter).lean()
+		return CommentModel.find(tokenFindFilter)
+			.populate(<PopulateOptions[]>[
+				{
+					path: "user upvoters downvoters",
+				},
+			])
+			.lean()
 	}
 
 	async findById(commentId: string) {
