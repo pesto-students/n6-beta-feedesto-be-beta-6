@@ -7,8 +7,6 @@ const { ObjectId } = Types
 class AnswerDbModel {
 	async findAll({
 		_id,
-		pageNumber = 1,
-		limit = 25,
 		discussionId,
 		userId,
 	}: {
@@ -24,7 +22,6 @@ class AnswerDbModel {
 			tokenFindFilter.discussionId = new ObjectId(discussionId)
 		if (!isUndefined(userId)) tokenFindFilter.userId = new ObjectId(userId)
 
-		let skip = (pageNumber - 1) * limit
 		return AnswerModel.find(tokenFindFilter)
 			.populate(<PopulateOptions[]>[
 				{
@@ -37,8 +34,6 @@ class AnswerDbModel {
 					},
 				},
 			])
-			.limit(limit)
-			.skip(skip)
 			.sort({ upvoteIds: -1 })
 			.lean()
 
