@@ -267,7 +267,7 @@ export async function findScoreByDiscussion({ _id }: { _id: string }) {
 		})
 	}
 
-	return usersWithScore
+	return usersWithScore.sort((a, b) => b.score - a.score)
 }
 
 export async function deleteAnswer({ _id }: { _id: string }) {

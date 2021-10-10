@@ -59,8 +59,7 @@ export const apiDiscussionList = new WebApi({
 
 			const isInputAllowed =
 				isParticipant && isLive && locals.session.role === AuthRole.USER
-			const isActionAllowed =
-				isViewer && isLive && locals.session.role === AuthRole.USER
+			const isActionAllowed = isLive && locals.session.role === AuthRole.USER
 
 			return {
 				...el,
